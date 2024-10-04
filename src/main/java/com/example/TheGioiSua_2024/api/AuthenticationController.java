@@ -4,14 +4,10 @@
  */
 package com.example.TheGioiSua_2024.api;
 
-import com.example.TheGioiSua_2024.JwtUtil.JwtUtil;
-import com.example.TheGioiSua_2024.model.AuthenticationRequest;
-import com.example.TheGioiSua_2024.service.MyUserDetailsService;
+import com.example.TheGioiSua_2024.JwtUtil.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
@@ -19,27 +15,34 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
+    @PostMapping("/login")
+    public LoginResponse authenticateUser( @RequestBody LoginRequest loginRequest) {
 
-    @PostMapping("/authenticate")
-    public String createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
-            );
-        } catch (AuthenticationException e) {
-            throw new Exception("Incorrect username or password", e);
-        }
+        // Xác thực từ username và password.
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+        // Nếu không xảy ra exception tức là thông tin hợp lệ
+        // Set thông tin authentication vào Security Context
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwt;
+        // Trả về jwt cho người dùng.
+        String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+        return new LoginResponse(jwt);
+    }
+
+    // Api /api/random yêu cầu phải xác thực mới có thể request
+    @GetMapping("/random")
+    public RandomStuff randomStuff() {
+        return new RandomStuff("JWT Hợp lệ mới có thể thấy được message này");
     }
 }
