@@ -4,7 +4,8 @@
  */
 package com.example.TheGioiSua_2024.repository;
 
-import com.example.TheGioiSua_2024.model.VaiTro;
+import com.example.TheGioiSua_2024.entity.Role;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Hieu
  */
 @Repository
-public interface VaiTroRepository extends JpaRepository<VaiTro, Integer>{
+public interface RoleRepository extends JpaRepository<Role, Long>{
     
 }

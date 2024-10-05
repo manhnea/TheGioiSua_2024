@@ -4,7 +4,8 @@
  */
 package com.example.TheGioiSua_2024.repository;
 
-import com.example.TheGioiSua_2024.model.NguoiDung;
+import com.example.TheGioiSua_2024.entity.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * @author Hieu
  */
 @Repository
-public interface NguoiDungRepository extends JpaRepository<NguoiDung, Long>{
-    NguoiDung timKiemVoiTenDangNhap(String TenDangNhap);
-    NguoiDung timKiemVoiId(Long ID);
+public interface UserRepository extends JpaRepository<User, Long>{
+    Boolean existsByUsername(String username);
+    Optional<User> findByUsername(String username);
 }
