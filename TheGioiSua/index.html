@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" ng-app="myApp">
 
 <head>
     <meta charset="UTF-8">
@@ -7,10 +7,14 @@
     <title>Cửa Hàng Trực Tuyến</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
+    <script src="/assets/js/service/UserService.js"></script>
+    <script src="/assets/js/controller/mainController.js"></script>
 </head>
 
-<body>
-
+<body ng-controller="MainController">
+    <div ng-view></div> <!-- Nguyên tắc hiển thị template -->
     <div class="container bg-danger bg-gradient">
         <!-- header -->
 
@@ -49,7 +53,7 @@
                             <a class="nav-link" href="#">Giỏ Hàng</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Đăng Nhập</a>
+                            <a class="nav-link" href="/login">{{account}}</a>
                         </li>
                     </ul>
                 </div>
