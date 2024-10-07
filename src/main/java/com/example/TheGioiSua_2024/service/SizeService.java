@@ -26,6 +26,7 @@ public class SizeService implements ISizeService {
 
     @Override
     public Size save(Size size) {
+        size.setStatus(1);
         return sizeRepository.save(size);
     }
     @Override
