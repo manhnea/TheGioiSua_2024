@@ -1,15 +1,20 @@
-// userService.js
-var app = angular.module('myApp', ['ngRoute']);
+var app = angular.module("myApp", []);
+// var app = angular.module("myApp", ["ngRoute"]);
 
-// Định nghĩa UserService
-app.service('UserService', function() {
-    var userInfo = null;
+// Định nghĩa UserService dưới dạng class
+class UserService {
+  constructor() {
+    this.userInfo = null;
+  }
 
-    this.setUserInfo = function(info) {
-        userInfo = info;
-    };
+  setUserInfo(info) {
+    this.userInfo = info;
+  }
 
-    this.getUserInfo = function() {
-        return userInfo;
-    };
-});
+  getUserInfo() {
+    return this.userInfo;
+  }
+}
+
+// Đăng ký UserService với AngularJS
+app.service("UserService", UserService);
