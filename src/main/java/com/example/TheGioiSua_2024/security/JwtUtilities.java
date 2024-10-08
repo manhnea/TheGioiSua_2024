@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -21,8 +20,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
-public class JwtUtilities{
-
+public class JwtUtilities {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -30,31 +28,36 @@ public class JwtUtilities{
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
-
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Claims extractAllClaims(String token) {return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();}
+    public Claims extractAllClaims(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    public Date extractExpiration(String token) { return extractClaim(token, Claims::getExpiration); }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractUsername(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String user = extractUsername(token);
+        return (user.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
     public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
 //    public String generateToken(String username , List<String> roles)
-    public String generateToken(String username , String roleName){
-
-        return Jwts.builder().setSubject(username).claim("role",roleName).setIssuedAt(new Date(System.currentTimeMillis()))
+    public String generateToken(Long id,String username, String roleName) {
+        String Id = String.valueOf(id);
+        return Jwts.builder().claim("id",Id).claim("user", username).claim("role", roleName).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(jwtExpiration, ChronoUnit.MILLIS)))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
@@ -82,11 +85,12 @@ public class JwtUtilities{
         return false;
     }
 
-    public String getToken (HttpServletRequest httpServletRequest) {
-         final String bearerToken = httpServletRequest.getHeader("Authorization");
-         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-         {return bearerToken.substring(7,bearerToken.length()); } // The part after "Bearer "
-         return null;
+    public String getToken(HttpServletRequest httpServletRequest) {
+        final String bearerToken = httpServletRequest.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7, bearerToken.length());
+        } // The part after "Bearer "
+        return null;
     }
 
 }

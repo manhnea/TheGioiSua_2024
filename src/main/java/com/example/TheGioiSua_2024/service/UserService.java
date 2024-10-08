@@ -67,7 +67,7 @@ public class UserService implements IUserService{
             Role role = iRoleRepository.findById(2l).orElseThrow();//2l user
             user.setRole(role);
             iUserRepository.save(user);
-            String token = jwtUtilities.generateToken(registerDto.getUsername(),role.getRoleName());
+            String token = jwtUtilities.generateToken(null,registerDto.getUsername(),role.getRoleName());
             return new ResponseEntity<>(new BearerToken(token , "Bearer "),HttpStatus.OK);
 
         }
@@ -86,7 +86,7 @@ public class UserService implements IUserService{
         List<String> rolesNames = new ArrayList<>();
 //        user.getRoles().forEach(r-> rolesNames.add(r.getRoleName()));
         
-        String token = jwtUtilities.generateToken(user.getUsername(),user.getRole().getRoleName());
+        String token = jwtUtilities.generateToken(user.getId(),user.getUsername(),user.getRole().getRoleName());
         return token;
     }
 
