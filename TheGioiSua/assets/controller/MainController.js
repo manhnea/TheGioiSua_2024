@@ -7,16 +7,15 @@ app.controller("MainController", [
   function ($scope, $location) {
     $scope.user = null;
     $scope.account = "Đăng Nhập";
-
-    const userInfo = sessionStorage.getItem("userInfo");
+    const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
       $scope.user = JSON.parse(userInfo);
       $scope.account = $scope.user.user;
     }
-    $scope.$on("$routeChangeSuccess", function () {
-      $scope.isLoginPage =
-        $location.path() === "/login" || $location.path() === "/register";
-    });
+    $scope.$on('$locationChangeSuccess', function() {
+      $scope.isLoginPage = $location.path() === '/login';
+      $scope.isDetailPage = $location.path() === '/detailUser';
+  });
   },
 ]);
 

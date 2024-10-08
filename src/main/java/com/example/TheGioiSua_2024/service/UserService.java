@@ -7,6 +7,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.dto.BearerToken;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
+import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
 import com.example.TheGioiSua_2024.repository.RoleRepository;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -92,5 +94,13 @@ public class UserService implements IUserService {
         String token = jwtUtilities.generateToken(user.getId(), user.getUsername(), user.getRole().getRoleName());
         return token;
     }
+    
+    @Override
+    public UserDto findUserById(Long id) {
+        User user = iUserRepository.findById(id).orElseThrow();
+        UserDto userDto = new UserDto(user.getId(), user.getUsername(), user.getFullname(), user.getRegistrationdate(), user.getPhonenumber(), user.getAddress(), user.getEmail(), user.getRole().getRoleName());
+        return userDto;
+    }
+    
 
 }

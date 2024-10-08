@@ -2,12 +2,13 @@
 <html lang="vi" ng-app="myApp">
 
 <head>
-    <meta charset="UTF-8">  
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/"> <!-- Thêm thẻ này -->
     <title>Cửa Hàng Trực Tuyến</title>
     <base href="/">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
@@ -20,7 +21,7 @@
     <div class="container">
         <!-- header -->
         <div ng-include="'/assets/views/header.html'" ng-show="!isLoginPage"></div>
-        <div ng-include="'/assets/views/banner.html'" ng-show="!isLoginPage"></div>
+        <div ng-include="'/assets/views/banner.html'" ng-show="!isLoginPage && !isDetailPage"></div>
         <div ng-view></div>
         <div ng-include="'/assets/views/footer.html'" ng-show="!isLoginPage"></div>
     </div>

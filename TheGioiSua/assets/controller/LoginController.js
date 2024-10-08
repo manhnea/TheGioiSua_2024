@@ -27,20 +27,15 @@ app.controller("LoginController", [
         .post("http://localhost:1234/api/user/authenticate", userCredentials)
         .then(
           function (response) {
-            sessionStorage.setItem("token", response.data.token);
+            localStorage.setItem("token", response.data.token);
             const userInfo = parseJwt(response.data.token);
-            sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+            localStorage.setItem("userInfo", JSON.stringify(userInfo));
             window.location.href = "/";
           },
           function () {
             $scope.errorMessage = "Login failed: Invalid username or password";
           }
         );
-    };
-
-    $scope.logout = function () {
-      localStorage.removeItem("jwtToken");
-      console.log("User logged out. Token removed.");
     };
   },
 ]);
