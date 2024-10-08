@@ -13,6 +13,9 @@ app.controller("MainController", [
       $scope.user = JSON.parse(userInfo);
       $scope.account = $scope.user.user;
     }
+    $scope.$on("$routeChangeSuccess", function () {
+      $scope.isLoginPage = $location.path() === "/login";
+    });
   },
 ]);
 
