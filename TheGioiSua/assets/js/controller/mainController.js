@@ -1,15 +1,50 @@
-// mainController.js
-var app = angular.module('myApp'); // Sử dụng ứng dụng đã được khởi tạo trong userService.js
+// Khởi tạo ứng dụng AngularJS với ngRoute
+var app = angular.module("myApp", ["ngRoute"]);
 
-// Controller cho trang chính
+app.controller("MainController", [
+  "$scope",
+  "$location",
+  function ($scope, $location) {
+    $scope.user = null;
+    $scope.account = "Đăng Nhập";
 
-app.controller('MainController', ['$scope', 'UserService', function($scope, UserService) {
-    
-    $scope.user = UserService.getUserInfo(); // Lấy thông tin người dùng từ UserService
-    if($scope.user == null){
-        $scope.account = 'Đăng Nhập';
-    }else{
-        $scope.account = "Đã Đăng Nhập";
-        console.log($scope.user);
+    // Lấy thông tin người dùng từ sessionStorage
+    const userInfo = sessionStorage.getItem("userInfo");
+    if (userInfo) {
+      $scope.user = JSON.parse(userInfo);
+      $scope.account = $scope.user.user;
     }
-}]);
+
+    // Theo dõi sự thay đổi của route để ẩn/hiển thị header và footer
+    $scope.$on("$routeChangeSuccess", function () {
+      $scope.isLoginPage = $location.path() === "/login";
+    });
+  },
+]);
+
+app.config([
+  "$routeProvider",
+  "$locationProvider",
+  function ($routeProvider, $locationProvider) {
+    $routeProvider
+      .when("/login", {
+        templateUrl: "/assets/views/login.html",
+        controller: "LoginController",
+      })
+      .when("/home", {
+        templateUrl: "/assets/views/home.html",
+        controller: "MainController",
+      })
+      .when("/detailUser", {
+        templateUrl: "/assets/views/userDetail.html",
+        controller: "DetailController",
+      })
+      .otherwise({
+        redirectTo: "/home",
+      });
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false,
+    });
+  },
+]);
