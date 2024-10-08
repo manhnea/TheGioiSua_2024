@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/"> <!-- Thêm thẻ này -->
     <title>Cửa Hàng Trực Tuyến</title>
     <base href="/">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -12,56 +13,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
     <script src="/assets/js/controller/MainController.js"></script>
     <script src="/assets/js/controller/LoginController.js"></script>
+    <script src="/assets/js/controller/DetailController.js"></script>
 </head>
 
 <body ng-controller="MainController">
     <div class="container">
         <!-- header -->
-        <div id="header">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light ">
-                <a class="navbar-brand" href="#">
-                    <img src="assets/img/logo.jpg" alt="Logo" class="d-inline-block align-top img-size-x" />
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Trang Chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Sản Phẩm</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Liên Hệ</a>
-                        </li>
-                    </ul>
-                    <!-- Thanh tìm kiếm ở giữa -->
-                    <form class="form-inline mx-auto my-2 my-lg-0">
-                        <div class="input-group w-100">
-                            <input class="form-control" type="search" placeholder="Tìm kiếm" aria-label="Search">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-success" type="submit">Tìm</button>
-                            </div>
-                        </div>
-                    </form>
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Giỏ Hàng</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="" ng-click="openLogin()">{{account}}</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
+        <div ng-include="'/assets/views/header.html'" ng-show="!isLoginPage"></div>
+        <div ng-include="'/assets/views/banner.html'" ng-show="!isLoginPage"></div>
         <div ng-view></div>
+        <div ng-include="'/assets/views/footer.html'" ng-show="!isLoginPage"></div>
     </div>
-
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
