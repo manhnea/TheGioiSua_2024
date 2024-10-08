@@ -4,7 +4,6 @@
  */
 package com.example.TheGioiSua_2024.service;
 
-
 import com.example.TheGioiSua_2024.dto.BearerToken;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
@@ -30,18 +29,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserService implements IUserService{
+public class UserService implements IUserService {
 
-    private final AuthenticationManager authenticationManager ;
-    private final UserRepository iUserRepository ;
-    private final RoleRepository iRoleRepository ;
-    private final PasswordEncoder passwordEncoder ;
-    private final JwtUtilities jwtUtilities ;
-
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository iUserRepository;
+    private final RoleRepository iRoleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtilities jwtUtilities;
 
     @Override
     public Role saveRole(Role role) {
@@ -55,10 +52,13 @@ public class UserService implements IUserService{
 
     @Override
     public ResponseEntity<?> register(RegisterDto registerDto) {
-        if(iUserRepository.existsByUsername(registerDto.getUsername()))
-        { return  new ResponseEntity<>("email is already taken !", HttpStatus.SEE_OTHER); }
-        else
-        { User user = new User();
+        if (iUserRepository.existsByUsername(registerDto.getUsername())) {
+            return new ResponseEntity<>("User is already taken !", HttpStatus.SEE_OTHER);
+        }
+        else if(iUserRepository.existsByEmail(registerDto.getEmail()))  {
+            return new ResponseEntity<>("Email is already taken !", HttpStatus.SEE_OTHER);
+        } else {
+            User user = new User();
             user.setEmail(registerDto.getEmail());
             user.setFullname(registerDto.getFullname());
             user.setUsername(registerDto.getUsername());
@@ -67,15 +67,16 @@ public class UserService implements IUserService{
             Role role = iRoleRepository.findById(2l).orElseThrow();//2l user
             user.setRole(role);
             iUserRepository.save(user);
-            String token = jwtUtilities.generateToken(null,registerDto.getUsername(),role.getRoleName());
-            return new ResponseEntity<>(new BearerToken(token , "Bearer "),HttpStatus.OK);
+            String token = jwtUtilities.generateToken(null, registerDto.getUsername(), role.getRoleName());
+//            return new ResponseEntity<>(new BearerToken(token, "Bearer "), HttpStatus.OK);
+            return new ResponseEntity<>("Tạo Tài Khoản Thành Công", HttpStatus.OK);
 
         }
-        }
+    }
 
     @Override
     public String authenticate(LoginDto loginDto) {
-      Authentication authentication= authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsername(),
                         loginDto.getPassword()
@@ -85,8 +86,8 @@ public class UserService implements IUserService{
         User user = iUserRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> rolesNames = new ArrayList<>();
 //        user.getRoles().forEach(r-> rolesNames.add(r.getRoleName()));
-        
-        String token = jwtUtilities.generateToken(user.getId(),user.getUsername(),user.getRole().getRoleName());
+
+        String token = jwtUtilities.generateToken(user.getId(), user.getUsername(), user.getRole().getRoleName());
         return token;
     }
 

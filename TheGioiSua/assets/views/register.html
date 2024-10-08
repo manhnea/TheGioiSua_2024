@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <h2>Registration Form</h2>
+    <form name="registrationForm" ng-submit="submitForm()">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" ng-model="user.username" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" ng-model="user.password" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="fullname" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullname" ng-model="user.fullname" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" ng-model="user.email" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="registrationForm.$invalid">Submit</button>
+    </form>
+</div>

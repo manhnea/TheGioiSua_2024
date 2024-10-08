@@ -14,7 +14,8 @@ app.controller("MainController", [
       $scope.account = $scope.user.user;
     }
     $scope.$on("$routeChangeSuccess", function () {
-      $scope.isLoginPage = $location.path() === "/login";
+      $scope.isLoginPage =
+        $location.path() === "/login" || $location.path() === "/register";
     });
   },
 ]);
@@ -36,12 +37,17 @@ app.config([
         templateUrl: "/assets/views/userDetail.html",
         controller: "DetailController",
       })
+      .when("/register", {
+        templateUrl: "/assets/views/register.html",
+        controller: "RegisterController",
+      })
       .otherwise({
         redirectTo: "/home",
       });
-    $locationProvider.html5Mode({
-      enabled: true,
-      requireBase: false,
-    });
+    // $locationProvider.html5Mode({
+    //   enabled: true,
+    //   requireBase: false,
+    // });
+    $locationProvider.html5Mode(false);
   },
 ]);
