@@ -14,6 +14,7 @@ import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
 import jakarta.transaction.Transactional;
+import java.sql.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +65,7 @@ public class UserService implements IUserService {
             user.setUsername(registerDto.getUsername());
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
             //By Default , he/she is a simple user
+            user.setRegistrationdate(new Date(System.currentTimeMillis()));
             Role role = iRoleRepository.findById(2l).orElseThrow();//2l user
             user.setRole(role);
             iUserRepository.save(user);
