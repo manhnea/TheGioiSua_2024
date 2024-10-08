@@ -2,10 +2,14 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Container;
 import com.example.TheGioiSua_2024.service.ContainerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/Container")
@@ -17,11 +21,23 @@ public class ContainerRestController {
         return containerService.getAllContainers();
     }
     @PostMapping("/add")
-    public Container add(@RequestBody Container container) {
+    public String add(@RequestBody @Valid Container container, BindingResult bindingResult) {
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
         return containerService.addContainer(container);
     }
     @PutMapping("/update/{id}")
-    public Container update(@PathVariable("id") Long id, @RequestBody Container container) {
+    public String update(@PathVariable("id") Long id, @RequestBody @Valid Container container,BindingResult bindingResult) {
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
         return containerService.updateContainer(id, container);
     }
     @PutMapping("/delete/{id}")

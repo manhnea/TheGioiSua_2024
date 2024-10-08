@@ -7,15 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContainerService implements IContainerService {
     @Autowired
     private ContainerRepository containerRepository;
     @Override
-    public Container addContainer(Container container) {
+    public String addContainer(Container container) {
+        // Loại bỏ khoảng trắng ở đầu và cuối tên container
+        String trimmedName = container.getContainername().trim();
+        container.setContainername(trimmedName);
+        // Kiểm tra xem tên container đã tồn tại chưa
+        Optional<Container> existingContainer = getContainerByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         container.setStatus(1);
-        return containerRepository.save(container);
+        containerRepository.save(container);
+        return "Thêm thành công";
     }
 
     @Override
@@ -24,11 +34,20 @@ public class ContainerService implements IContainerService {
     }
 
     @Override
-    public Container updateContainer(Long id, Container container) {
+    public String updateContainer(Long id, Container container) {
+        // Loại bỏ khoảng trắng ở đầu và cuối tên container
+        String trimmedName = container.getContainername().trim();
+        container.setContainername(trimmedName);
+        // Kiểm tra xem tên container đã tồn tại chưa
+        Optional<Container> existingContainer = getContainerByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         Container contain = containerRepository.findById(id).orElseThrow();
         contain.setContainername(container.getContainername());
         contain.setDescription(container.getDescription());
-        return containerRepository.save(contain);
+        containerRepository.save(contain);
+        return "Sua thanh cong";
     }
 
     @Override
@@ -36,5 +55,10 @@ public class ContainerService implements IContainerService {
         Container container = containerRepository.findById(id).orElseThrow();
         container.setStatus(0);
         return containerRepository.save(container);
+    }
+
+    @Override
+    public Optional<Container> getContainerByName(String containerName) {
+        return containerRepository.findByContainername(containerName);
     }
 }
