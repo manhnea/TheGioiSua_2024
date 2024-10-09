@@ -57,7 +57,7 @@ public class JwtUtilities {
 //    public String generateToken(String username , List<String> roles)
     public String generateToken(Long id,String username, String roleName) {
         String Id = String.valueOf(id);
-        return Jwts.builder().claim("id",Id).claim("user", username).claim("role", roleName).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().claim("id",Id).setSubject(username).claim("role", roleName).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(jwtExpiration, ChronoUnit.MILLIS)))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
