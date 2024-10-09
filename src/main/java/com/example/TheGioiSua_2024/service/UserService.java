@@ -98,6 +98,9 @@ public class UserService implements IUserService {
     @Override
     public UserDto findUserById(Long id) {
         User user = iUserRepository.findById(id).orElseThrow();
+        if(user == null){
+            System.out.println("null");
+        }
         UserDto userDto = new UserDto(user.getId(), user.getUsername(), user.getFullname(), user.getRegistrationdate(), user.getPhonenumber(), user.getAddress(), user.getEmail(), user.getRole().getRoleName());
         return userDto;
     }
