@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class RegisterDto implements Serializable {
     //it's a Data Trasfer Object for registration
     String username ;
+    String password ;
     String fullname ;
     String email;
-    String password ;
 }
