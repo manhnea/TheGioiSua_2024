@@ -17,8 +17,8 @@ public class MilkType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String milktypename;
     @NotBlank(message = "Tên không được để trống")
+    private String milkTypename;
     private String description;
     private int status;
 }

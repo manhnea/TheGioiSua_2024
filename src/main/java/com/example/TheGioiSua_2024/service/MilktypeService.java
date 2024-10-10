@@ -17,13 +17,12 @@ public class MilktypeService implements IMilktypeService {
 
     @Override
     public String AddMilktype(MilkType milktype) {
-        // Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = milktype.getMilktypename().trim();
-        milktype.setMilktypename(trimmedName);
+        String trimmedName = milktype.getMilkTypename().trim();
+        milktype.setMilkTypename(trimmedName);
         // Kiểm tra xem tên  đã tồn tại chưa
         Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "MilkType với tên này đã tồn tại.";
+            return "Container với tên này đã tồn tại.";
         }
         milktype.setStatus(1);
         milktypeRepository.save(milktype);
@@ -32,17 +31,17 @@ public class MilktypeService implements IMilktypeService {
 
     @Override
     public String UpdateMilktype(Long id, MilkType milktype) {
-        // Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = milktype.getMilktypename().trim();
-        milktype.setMilktypename(trimmedName);
+// Loại bỏ khoảng trắng ở đầu và cuối tên
+        String trimmedName = milktype.getMilkTypename().trim();
+        milktype.setMilkTypename(trimmedName);
         // Kiểm tra xem tên  đã tồn tại chưa
         Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "MilkType với tên này đã tồn tại.";
+            return "Container với tên này đã tồn tại.";
         }
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
         milktype1.setDescription(milktype.getDescription());
-        milktype1.setMilktypename(milktype.getMilktypename());
+        milktype1.setMilkTypename(milktype.getMilkTypename());
          milktypeRepository.save(milktype1);
          return "Sua Thanh Cong";
     }
@@ -55,9 +54,10 @@ public class MilktypeService implements IMilktypeService {
     }
 
     @Override
-    public Optional<MilkType> getMilkTypeByName(String milkTypeName) {
-        return milktypeRepository.findByMilkTypename(milkTypeName);
+    public Optional<MilkType> getMilkTypeByName(String milktypename) {
+        return milktypeRepository.findByMilkTypename(milktypename);
     }
+
 
     @Override
     public List<MilkType> GetAllMilktype() {

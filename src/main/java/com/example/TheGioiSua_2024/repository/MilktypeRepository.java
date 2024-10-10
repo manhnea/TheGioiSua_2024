@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface MilktypeRepository extends JpaRepository<MilkType,Long> {
-    Optional<MilkType> findByMilkTypename(String milkTypeName);
+    Optional<MilkType> findByMilkTypename(String milkTypename);
 }

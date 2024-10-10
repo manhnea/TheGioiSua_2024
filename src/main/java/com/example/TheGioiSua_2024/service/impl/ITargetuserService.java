@@ -11,5 +11,5 @@ public interface ITargetuserService {
     String addTargetuser(Targetuser targetuser);
     String updateTargetuser(Long id,Targetuser targetuser);
     Targetuser deleteTargetuser(Long id);
-    Optional<Targetuser> getTargetuserByName(String targetuserName);
+    Optional<Targetuser> getTargetuserByName(String targetname);
 }
