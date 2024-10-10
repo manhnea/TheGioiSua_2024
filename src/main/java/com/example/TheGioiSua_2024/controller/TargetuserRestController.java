@@ -2,7 +2,10 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Targetuser;
 import com.example.TheGioiSua_2024.service.TargetuserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,11 +20,23 @@ public class TargetuserRestController {
         return targetuserService.getAllTargetuser();
     }
     @PostMapping("/add")
-    public Targetuser add(@RequestBody Targetuser targetuser) {
+    public String add(@RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
         return targetuserService.addTargetuser(targetuser);
     }
     @PutMapping("/update/{id}")
-    public Targetuser update(@RequestBody Targetuser targetuser, @PathVariable("id") Long id) {
+    public String update(@RequestBody @Valid Targetuser targetuser,BindingResult bindingResult, @PathVariable("id") Long id) {
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
         return targetuserService.updateTargetuser(id, targetuser);
     }
     @PutMapping("delete/{id}")

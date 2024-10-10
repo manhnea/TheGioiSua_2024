@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TargetuserService implements ITargetuserService {
@@ -18,17 +19,35 @@ public class TargetuserService implements ITargetuserService {
     }
 
     @Override
-    public Targetuser addTargetuser(Targetuser targetuser) {
+    public String addTargetuser(Targetuser targetuser) {
+        // Loại bỏ khoảng trắng ở đầu và cuối tên
+        String trimmedName = targetuser.getTargetname().trim();
+        targetuser.setTargetname(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Targetuser với tên này đã tồn tại.";
+        }
         targetuser.setStatus(1);
-        return targetuserRepository.save(targetuser);
+         targetuserRepository.save(targetuser);
+         return "Added Successfully";
     }
 
     @Override
-    public Targetuser updateTargetuser(Long id, Targetuser targetuser) {
+    public String updateTargetuser(Long id, Targetuser targetuser) {
+        // Loại bỏ khoảng trắng ở đầu và cuối tên
+        String trimmedName = targetuser.getTargetname().trim();
+        targetuser.setTargetname(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Targetuser với tên này đã tồn tại.";
+        }
         Targetuser targetuser1 = targetuserRepository.findById(id).orElseThrow();
         targetuser1.setDescription(targetuser.getDescription());
         targetuser1.setTargetname(targetuser.getTargetname());
-        return targetuserRepository.save(targetuser1);
+         targetuserRepository.save(targetuser1);
+         return "Updated Successfully";
     }
 
     @Override
@@ -37,4 +56,11 @@ public class TargetuserService implements ITargetuserService {
         targetuser1.setStatus(0);
         return targetuserRepository.save(targetuser1);
     }
+
+    @Override
+    public Optional<Targetuser> getTargetuserByName(String targetuserName) {
+        return targetuserRepository.findByTargetusername(targetuserName);
+    }
+
+
 }
