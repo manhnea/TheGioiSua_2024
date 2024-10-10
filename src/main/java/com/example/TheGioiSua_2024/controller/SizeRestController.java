@@ -12,6 +12,7 @@ import java.util.List;
 public class SizeRestController {
     @Autowired
     private SizeService sizeService;
+    //RessourceEndPoint:http://localhost:8087/api/Size/lst
     @GetMapping("/lst")
     public List<Size> lst() {
         return sizeService.findAll();
