@@ -28,4 +28,5 @@ public class MilktasteRestController {
     public Milktaste delete(@PathVariable("id") Long id) {
         return milktasteService.deleteMilktaste(id);
     }
+
 }
