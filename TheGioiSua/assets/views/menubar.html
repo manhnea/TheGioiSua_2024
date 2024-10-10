@@ -1,32 +1,65 @@
-<!-- Cột bên trái: Slider bar và các ô lọc -->
-<div class="col-md-2">
-    <!-- <h4>Sưax</h4> -->
-    <!-- Slider bar -->
-    <!-- <div class="mb-3">
-        <label for="priceSelect">Giá:</label>
-        <select class="form-select" id="priceSelect">
-            <option value="0">0</option>
-            <option value="20">20</option>
-            <option value="40">40</option>
-            <option value="60">60</option>
-            <option value="80">80</option>
-            <option value="100">100</option>
-        </select>
-    </div> -->
+<div class="row mt-4">
 
-    <div>
+    <!-- Cột bên trái: Slider bar và các ô lọc -->
+    <div class="col-md-3">
         <h5>Chọn loại sản phẩm</h5>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="filter1">
-            <label class="form-check-label" for="filter1">Sản phẩm A</label>
+        <div class="mb-3">
+            <label for="productSelect">Chọn sản phẩm:</label><br>
+            <select class="form-select" id="productSelect">
+                <option value="">Chọn loại sản phẩm</option>
+                <option value="filter1">Sữa A</option>
+                <option value="filter2">Sữa B</option>
+                <option value="filter3">Sữa C</option>
+            </select>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="filter2">
-            <label class="form-check-label" for="filter2">Sản phẩm B</label>
+    </div>
+
+    <!-- Lọc theo giá -->
+    <div class="col-md-3">
+        <h5>Lọc theo giá</h5>
+        <div class="mb-3">
+            <label for="priceSelect">Chọn khoảng giá:</label><br>
+            <select class="form-select" id="priceSelect">
+                <option value="0">Dưới 100,000</option>
+                <option value="1">100,000 - 200,000</option>
+                <option value="2">200,000 - 300,000</option>
+                <option value="3">Trên 300,000</option>
+            </select>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="filter3">
-            <label class="form-check-label" for="filter3">Sản phẩm C</label>
+    </div>
+
+    <!-- Lọc theo hãng sữa -->
+    <div class="col-md-3">
+        <h5>Chọn hãng sữa</h5>
+        <div class="mb-3">
+            <label for="brandSelect">Chọn hãng:</label><br>
+            <select class="form-select" id="brandSelect">
+                <option value="">Chọn hãng sữa</option>
+                <option value="brand1">Hãng A</option>
+                <option value="brand2">Hãng B</option>
+                <option value="brand3">Hãng C</option>
+            </select>
         </div>
+    </div>
+
+    <!-- Lọc theo đối tượng sử dụng -->
+    <div class="col-md-3">
+        <h5>Đối tượng sử dụng</h5>
+        <div class="mb-3">
+            <label for="userSelect">Chọn đối tượng:</label><br>
+            <select class="form-select" id="userSelect">
+                <option value="">Chọn đối tượng sử dụng</option>
+                <option value="user1">Trẻ em</option>
+                <option value="user2">Người lớn</option>
+                <option value="user3">Người cao tuổi</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Dòng nút tìm kiếm -->
+<div class="row mt-3">
+    <div class="col-md-12 text-center">
+        <button type="button" class="btn btn-primary">Tìm kiếm</button>
     </div>
 </div>

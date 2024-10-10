@@ -22,11 +22,10 @@
         <!-- header -->
         <div ng-include="'/assets/views/header.html'" ng-show="!isLoginPage"></div>
         <div ng-include="'/assets/views/banner.html'" ng-show="!isLoginPage && !isDetailPage"></div>
-        <!-- <div class="row mt-4">
-            <div ng-include="'/assets/views/menubar.html'" ng-show="!isLoginPage"></div>
-            <div ng-include="'/assets/views/producthome.html'" ng-show="!isLoginPage"></div>
-        </div> -->
-        <!-- <div ng-view></div> -->
+        <div ng-include="'/assets/views/menubar.html'" ng-show="!isLoginPage"></div>
+        <div ng-view></div>
+        <!-- <div ng-include="'/assets/views/formMuaSua.html'" ng-show="!isLoginPage"></div> -->
+        <div ng-include="'/assets/views/nhaPhanPhoi.html'" ng-show="!isLoginPage"></div>
         <div ng-include="'/assets/views/footer.html'" ng-show="!isLoginPage"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
