@@ -1,6 +1,8 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Product;
+import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.repository.ProductRepository;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ public class ProductService implements IProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private MilktypeRepository milktypeRepository;
+
 
     @Override
     public List<Product> getAllProduct() {
@@ -26,19 +31,48 @@ public class ProductService implements IProductService {
 
         String productName = product.getProductName().trim();
         product.setProductName(productName);
-
-        // Check for existing product code
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
-
-        // Check for existing product name
         if (productRepository.findByProductName(productName).isPresent()) {
             return "Sản phẩm với tên này đã tồn tại.";
         }
 
-        product.setStatus(1); // Assuming '1' indicates active or available status
+        product.setStatus(1);
         productRepository.save(product);
         return "Thêm sản phẩm thành công.";
+    }
+
+    @Override
+    public String updateProduct(Long id, Product product) {
+
+        String productCode = product.getProductCode().trim();
+        product.setProductCode(productCode);
+
+        String productName = product.getProductName().trim();
+        product.setProductName(productName);
+        if (productRepository.findByProductCode(productCode).isPresent()) {
+            return "Sản phẩm với mã này đã tồn tại.";
+        }
+        if (productRepository.findByProductName(productName).isPresent()) {
+            return "Sản phẩm với tên này đã tồn tại.";
+        }
+
+        Product existingProduct = productRepository.findById(id).orElseThrow();
+        MilkType milkType = milktypeRepository.findById(product.getMilktype().getId()).orElseThrow();
+        existingProduct.setMilktype(milkType);
+        existingProduct.setProductName(product.getProductName());
+        existingProduct.setProductCode(product.getProductCode());
+        existingProduct.setQuantity(product.getQuantity());
+        existingProduct.setStatus(1);
+        productRepository.save(existingProduct);
+        return "Cập nhật sản phẩm thành công.";
+    }
+
+    @Override
+    public void deleteProduct(Long id, Product product) {
+        Product existingProduct = productRepository.findById(id).orElseThrow();
+        existingProduct.setStatus(0);
+        productRepository.save(existingProduct);
     }
 }
