@@ -9,9 +9,9 @@ import java.util.List;
 public interface IMilkdetailService {
     List<Milkdetail> getAll();
 
-    Milkdetail add(Milkdetail milkdetail);
+    String add(Milkdetail milkdetail);
 
-    Milkdetail update(Long id, Milkdetail milkdetail);
+    String update(Long id, Milkdetail milkdetail);
 
-    Milkdetail delete(Long id, Milkdetail milkdetail);
+    String delete(Long id, Milkdetail milkdetail);
 }
