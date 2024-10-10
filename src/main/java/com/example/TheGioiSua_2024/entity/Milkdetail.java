@@ -22,32 +22,26 @@ public class Milkdetail {
 
     @ManyToOne
     @JoinColumn(name = "productid")
-
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "containerid")
-
     private Container container;
 
     @ManyToOne
     @JoinColumn(name = "sizeid")
-
     private Size size;
 
     @ManyToOne
     @JoinColumn(name = "milktasteid")
-
     private Milktaste milktaste;
 
     @ManyToOne
     @JoinColumn(name = "packagingunitid")
-
     private Packagingunit packagingunit;
 
     @ManyToOne
     @JoinColumn(name = "usagecapacityid")
-
     private Usagecapacity usagecapacity;
 
     @NotNull(message = "Ngày hết hạn là bắt buộc")
