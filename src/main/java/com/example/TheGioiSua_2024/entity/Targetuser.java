@@ -18,7 +18,7 @@ public class Targetuser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = "Tên không được để trống")
-    private String targetname;
+    private String targetusername;
     private String description;
     private int status;
 }
