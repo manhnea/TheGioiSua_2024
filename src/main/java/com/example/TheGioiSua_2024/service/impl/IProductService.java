@@ -5,4 +5,6 @@ import com.example.TheGioiSua_2024.entity.Product;
 import java.util.List;
 
 public interface IProductService {
+    List<Product> getAllProduct();
+    String addProduct(Product product);
 }

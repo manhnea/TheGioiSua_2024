@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,22 +36,28 @@ public class Milkdetail {
     @JoinColumn(name = "milktasteid")
     private Milktaste milktaste;
 
-   @ManyToOne
-   @JoinColumn(name = "packagingunitid")
+    @ManyToOne
+    @JoinColumn(name = "packagingunitid")
     private Packagingunit packagingunit;
 
-   @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "usagecapacityid")
     private Usagecapacity usagecapacity;
 
-   private Date expirationdate;
+    @NotNull(message = "Ngày hết hạn là bắt buộc")
+    @FutureOrPresent(message = "Ngày hết hạn phải là ngày hiện tại hoặc trong tương lai")
+    private Date expirationdate;
 
-   private float price;
+    @NotNull(message = "Giá là bắt buộc")
+    @Min(value = 0, message = "Giá không được âm")
+    private float price;
 
-   private String description;
+    @NotBlank(message = "Mô tả là bắt buộc")
+    private String description;
 
-   private int stockquantity;
+    @NotNull(message = "Số lượng tồn kho là bắt buộc")
+    @Min(value = 0, message = "Số lượng tồn kho không được âm")
+    private int stockquantity;
 
-   private int status;
-
+    private int status;
 }

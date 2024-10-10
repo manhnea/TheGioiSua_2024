@@ -22,41 +22,17 @@ public class MilkdetailService implements IMilkdetailService {
 
     @Override
     public Milkdetail add(Milkdetail milkdetail) {
-        return milkdetailRepository.save(milkdetail);
+        return null;
     }
 
     @Override
     public Milkdetail update(Long id, Milkdetail milkdetail) {
-        Optional<Milkdetail> optionalMilkdetail = milkdetailRepository.findById(id);
-        if (optionalMilkdetail.isPresent()) {
-            Milkdetail existingMilkdetail = optionalMilkdetail.get();
-            existingMilkdetail.setMilktaste(milkdetail.getMilktaste());
-            existingMilkdetail.setStockquantity(milkdetail.getStockquantity());
-            existingMilkdetail.setProduct(milkdetail.getProduct());
-            existingMilkdetail.setPrice(milkdetail.getPrice());
-            existingMilkdetail.setExpirationdate(milkdetail.getExpirationdate());
-            existingMilkdetail.setDescription(milkdetail.getDescription());
-            existingMilkdetail.setStockquantity(milkdetail.getStockquantity());
-            existingMilkdetail.setStatus(1);
-            existingMilkdetail.setContainer(milkdetail.getContainer());
-            existingMilkdetail.setSize(milkdetail.getSize());
-            existingMilkdetail.setPackagingunit(milkdetail.getPackagingunit());
-            existingMilkdetail.setUsagecapacity(milkdetail.getUsagecapacity());
-            return milkdetailRepository.save(existingMilkdetail);
-        } else {
-            throw new RuntimeException("Milkdetail with id " + id + " not found.");
-        }
+        return null;
     }
 
     @Override
     public Milkdetail delete(Long id, Milkdetail milkdetail) {
-        Optional<Milkdetail> optionalMilkdetail = milkdetailRepository.findById(id);
-        if (optionalMilkdetail.isPresent()) {
-            Milkdetail existingMilkdetail = optionalMilkdetail.get();
-            existingMilkdetail.setStatus(0);
-            return milkdetailRepository.save(existingMilkdetail);
-        } else {
-            throw new RuntimeException("Milkdetail with id " + id + " not found.");
-        }
+        return null;
     }
+
 }

@@ -2,20 +2,35 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Product;
 import com.example.TheGioiSua_2024.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/Product")
 public class ProductController {
-@Autowired
-private ProductService productService;
-@GetMapping("/getAll")
-public List<Product> getAllProduct(){
-    return productService.getAllProduct();
-}
+    @Autowired
+    private ProductService productService;
+
+    @GetMapping("/get")
+    public List<Product> getAllProduct() {
+        return productService.getAllProduct();
+    }
+
+    @PostMapping("/add")
+    public String addProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if (fieldError != null) {
+                return fieldError.getDefaultMessage();
+            }
+        }
+        String resultMessage = productService.addProduct(product);
+
+        return resultMessage;
+    }
 }
