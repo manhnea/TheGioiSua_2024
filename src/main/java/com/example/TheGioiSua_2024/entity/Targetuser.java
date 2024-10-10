@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,8 @@ public class Targetuser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String targetname;
+    @NotBlank(message = "Tên không được để trống")
+    private String targetusername;
     private String description;
     private int status;
 }

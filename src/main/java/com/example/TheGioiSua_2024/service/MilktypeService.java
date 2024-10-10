@@ -1,12 +1,14 @@
 package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.entity.MilkType;
+import com.example.TheGioiSua_2024.entity.Milktaste;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.service.impl.IMilktypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MilktypeService implements IMilktypeService {
@@ -14,17 +16,34 @@ public class MilktypeService implements IMilktypeService {
     MilktypeRepository milktypeRepository;
 
     @Override
-    public MilkType AddMilktype(MilkType milktype) {
+    public String AddMilktype(MilkType milktype) {
+        String trimmedName = milktype.getMilkTypename().trim();
+        milktype.setMilkTypename(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         milktype.setStatus(1);
-       return milktypeRepository.save(milktype);
+        milktypeRepository.save(milktype);
+        return "Them Thanh Cong";
     }
 
     @Override
-    public MilkType UpdateMilktype(Long id, MilkType milktype) {
+    public String UpdateMilktype(Long id, MilkType milktype) {
+// Loại bỏ khoảng trắng ở đầu và cuối tên
+        String trimmedName = milktype.getMilkTypename().trim();
+        milktype.setMilkTypename(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
         milktype1.setDescription(milktype.getDescription());
-        milktype1.setMilktypename(milktype.getMilktypename());
-        return milktypeRepository.save(milktype1);
+        milktype1.setMilkTypename(milktype.getMilkTypename());
+         milktypeRepository.save(milktype1);
+         return "Sua Thanh Cong";
     }
 
     @Override
@@ -33,6 +52,12 @@ public class MilktypeService implements IMilktypeService {
         milktype1.setStatus(0);
         return milktypeRepository.save(milktype1);
     }
+
+    @Override
+    public Optional<MilkType> getMilkTypeByName(String milktypename) {
+        return milktypeRepository.findByMilkTypename(milktypename);
+    }
+
 
     @Override
     public List<MilkType> GetAllMilktype() {

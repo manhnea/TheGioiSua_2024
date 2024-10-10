@@ -2,7 +2,10 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Packagingunit;
 import com.example.TheGioiSua_2024.service.PackagingunitService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,11 +20,23 @@ public class PackagingunitRestController {
         return packagingunitService.getAllPackagingunit();
     }
     @PostMapping("/add")
-    public Packagingunit addPackagingunit(@RequestBody Packagingunit packagingunit){
+    public String addPackagingunit(@RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult){
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
         return packagingunitService.addPackagingunit(packagingunit);
     }
     @PutMapping("/update/{id}")
-    public Packagingunit updatePackagingunit(@PathVariable("id") Long id, @RequestBody Packagingunit packagingunit){
+    public String updatePackagingunit(@PathVariable("id") Long id, @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult){
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
         return packagingunitService.updatePackagingunit(id, packagingunit);
     }
     @PutMapping("/delete/{id}")

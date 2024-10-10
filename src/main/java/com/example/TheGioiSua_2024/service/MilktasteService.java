@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MilktasteService implements IMilktasteService {
     @Autowired
@@ -17,16 +19,33 @@ public class MilktasteService implements IMilktasteService {
     }
 
     @Override
-    public Milktaste addMilktaste(Milktaste milktaste) {
+    public String addMilktaste(Milktaste milktaste) {
+        // Loại bỏ khoảng trắng ở đầu và cuối tên
+        String trimmedName = milktaste.getMilktastename().trim();
+        milktaste.setMilktastename(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<Milktaste> existingContainer = getMilktasteByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         milktaste.setStatus(1);
-        return milktasteRepository.save(milktaste);
+        return "Thêm thành công";
     }
 
     @Override
-    public Milktaste updateMilktaste(Long id, Milktaste milktaste) {
+    public String updateMilktaste(Long id, Milktaste milktaste) {
+        // Loại bỏ khoảng trắng ở đầu và cuối tên
+        String trimmedName = milktaste.getMilktastename().trim();
+        milktaste.setMilktastename(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<Milktaste> existingContainer = getMilktasteByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         Milktaste m = milktasteRepository.findById(id).orElseThrow();
         m.setMilktastename(milktaste.getMilktastename());
-        return milktasteRepository.save(m);
+        milktasteRepository.save(m);
+        return "Thêm thành công";
     }
 
     @Override
@@ -34,5 +53,10 @@ public class MilktasteService implements IMilktasteService {
         Milktaste m = milktasteRepository.findById(id).orElseThrow();
         m.setStatus(0);
         return milktasteRepository.save(m);
+    }
+
+    @Override
+    public Optional<Milktaste> getMilktasteByName(String milktasteName) {
+        return milktasteRepository.findByMilktastename(milktasteName);
     }
 }
