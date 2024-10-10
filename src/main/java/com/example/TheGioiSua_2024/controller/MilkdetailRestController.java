@@ -3,12 +3,14 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/milkdetail")
+@RequestMapping("/Milkdetail")
 public class MilkdetailRestController {
     @Autowired
     private MilkdetailService milkdetailService;
@@ -17,16 +19,32 @@ public class MilkdetailRestController {
     private List<Milkdetail> lst(){
         return milkdetailService.getAll();
     }
+
     @PostMapping("/add")
-    private Milkdetail add(@RequestBody Milkdetail milkdetail){
-        return milkdetailService.add(milkdetail);
+    private String add(@RequestBody @Autowired Milkdetail milkdetail, BindingResult bindingResult){
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
+       String mess = milkdetailService.add(milkdetail);
+        return mess;
     }
     @PutMapping("/update/{id}")
-    private Milkdetail update(@PathVariable("id") Long id, @RequestBody Milkdetail milkdetail){
-        return milkdetailService.update(id,milkdetail);
+    private String update(@PathVariable("id") Long id, @RequestBody @Autowired Milkdetail milkdetail, BindingResult bindingResult){
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
+        return milkdetailService.update(id, milkdetail);
     }
     @PutMapping("/delete/{id}")
-    private Milkdetail delete(@PathVariable("id") Long id, @RequestBody Milkdetail milkdetail){
-        return milkdetailService.delete(id,milkdetail);
+    private String delete(@PathVariable("id") Long id, @RequestBody @Autowired Milkdetail milkdetail){
+        String mess = milkdetailService.delete(id, milkdetail);
+        return mess;
     }
+
 }

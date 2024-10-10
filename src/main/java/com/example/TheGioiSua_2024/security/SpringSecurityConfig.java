@@ -33,7 +33,7 @@ public class SpringSecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests()
-            .requestMatchers("/user/**","/product/**","/milkdetail/lst").permitAll()
+            .requestMatchers("/user/**","/product/**","/Milkdetail/lst").permitAll()
             .requestMatchers("/admin/**",
                     "/Size/**",
                     "/Voucher/**",
@@ -43,6 +43,7 @@ public class SpringSecurityConfig {
                     "/Packagingunit/**",
                     "/Targetuser/**",
                     "/Product/**",
+                    "/Milkdetail/**",
                     "/Usagecapacity/**").hasAuthority("Admin");
 //            .requestMatchers("/user/**").hasAuthority("Customer") ;
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
