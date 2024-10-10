@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách đơn hàng | Quản trị Admin</title>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <!-- Main CSS-->
+    <link rel="stylesheet" th:href="@{/main/css/main.css}" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+    <!-- Font Icon CSS-->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet">
+</head>
+
+<body class="app sidebar-mini rtl" onload="time()">
+<header class="app-header">
+    <div th:replace="ViewAdmin/Layout/header :: header"></div>
+</header>
+<aside class="app-sidebar">
+    <div th:replace="ViewAdmin/Layout/menu :: menu"></div>
+</aside>
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb side">
+            <li class="breadcrumb-item active"><a href="#"><b>Danh sách đơn hàng</b></a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <div class="row element-button">
+                        <div class="col-sm-2">
+
+                            <a class="btn btn-add btn-sm" th:href="@{form-add-don-hang}" title="Thêm"><i
+                                    class="fas fa-plus"></i>
+                                Tạo mới đơn hàng</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-delete btn-sm nhap-tu-file" onclick="myFunction(this)" title="Nhập"
+                               type="button"><i
+                                    class="fas fa-file-upload"></i> Tải từ file</a>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <a class="btn btn-delete btn-sm print-file" onclick="myApp.printTable()" title="In"
+                               type="button"><i
+                                    class="fas fa-print"></i> In dữ liệu</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-delete btn-sm print-file js-textareacopybtn" title="Sao chép"
+                               type="button"><i
+                                    class="fas fa-copy"></i> Sao chép</a>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <a class="btn btn-excel btn-sm" href="" title="In"><i class="fas fa-file-excel"></i> Xuất
+                                Excel</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-delete btn-sm pdf-file" onclick="myFunction(this)" title="In"
+                               type="button"><i
+                                    class="fas fa-file-pdf"></i> Xuất PDF</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-delete btn-sm" onclick="myFunction(this)" title="Xóa" type="button"><i
+                                    class="fas fa-trash-alt"></i> Xóa tất cả </a>
+                        </div>
+                    </div>
+                    <!-- Search Bar -->
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <input class="form-control" id="searchBox" placeholder="Tìm kiếm đơn hàng..." type="text">
+                        </div>
+                    </div>
+
+                    <!-- Orders Table -->
+                    <table class="table table-hover table-bordered" id="sampleTable">
+                        <thead>
+                        <tr>
+                            <th width="10"><input id="all" type="checkbox"></th>
+                            <th>ID đơn hàng</th>
+                            <th>Khách hàng</th>
+                            <th>Đơn hàng</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th>Phương Thức</th>
+                            <th>Tình trạng</th>
+                            <th>Thời gian</th>
+                            <th>Tính năng</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td width="10"><input name="check1" type="checkbox" value="1"></td>
+                            <td>MD0837</td>
+                            <td>Triệu Thanh Phú</td>
+                            <td>Sua B</td>
+                            <td>2</td>
+                            <td>9.400.000 đ</td>
+                            <td><span class="badge bg-success"><i class="fas fa-university"></i> banking</span></td>
+                            <td><span class="badge bg-success">Hoàn thành</span></td>
+                            <td>00:00:00 01/01/2024</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm trash" title="Xóa" type="button">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm edit" title="Sửa" type="button">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="10"><input name="check2" type="checkbox" value="2"></td>
+                            <td>MD0838</td>
+                            <td>Nguyễn Văn A</td>
+                            <td>Sua a</td>
+                            <td>1</td>
+                            <td>5.500.000 đ</td>
+                            <td><span class="badge bg-warning"><i class="fas fa-money-bill-wave"></i> tiền mặt</span>
+                            </td>
+                            <td><span class="badge bg-warning">Đang xử lý</span></td>
+                            <td>00:00:00 01/01/2024</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm trash" title="Xóa" type="button">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm edit" data-target="#ModalUP" data-toggle="modal" id="show-emp"
+                                        title="Sửa"
+                                        type="button"><i class="fas fa-edit"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<!--
+  MODAL
+-->
+<div class="modal fade" id="ModalUP" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="row">z
+                    <div class="form-group  col-md-12">
+          <span class="thong-tin-thanh-toan">
+            <h5>Chỉnh sửa thông tin đơn hàng</h5>
+          </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label">ID đơn hàng </label>
+                        <input class="form-control" type="number" value="71309005">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Khách hàng	</label>
+                        <input class="form-control" type="text" required value="Bàn ăn gỗ Theresa">
+                    </div>
+                    <div class="form-group  col-md-6">
+                        <label class="control-label">Số lượng</label>
+                        <input class="form-control" type="number" required value="20">
+                    </div>
+                    <div class="form-group col-md-6 ">
+                        <label for="exampleSelect1" class="control-label">Tình trạng sản phẩm</label>
+                        <select class="form-control" id="exampleSelect1">
+                            <option>Còn hàng</option>
+                            <option>Hết hàng</option>
+                            <option>Đang nhập hàng</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label">Giá bán</label>
+                        <input class="form-control" type="text" value="5.600.000">
+                    </div>
+
+                </div>
+                <BR>
+                <a href="#" style="    float: right;
+    font-weight: 600;
+    color: #ea0000;">Chỉnh sửa sản phẩm nâng cao</a>
+                <BR>
+                <BR>
+                <button class="btn btn-save" type="button">Lưu lại</button>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                <BR>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div th:replace="ViewAdmin/Layout/footer :: footer"></div>
+</footer>
+</body>
+<script th:src="@{main/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{main/js/popper.min.js}"></script>
+<script th:src="@{main/js/bootstrap.min.js}"></script>
+<script th:src="@{main/js/main.js}"></script>
+<script th:src="@{main/js/data.js}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script th:src="@{main/js/plugins/pace.min.js}"></script>
+
+</html>
