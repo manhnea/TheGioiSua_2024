@@ -52,7 +52,7 @@ public class ProductService implements IProductService {
             return "Sản phẩm với mã này đã tồn tại.";
         }
 
-
+//
         Product existingProduct = productRepository.findById(id).orElseThrow();
         MilkType milkType = milktypeRepository.findById(product.getMilktype().getId()).orElseThrow();
         Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkbrand().getId()).orElseThrow();
