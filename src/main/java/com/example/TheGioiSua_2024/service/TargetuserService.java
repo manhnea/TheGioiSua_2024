@@ -21,8 +21,8 @@ public class TargetuserService implements ITargetuserService {
     @Override
     public String addTargetuser(Targetuser targetuser) {
         // Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = targetuser.getTargetusername().trim();
-        targetuser.setTargetusername(trimmedName);
+        String trimmedName = targetuser.getTargetName().trim();
+        targetuser.setTargetName(trimmedName);
         // Kiểm tra xem tên  đã tồn tại chưa
         Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
         if (existingContainer.isPresent()) {
@@ -36,8 +36,8 @@ public class TargetuserService implements ITargetuserService {
     @Override
     public String updateTargetuser(Long id, Targetuser targetuser) {
         // Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = targetuser.getTargetusername().trim();
-        targetuser.setTargetusername(trimmedName);
+        String trimmedName = targetuser.getTargetName().trim();
+        targetuser.setTargetName(trimmedName);
         // Kiểm tra xem tên  đã tồn tại chưa
         Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
         if (existingContainer.isPresent()) {
@@ -45,7 +45,7 @@ public class TargetuserService implements ITargetuserService {
         }
         Targetuser targetuser1 = targetuserRepository.findById(id).orElseThrow();
         targetuser1.setDescription(targetuser.getDescription());
-        targetuser1.setTargetusername(targetuser.getTargetusername());
+        targetuser1.setTargetName(targetuser.getTargetName());
          targetuserRepository.save(targetuser1);
          return "Updated Successfully";
     }
