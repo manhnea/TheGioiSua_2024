@@ -44,6 +44,7 @@ public class SpringSecurityConfig {
                     "/Targetuser/**",
                     "/Product/**",
                     "/Milkdetail/**",
+                    "/Milkbrand/**",
                     "/Usagecapacity/**").hasAuthority("Admin");
 //            .requestMatchers("/user/**").hasAuthority("Customer") ;
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
