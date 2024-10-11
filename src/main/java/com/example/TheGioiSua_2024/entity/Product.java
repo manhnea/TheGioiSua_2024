@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Product")
+@Table(name = "product")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -21,19 +22,21 @@ public class Product {
     private Long id;
 
     @NotBlank(message = "Mã sản phẩm là bắt buộc")
+    @JsonProperty("productcode")
     @Size(min = 5, max = 20, message = "Mã sản phẩm phải có độ dài từ 5 đến 20 ký tự")
     private String productCode;
 
-    @NotBlank(message = "Tên sản phẩm là bắt buộc")
-    @Size(min = 3, max = 50, message = "Tên sản phẩm phải có độ dài từ 3 đến 50 ký tự")
-    private String productName;
-
-    @Min(value = 1, message = "Số lượng phải ít nhất là 1")
-    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "milktypeid")
     private MilkType milktype;
 
+    @ManyToOne
+    @JoinColumn(name = "milkbrandid")
+    private Milkbrand milkbrand;
+
+    @ManyToOne
+    @JoinColumn(name = "targetuserid")
+    private Targetuser targetuser;
     private int status;
 }
