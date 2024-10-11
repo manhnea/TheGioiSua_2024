@@ -11,4 +11,4 @@ class TheGioiSua2024ApplicationTests {
 	}
 
 }
-//  DM THUAN THIEN NGU VCL ok chưa
+//  DM THUAN THIEN NGU VCL ok chưa CRUD cũng đ biết làm
