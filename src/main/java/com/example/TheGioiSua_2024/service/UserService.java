@@ -52,7 +52,7 @@ public class UserService implements IUserService {
     public User saverUser(User user) {
         return iUserRepository.save(user);
     }
-
+    // Đăng ký người dùng
     @Override
     public ResponseEntity<?> register(RegisterDto registerDto) {
         if (iUserRepository.existsByUsername(registerDto.getUsername())) {
