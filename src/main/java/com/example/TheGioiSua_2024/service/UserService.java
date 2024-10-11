@@ -27,6 +27,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,7 +68,8 @@ public class UserService implements IUserService {
             user.setUsername(registerDto.getUsername());
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
             //By Default , he/she is a simple user
-            user.setRegistrationdate(new Date(System.currentTimeMillis()));
+//            user.setRegistrationdate(new Date(System.currentTimeMillis()));
+            user.setRegistrationdate(LocalDateTime.now());
             Role role = iRoleRepository.findById(2l).orElseThrow();//2l user
             user.setRole(role);
             iUserRepository.save(user);

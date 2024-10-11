@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -37,7 +37,7 @@ public class User implements UserDetails{
     private String username;
     private String password;
     private String fullname;
-    private Date registrationdate;
+    private LocalDateTime registrationdate;
     private String phonenumber;
     private String address;
     private String email;

@@ -5,6 +5,8 @@
 package com.example.TheGioiSua_2024.dto;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,7 @@ public class UserDto {
     private Long ID;
     private String Username;
     private String FullName;
-    private Date RegistrationDate;
+    private LocalDateTime RegistrationDate;
     private String PhoneNumber;
     private String Address;
     private String Email;
