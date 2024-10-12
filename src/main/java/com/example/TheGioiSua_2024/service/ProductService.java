@@ -3,8 +3,11 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Product;
+import com.example.TheGioiSua_2024.entity.Targetuser;
+import com.example.TheGioiSua_2024.repository.MilkbrandRepository;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.repository.ProductRepository;
+import com.example.TheGioiSua_2024.repository.TargetuserRepository;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +22,9 @@ public class ProductService implements IProductService {
     @Autowired
     private MilktypeRepository milktypeRepository;
     @Autowired
-    private MilktypeRepository milkTypeRepository;
+    private MilkbrandRepository milkbrandRepository;
     @Autowired
-    private TargetuserService targetuserService;
+    private TargetuserRepository targetuserRepository;
 
     @Override
     public List<Product> getAllProduct() {
@@ -49,11 +52,14 @@ public class ProductService implements IProductService {
             return "Sản phẩm với mã này đã tồn tại.";
         }
 
-
+//
         Product existingProduct = productRepository.findById(id).orElseThrow();
         MilkType milkType = milktypeRepository.findById(product.getMilktype().getId()).orElseThrow();
-//        Milkbrand milkbrand = milkTypeRepository.findById(product.getMilkbrand().getId()).orElseThrow();
+        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkbrand().getId()).orElseThrow();
+        Targetuser targetuser = targetuserRepository.findById(product.getTargetuser().getId()).orElseThrow();
         existingProduct.setMilktype(milkType);
+        existingProduct.setMilkbrand(milkbrand);
+        existingProduct.setTargetuser(targetuser);
         existingProduct.setProductCode(product.getProductCode());
         existingProduct.setStatus(1);
         productRepository.save(existingProduct);
