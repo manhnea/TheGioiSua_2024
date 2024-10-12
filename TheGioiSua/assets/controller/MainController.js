@@ -1,10 +1,10 @@
 // Khởi tạo ứng dụng AngularJS với ngRoute
 var app = angular.module("myApp", ["ngRoute"]);
-
 app.controller("MainController", [
   "$scope",
   "$location",
   function ($scope, $location) {
+    $scope.isHeader = true;
     $scope.user = null;
     $scope.account = "Đăng Nhập";
     const userInfo = localStorage.getItem("userInfo");
@@ -29,7 +29,7 @@ app.config([
         controller: "LoginController",
       })
       .when("/home", {
-        templateUrl: "/assets/views/home.html",
+        templateUrl: "/assets/views/product.html",
         controller: "MainController",
       })
       .when("/detailUser", {
@@ -41,7 +41,7 @@ app.config([
         controller: "RegisterController",
       })
       .otherwise({
-        redirectTo: "/home",
+        redirectTo: "/",
       });
     // $locationProvider.html5Mode({
     //   enabled: true,

@@ -2,9 +2,9 @@ package com.example.TheGioiSua_2024.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,17 +27,16 @@ public class Product {
     @Size(min = 5, max = 20, message = "Mã sản phẩm phải có độ dài từ 5 đến 20 ký tự")
     private String productCode;
 
-
     @ManyToOne
     @JoinColumn(name = "milktypeid")
-    private MilkType milktype;
+    private MilkType milkType;
 
     @ManyToOne
     @JoinColumn(name = "milkbrandid")
-    private Milkbrand milkbrand;
+    private Milkbrand milkBrand;
 
     @ManyToOne
     @JoinColumn(name = "targetuserid")
-    private Targetuser targetuser;
+    private Targetuser targetUser;
     private int status;
 }
