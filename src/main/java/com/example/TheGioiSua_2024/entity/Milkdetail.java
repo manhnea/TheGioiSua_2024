@@ -34,15 +34,15 @@ public class Milkdetail {
 
     @ManyToOne
     @JoinColumn(name = "milktasteid")
-    private Milktaste milktaste;
+    private Milktaste milkTaste;
 
     @ManyToOne
     @JoinColumn(name = "packagingunitid")
-    private Packagingunit packagingunit;
+    private Packagingunit packagingUnit;
 
     @ManyToOne
     @JoinColumn(name = "usagecapacityid")
-    private Usagecapacity usagecapacity;
+    private Usagecapacity usageCapacity;
 
     @NotNull(message = "Ngày hết hạn là bắt buộc")
     @FutureOrPresent(message = "Ngày hết hạn phải là ngày hiện tại hoặc trong tương lai")

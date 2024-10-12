@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container my-5">
+        <div class="row">
+            <!-- Hình ảnh sản phẩm -->
+            <div class="col-md-6">
+                <img src="https://via.placeholder.com/400" class="img-fluid" alt="Sản phẩm">
+            </div>
+
+            <!-- Chi tiết sản phẩm -->
+            <div class="col-md-6">
+                <h2>Tên sản phẩm</h2>
+                <p>Hãng: ABC</p>
+                <p class="text-danger"><strong>Giá: 500,000 VND</strong></p>
+                <p>Mô tả ngắn về sản phẩm.</p>
+
+                <!-- Form chọn kích thước và vị -->
+                <form>
+                    <!-- Chọn size -->
+                    <div class="mb-3">
+                        <label for="size" class="form-label"><strong>Chọn size:</strong></label>
+                        <select class="form-select" id="size" required>
+                            <option selected disabled>Chọn size</option>
+                            <option value="S">Size S</option>
+                            <option value="M">Size M</option>
+                            <option value="L">Size L</option>
+                            <option value="XL">Size XL</option>
+                        </select>
+                    </div>
+
+                    <!-- Chọn vị -->
+                    <div class="mb-3">
+                        <label for="flavor" class="form-label"><strong>Chọn vị (nếu có):</strong></label>
+                        <select class="form-select" id="flavor">
+                            <option selected disabled>Chọn vị</option>
+                            <option value="Vani">Vani</option>
+                            <option value="Sô cô la">Sô cô la</option>
+                            <option value="Dâu">Dâu</option>
+                            <option value="Trà xanh">Trà xanh</option>
+                        </select>
+                    </div>
+
+                    <!-- Số lượng -->
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label"><strong>Số lượng:</strong></label>
+                        <input type="number" class="form-control" id="quantity" value="1" min="1">
+                    </div>
+
+                    <!-- Nút thêm vào giỏ -->
+                    <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

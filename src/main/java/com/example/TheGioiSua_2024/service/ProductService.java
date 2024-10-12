@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Product;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductService implements IProductService {
@@ -54,12 +57,12 @@ public class ProductService implements IProductService {
 
 //
         Product existingProduct = productRepository.findById(id).orElseThrow();
-        MilkType milkType = milktypeRepository.findById(product.getMilktype().getId()).orElseThrow();
-        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkbrand().getId()).orElseThrow();
-        Targetuser targetuser = targetuserRepository.findById(product.getTargetuser().getId()).orElseThrow();
-        existingProduct.setMilktype(milkType);
-        existingProduct.setMilkbrand(milkbrand);
-        existingProduct.setTargetuser(targetuser);
+        MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow();
+        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).orElseThrow();
+        Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId()).orElseThrow();
+        existingProduct.setMilkType(milkType);
+        existingProduct.setMilkBrand(milkbrand);
+        existingProduct.setTargetUser(targetuser);
         existingProduct.setProductCode(product.getProductCode());
         existingProduct.setStatus(1);
         productRepository.save(existingProduct);
@@ -71,5 +74,10 @@ public class ProductService implements IProductService {
         Product existingProduct = productRepository.findById(id).orElseThrow();
         existingProduct.setStatus(0);
         productRepository.save(existingProduct);
+    }
+
+    @Override
+    public Page<ProductDto> getPage(Pageable pageable) {
+        return productRepository.getPage(pageable);
     }
 }

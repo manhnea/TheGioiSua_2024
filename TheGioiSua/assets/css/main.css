@@ -3,9 +3,71 @@
     padding: 0;
     box-sizing: border-box;
 }
+html{
+    font-size: 16px;
+}
 .img-size-x{
-    width: 100px;
+    width: 75px;
 }
 .size-icon{
     font-size: 16px;
 }
+.bg-coler-yellow{
+    background-color: #FFF9C4 !important;
+}
+header nav{
+    font-size: 1.1rem;
+}
+.custom-select {
+    width: 100%;
+    max-width: 250px; /* Hoặc đặt chiều rộng tối đa theo nhu cầu */
+    white-space: normal; /* Cho phép xuống dòng */
+}
+.marquee-alert {
+    background-color:#FFF9C4 !important;
+    padding: 10px; /* Thêm khoảng cách cho nội dung */
+    overflow: hidden; /* Ẩn phần tràn ra ngoài */
+}
+
+.marquee {
+    display: inline-block;
+    animation: marquee 10s linear infinite;
+    white-space: nowrap;
+    width: 100%; /* Chiếm toàn bộ chiều rộng của alert */
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+.row {
+    display: flex;
+    flex-wrap: wrap; /* Đảm bảo các card tự động xuống hàng nếu không đủ không gian */
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column; /* Đảm bảo thẻ card là một cột */
+}
+
+.card {
+    flex: 1; /* Đảm bảo card chiếm toàn bộ không gian trong container */
+    display: flex;
+    flex-direction: column; /* Đảm bảo card-body sắp xếp theo chiều dọc */
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column; /* Đảm bảo các phần tử trong card-body sắp xếp theo chiều dọc */
+    flex-grow: 1; /* Đẩy nút "Thêm vào giỏ" xuống dưới cùng */
+}
+
+.mt-auto {
+    margin-top: auto; /* Đẩy nút "Thêm vào giỏ" xuống dưới cùng */
+}
+
+
