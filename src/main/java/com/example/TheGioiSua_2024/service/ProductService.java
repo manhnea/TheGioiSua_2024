@@ -1,13 +1,9 @@
 package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.entity.MilkType;
-import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Product;
-import com.example.TheGioiSua_2024.entity.Targetuser;
-import com.example.TheGioiSua_2024.repository.MilkbrandRepository;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.repository.ProductRepository;
-import com.example.TheGioiSua_2024.repository.TargetuserRepository;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +17,7 @@ public class ProductService implements IProductService {
     private ProductRepository productRepository;
     @Autowired
     private MilktypeRepository milktypeRepository;
-    @Autowired
-    private MilkbrandRepository milkbrandRepository;
-    @Autowired
-    private TargetuserRepository targetuserRepository;
+
 
     @Override
     public List<Product> getAllProduct() {
@@ -35,9 +28,16 @@ public class ProductService implements IProductService {
     public String addProduct(Product product) {
         String productCode = product.getProductCode().trim();
         product.setProductCode(productCode);
+
+        String productName = product.getProductName().trim();
+        product.setProductName(productName);
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
+        if (productRepository.findByProductName(productName).isPresent()) {
+            return "Sản phẩm với tên này đã tồn tại.";
+        }
+
         product.setStatus(1);
         productRepository.save(product);
         return "Thêm sản phẩm thành công.";
@@ -45,22 +45,25 @@ public class ProductService implements IProductService {
 
     @Override
     public String updateProduct(Long id, Product product) {
+
         String productCode = product.getProductCode().trim();
         product.setProductCode(productCode);
 
+        String productName = product.getProductName().trim();
+        product.setProductName(productName);
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
+        if (productRepository.findByProductName(productName).isPresent()) {
+            return "Sản phẩm với tên này đã tồn tại.";
+        }
 
-//
         Product existingProduct = productRepository.findById(id).orElseThrow();
         MilkType milkType = milktypeRepository.findById(product.getMilktype().getId()).orElseThrow();
-        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkbrand().getId()).orElseThrow();
-        Targetuser targetuser = targetuserRepository.findById(product.getTargetuser().getId()).orElseThrow();
         existingProduct.setMilktype(milkType);
-        existingProduct.setMilkbrand(milkbrand);
-        existingProduct.setTargetuser(targetuser);
+        existingProduct.setProductName(product.getProductName());
         existingProduct.setProductCode(product.getProductCode());
+        existingProduct.setQuantity(product.getQuantity());
         existingProduct.setStatus(1);
         productRepository.save(existingProduct);
         return "Cập nhật sản phẩm thành công.";
