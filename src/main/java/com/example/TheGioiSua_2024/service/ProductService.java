@@ -28,7 +28,6 @@ public class ProductService implements IProductService {
     private MilkbrandRepository milkbrandRepository;
     @Autowired
     private TargetuserRepository targetuserRepository;
-
     @Override
     public List<Product> getAllProduct() {
         return productRepository.findAll();
@@ -38,9 +37,12 @@ public class ProductService implements IProductService {
     public String addProduct(Product product) {
         String productCode = product.getProductCode().trim();
         product.setProductCode(productCode);
+
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
+
+
         product.setStatus(1);
         productRepository.save(product);
         return "Thêm sản phẩm thành công.";
@@ -48,14 +50,16 @@ public class ProductService implements IProductService {
 
     @Override
     public String updateProduct(Long id, Product product) {
+
         String productCode = product.getProductCode().trim();
         product.setProductCode(productCode);
+
 
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
 
-//
+
         Product existingProduct = productRepository.findById(id).orElseThrow();
         MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow();
         Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).orElseThrow();
@@ -64,6 +68,7 @@ public class ProductService implements IProductService {
         existingProduct.setMilkBrand(milkbrand);
         existingProduct.setTargetUser(targetuser);
         existingProduct.setProductCode(product.getProductCode());
+
         existingProduct.setStatus(1);
         productRepository.save(existingProduct);
         return "Cập nhật sản phẩm thành công.";
