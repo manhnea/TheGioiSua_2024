@@ -10,6 +10,8 @@ import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.User;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
 import java.util.Collections;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class UserRestController {
 
     //RessourceEndPoint:http://localhost:1234/api/user/register
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
         return iUserService.register(registerDto);
     }
 //    @CrossOrigin(origins = "http://127.0.0.1:5500")
