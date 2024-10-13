@@ -15,10 +15,12 @@ import java.util.List;
 public class TargetuserRestController {
     @Autowired
     private TargetuserService targetuserService;
+    //http://localhost:1234/api/Targetuser/lst
     @GetMapping("/lst")
     public List<Targetuser> lst() {
         return targetuserService.getAllTargetuser();
     }
+    //http://localhost:1234/api/Targetuser/add
     @PostMapping("/add")
     public String add(@RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -29,6 +31,7 @@ public class TargetuserRestController {
         }
         return targetuserService.addTargetuser(targetuser);
     }
+    //http://localhost:1234/api/Targetuser/update/{id}
     @PutMapping("/update/{id}")
     public String update(@RequestBody @Valid Targetuser targetuser,BindingResult bindingResult, @PathVariable("id") Long id) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -39,7 +42,8 @@ public class TargetuserRestController {
         }
         return targetuserService.updateTargetuser(id, targetuser);
     }
-    @PutMapping("delete/{id}")
+    //http://localhost:1234/api/Targetuser/delete/{id}
+    @PutMapping("/delete/{id}")
     public Targetuser delete(@PathVariable("id") Long id) {
         return targetuserService.deleteTargetuser(id);
     }

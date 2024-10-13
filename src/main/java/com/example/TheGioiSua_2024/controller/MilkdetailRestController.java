@@ -15,12 +15,12 @@ import java.util.List;
 public class MilkdetailRestController {
     @Autowired
     private MilkdetailService milkdetailService;
-
+    //http://localhost:1234/api/Milkdetail/lst
     @GetMapping("/lst")
     private List<Milkdetail> lst(){
         return milkdetailService.getAll();
     }
-
+    //http://localhost:1234/api/Milkdetail/add
     @PostMapping("/add")
     private String add(@RequestBody @Valid Milkdetail milkdetail, BindingResult bindingResult){
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -33,6 +33,7 @@ public class MilkdetailRestController {
        String mess = milkdetailService.add(milkdetail);
         return mess;
     }
+    //http://localhost:1234/api/Milkdetail/update/{id}
     @PutMapping("/update/{id}")
     private String update(@PathVariable("id") Long id,  @Valid @RequestBody Milkdetail milkdetail, BindingResult bindingResult){
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -43,6 +44,7 @@ public class MilkdetailRestController {
         }
         return milkdetailService.update(id, milkdetail);
     }
+    //http://localhost:1234/api/Milkdetail/delete/{id}
     @PutMapping("/delete/{id}")
     private String delete(@PathVariable("id") Long id, @RequestBody Milkdetail milkdetail){
         String mess = milkdetailService.delete(id, milkdetail);

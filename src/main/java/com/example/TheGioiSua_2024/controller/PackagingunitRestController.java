@@ -15,10 +15,13 @@ import java.util.List;
 public class PackagingunitRestController {
     @Autowired
     private PackagingunitService packagingunitService;
+
+    //http://localhost:1234/api/Packagingunit/lst
     @GetMapping("/lst")
     public List<Packagingunit> getAllPackagingunit(){
         return packagingunitService.getAllPackagingunit();
     }
+    //http://localhost:1234/api/Packagingunit/add
     @PostMapping("/add")
     public String addPackagingunit(@RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult){
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -29,6 +32,7 @@ public class PackagingunitRestController {
         }
         return packagingunitService.addPackagingunit(packagingunit);
     }
+    //http://localhost:1234/api/Packagingunit/update/{id}
     @PutMapping("/update/{id}")
     public String updatePackagingunit(@PathVariable("id") Long id, @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult){
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -39,6 +43,7 @@ public class PackagingunitRestController {
         }
         return packagingunitService.updatePackagingunit(id, packagingunit);
     }
+    //http://localhost:1234/api/Packagingunit/delete/{id}
     @PutMapping("/delete/{id}")
     public Packagingunit deletePackagingunit(@PathVariable("id") Long id){
         return packagingunitService.deletePackagingunit(id);

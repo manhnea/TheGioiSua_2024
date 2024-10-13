@@ -18,12 +18,12 @@ import org.springframework.http.ResponseEntity;
 public class ProductController {
     @Autowired
     private ProductService productService;
-
+    //http://localhost:1234/api/Product/lst
     @GetMapping("/lst")
     public List<Product> getAllProduct() {
         return productService.getAllProduct();
     }
-
+    //http://localhost:1234/api/Product/add
     @PostMapping("/add")
     public String addProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -36,6 +36,7 @@ public class ProductController {
 
         return resultMessage;
     }
+    //http://localhost:1234/api/Product//update/{id}
     @PutMapping("/update/{id}")
     public String updateProduct(@PathVariable("id") Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -46,6 +47,7 @@ public class ProductController {
         }
         return productService.updateProduct(id, product);
     }
+    //http://localhost:1234/api/Product/delete/{id}
     @PutMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id, @RequestBody Product product) {
         productService.deleteProduct(id, product);

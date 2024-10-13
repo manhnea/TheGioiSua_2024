@@ -12,18 +12,22 @@ import java.util.List;
 public class VoucherRestController {
     @Autowired
     private VoucherService voucherService;
+    //http://localhost:1234/api/Voucher/lst
     @GetMapping("/lst")
     public List<Voucher> lst(){
         return voucherService.getVoucherList();
     }
+    //http://localhost:1234/api/Voucher/add
     @PostMapping("/add")
     public Voucher add(@RequestBody Voucher voucher){
         return voucherService.saveVoucher(voucher);
     }
+    //http://localhost:1234/api/Voucher/update/{id}
     @PutMapping("/update/{id}")
     public Voucher update(@PathVariable("id") Long id, @RequestBody Voucher voucher){
         return voucherService.updateVoucher(id,voucher);
     }
+    //http://localhost:1234/api/Voucher/delete/{id}
     @PutMapping("/delete/{id}")
     public Voucher delete(@PathVariable("id") Long id){
         return voucherService.deleteVoucher(id);

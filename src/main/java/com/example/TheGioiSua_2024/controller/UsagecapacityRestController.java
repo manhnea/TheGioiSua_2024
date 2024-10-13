@@ -12,18 +12,22 @@ import java.util.List;
 public class UsagecapacityRestController {
     @Autowired
     private UsagecapacityService usagecapacityService;
+    //http://localhost:1234/api/Usagecapacity/lst
     @GetMapping("/lst")
     public List<Usagecapacity> getUsagecapacity(){
         return usagecapacityService.getAllUsagecapacity();
     }
+    //http://localhost:1234/api/Usagecapacity/add
     @PostMapping("/add")
     public Usagecapacity addUsagecapacity(@RequestBody Usagecapacity usagecapacity){
        return usagecapacityService.addUsagecapacity(usagecapacity);
     }
+    //http://localhost:1234/api/Usagecapacity/update/{id}
     @PutMapping("/update/{id}")
     public Usagecapacity updateUsagecapacity(@PathVariable("id") Long id, @RequestBody Usagecapacity usagecapacity){
         return usagecapacityService.updateUsagecapacity(id, usagecapacity);
     }
+    //http://localhost:1234/api/Usagecapacity/delete/{id}
     @PutMapping("/delete/{id}")
     public Usagecapacity deleteUsagecapacity(@PathVariable("id") Long id){
         return usagecapacityService.deleteUsagecapacity(id);

@@ -15,10 +15,12 @@ import java.util.List;
 public class ContainerRestController {
     @Autowired
     private ContainerService containerService;
+    //http://localhost:1234/api/Container/lst
     @GetMapping("/lst")
     public List<Container> lst() {
         return containerService.getAllContainers();
     }
+    //http://localhost:1234/api/Container/add
     @PostMapping("/add")
     public String add(@RequestBody @Valid Container container, BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -29,6 +31,7 @@ public class ContainerRestController {
         }
         return containerService.addContainer(container);
     }
+    //http://localhost:1234/api/Container/update/{id}
     @PutMapping("/update/{id}")
     public String update(@PathVariable("id") Long id, @RequestBody @Valid Container container,BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -39,6 +42,7 @@ public class ContainerRestController {
         }
         return containerService.updateContainer(id, container);
     }
+    //http://localhost:1234/api/Container/delete/{id}
     @PutMapping("/delete/{id}")
     public Container delete(@PathVariable("id") Long id) {
         return containerService.deleteContainer(id);
