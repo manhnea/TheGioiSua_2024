@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #fce4ec;
+}
+
+.header-top {
+    background-color: #f8bbd0;
+    padding: 10px;
+    text-align: right;
+}
+
+.contact-info {
+    float: left;
+    margin-left: 10px;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f48fb1;
+}
+
+.logo {
+    height: 60px;
+    margin-right: 20px;
+}
+
+.search-bar {
+    flex: 1;
+    padding: 8px;
+    margin-right: 20px;
+}
+
+.cart {
+    font-weight: bold;
+}
+
+.main-nav ul {
+    list-style-type: none;
+    display: flex;
+    background-color: #f06292;
+    padding: 10px;
+    justify-content: space-around;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+}
+
+.banner-section {
+    display: flex;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #ffebee;
+    padding: 15px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+}
+
+.banner {
+    width: 80%;
+}
+
+.banner img {
+    width: 100%;
+    margin: 0 0 10px;
+}
+
+.category-icons {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+    background-color: #f8bbd0;
+}
+
+.icon {
+    text-align: center;
+    padding: 10px;
+    width: 100px;
+}
+
+.product-showcase {
+    background-color: #fce4ec;
+    padding: 20px;
+}
+
+.product-showcase h2 {
+    text-align: center;
+    color: #ad1457;
+    margin-bottom: 20px;
+}
+
+.products {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product {
+    text-align: center;
+    width: 150px;
+}
+
+.product img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.price {
+    color: #d81b60;
+    font-weight: bold;
+}
+
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8bbd0;
+    padding: 20px;
+}
+
+.company-info, .footer-links {
+    width: 45%;
+}
+
+.footer-links ul {
+    list-style-type: none;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #ad1457;
+}
