@@ -2,50 +2,51 @@ var app = angular.module("myApp", ["ngRoute"]);
 
 app.config(function ($routeProvider) {
   $routeProvider
-    .when("/login", {
-      templateUrl: "index.html",
+    .when("/", {
+      templateUrl: "doc/views/home.html",
       controller: "IndexController",
     })
-    .when("/index", {
-      templateUrl: "home.html",
-      controller: "HomeController",
-    })
     .when("/home", {
-      templateUrl: "views/home.html",
+      templateUrl: "doc/views/home.html",
       controller: "HomeController",
     })
     .when("/table-data-table", {
-      templateUrl: "views/table-data-table.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/table-data-table.html",
+      controller: "DataTableController",
     })
     .when("/form-add-nhan-vien", {
-      templateUrl: "views/form-add-nhan-vien.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/form-add-nhan-vien.html",
+      controller: "NhanVienController",
     })
     .when("/table-data-khach-hang", {
-      templateUrl: "views/table-data-khach-hang.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/table-data-khach-hang.html",
+      controller: "KhachHangController",
     })
     .when("/form-add-san-pham", {
-      templateUrl: "views/form-add-san-pham.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/form-add-san-pham.html",
+      controller: "SanPhamController",
     })
     .when("/quan-ly-bao-cao", {
-      templateUrl: "views/quan-ly-bao-cao.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/quan-ly-bao-cao.html",
+      controller: "BaoCaoController",
     })
     .when("/table-data-oder", {
-      templateUrl: "views/table-data-oder.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/table-data-oder.html",
+      controller: "DataOderController",
     })
     .when("/table-data-product", {
-      templateUrl: "views/table-data-product.html",
-      controller: "ContactController",
+      templateUrl: "doc/views/table-data-product.html",
+      controller: "DataProductController",
+    })
+    .when("/login", {
+      templateUrl: "login.html",
+      controller: "LoginController",
     })
     .otherwise({
       redirectTo: "/",
     });
 });
+
 app.controller("HomeController", function ($scope) {
   $scope.message = "Welcome to the Home Page!";
 });
