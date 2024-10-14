@@ -16,10 +16,6 @@ public class MilkdetailService implements IMilkdetailService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ContainerRepository containerRepository;
-    @Autowired
-    private SizeRepository sizeRepository;
-    @Autowired
     private MilktasteRepository milktasteRepository;
     @Autowired
     private PackagingunitRepository packagingunitRepository;
@@ -42,18 +38,15 @@ public class MilkdetailService implements IMilkdetailService {
     @Override
     public String update(Long id, Milkdetail milkdetail) {
         Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        Product product = productRepository.findById(milkdetail.getProduct().getId()).get();
-        Size size = sizeRepository.findById(milkdetail.getSize().getId()).get();
-        Container container = containerRepository.findById(milkdetail.getContainer().getId()).get();
-        Milktaste milktaste = milktasteRepository.findById(milkdetail.getMilkTaste().getId()).get();
-        Packagingunit packagingunit = packagingunitRepository.findById(milkdetail.getPackagingUnit().getId()).get();
-        Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail.getUsageCapacity().getId()).get();
+        Product product = productRepository.findById(milkdetail1.getProduct().getId()).get();
+        Milktaste milktaste = milktasteRepository.findById(milkdetail1.getMilkTaste().getId()).get();
+        Packagingunit packagingunit = packagingunitRepository.findById(milkdetail1.getPackagingUnit().getId()).get();
+        Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail1.getUsageCapacity().getId()).get();
         milkdetail1.setProduct(product);
-        milkdetail1.setSize(size);
-        milkdetail1.setContainer(container);
         milkdetail1.setMilkTaste(milktaste);
         milkdetail1.setPackagingUnit(packagingunit);
         milkdetail1.setUsageCapacity(usagecapacity);
+        milkdetail1.setMilkdetailcode(milkdetail.getMilkdetailcode());
         milkdetail1.setPrice(milkdetail.getPrice());
         milkdetail1.setExpirationdate(milkdetail.getExpirationdate());
         milkdetail1.setDescription(milkdetail.getDescription());

@@ -28,6 +28,7 @@ public class ProductService implements IProductService {
     private MilkbrandRepository milkbrandRepository;
     @Autowired
     private TargetuserRepository targetuserRepository;
+
     @Override
     public List<Product> getAllProduct() {
         return productRepository.findAll();
@@ -35,9 +36,14 @@ public class ProductService implements IProductService {
 
     @Override
     public String addProduct(Product product) {
+
+        String productname = product.getProductname().trim();
         String productCode = product.getProductCode().trim();
         product.setProductCode(productCode);
-
+        product.setProductname(productname);
+        if (productRepository.findByProductname(productname).isPresent()) {
+            return "Sản phẩm với tên này đã tồn tại.";
+        }
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
@@ -61,14 +67,13 @@ public class ProductService implements IProductService {
 
 
         Product existingProduct = productRepository.findById(id).orElseThrow();
-        MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow();
-        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).orElseThrow();
-        Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId()).orElseThrow();
+        MilkType milkType = milktypeRepository.findById(existingProduct.getMilkType().getId()).orElseThrow();
+        Milkbrand milkbrand = milkbrandRepository.findById(existingProduct.getMilkBrand().getId()).orElseThrow();
+        Targetuser targetuser = targetuserRepository.findById(existingProduct.getTargetUser().getId()).orElseThrow();
         existingProduct.setMilkType(milkType);
         existingProduct.setMilkBrand(milkbrand);
         existingProduct.setTargetUser(targetuser);
         existingProduct.setProductCode(product.getProductCode());
-
         existingProduct.setStatus(1);
         productRepository.save(existingProduct);
         return "Cập nhật sản phẩm thành công.";
@@ -79,10 +84,5 @@ public class ProductService implements IProductService {
         Product existingProduct = productRepository.findById(id).orElseThrow();
         existingProduct.setStatus(0);
         productRepository.save(existingProduct);
-    }
-
-    @Override
-    public Page<ProductDto> getPage(Pageable pageable) {
-        return productRepository.getPage(pageable);
     }
 }

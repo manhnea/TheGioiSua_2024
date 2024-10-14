@@ -22,6 +22,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Tên sản phẩm không được để trống")
+    @Size(max = 100, message = "Tên sản phẩm không được dài quá 100 ký tự")
+    private String productname;
+
     @NotBlank(message = "Mã sản phẩm là bắt buộc")
     @JsonProperty("productcode")
     @Size(min = 5, max = 20, message = "Mã sản phẩm phải có độ dài từ 5 đến 20 ký tự")

@@ -1,23 +1,30 @@
 package com.example.TheGioiSua_2024.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "size")
+@Table(name = "userinvoice")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Size {
+public class Userinvoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Tên không được để trống")
-    private String sizename;
     private int status;
+
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "invoiceid")
+    private Invoice invoice;
+
+
 }

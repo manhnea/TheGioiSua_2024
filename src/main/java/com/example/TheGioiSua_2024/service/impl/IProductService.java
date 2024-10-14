@@ -14,6 +14,5 @@ public interface IProductService {
     String updateProduct(Long id, Product product);
 
     void deleteProduct(Long id, Product product);
-    
-    Page<ProductDto> getPage(Pageable pageable);
+
 }

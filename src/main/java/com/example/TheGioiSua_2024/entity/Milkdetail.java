@@ -19,19 +19,11 @@ public class Milkdetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull(message = " Mã Chi tiết sản phẩm là bắt buộc")
+    private String milkdetailcode;
     @ManyToOne
     @JoinColumn(name = "productid")
     private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "containerid")
-    private Container container;
-
-    @ManyToOne
-    @JoinColumn(name = "sizeid")
-    private Size size;
-
     @ManyToOne
     @JoinColumn(name = "milktasteid")
     private Milktaste milkTaste;

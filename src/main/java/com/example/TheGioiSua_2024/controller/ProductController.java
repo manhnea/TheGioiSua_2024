@@ -53,10 +53,5 @@ public class ProductController {
         productService.deleteProduct(id, product);
         return "Xóa sản phẩm thành công.";
     }
-    // /api/Product/getPage
-    @GetMapping("/getPage")
-    public ResponseEntity<?> getPage(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "12") int size){
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.getPage(pageable));
-    }
+
 }
