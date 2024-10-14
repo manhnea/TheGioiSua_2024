@@ -30,7 +30,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = "Tên quyền không được để trống")
-    @Pattern(regexp = "^[A-Za-z]+$", message = "Tên quyền chỉ được chứa các ký tự chữ và số (A-Z, a-z)")
+    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ]+$", message = "Tên quyền chỉ được chứa các ký tự chữ và số (A-Z, a-z)")
     private String roleName;
     private int status;
 }

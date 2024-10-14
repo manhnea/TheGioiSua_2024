@@ -19,21 +19,26 @@ public class Milkdetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = " Mã Chi tiết sản phẩm là bắt buộc")
+
+    @NotBlank(message = "Mã Chi tiết sản phẩm là bắt buộc")
+    @Size(min = 5, max = 20, message = "Mã Chi tiết sản phẩm phải có độ dài từ 5 đến 20 ký tự")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Mã Chi tiết sản phẩm chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String milkdetailcode;
+
     @ManyToOne
-    @JoinColumn(name = "productid")
+    @JoinColumn(name = "productid", nullable = false)
     private Product product;
+
     @ManyToOne
-    @JoinColumn(name = "milktasteid")
+    @JoinColumn(name = "milktasteid", nullable = false)
     private Milktaste milkTaste;
 
     @ManyToOne
-    @JoinColumn(name = "packagingunitid")
+    @JoinColumn(name = "packagingunitid", nullable = false)
     private Packagingunit packagingUnit;
 
     @ManyToOne
-    @JoinColumn(name = "usagecapacityid")
+    @JoinColumn(name = "usagecapacityid", nullable = false)
     private Usagecapacity usageCapacity;
 
     @NotNull(message = "Ngày hết hạn là bắt buộc")
@@ -41,15 +46,18 @@ public class Milkdetail {
     private Date expirationdate;
 
     @NotNull(message = "Giá là bắt buộc")
-    @Min(value = 0, message = "Giá không được âm")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Giá không được âm")
     private float price;
 
     @NotBlank(message = "Mô tả là bắt buộc")
+    @Size(max = 500, message = "Mô tả không được vượt quá 500 ký tự")
     private String description;
 
     @NotNull(message = "Số lượng tồn kho là bắt buộc")
     @Min(value = 0, message = "Số lượng tồn kho không được âm")
     private int stockquantity;
 
+    @Min(value = 0, message = "Trạng thái không hợp lệ")
+    @Max(value = 1, message = "Trạng thái không hợp lệ")
     private int status;
 }
