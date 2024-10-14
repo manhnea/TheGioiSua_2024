@@ -41,7 +41,7 @@ public class User implements UserDetails{
     private Long id;
 
     @NotBlank(message = "Tên đăng nhập không được để trống")
-
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Tên thương hiệu sữa chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     @Size(min = 6, max = 50, message = "Tên đăng nhập phải từ 6 đến 50 ký tự")
     private String username;
 
@@ -50,6 +50,7 @@ public class User implements UserDetails{
     private String password;
 
     @NotBlank(message = "Họ và tên không được để trống")
+    @Pattern(regexp = "^[A-Za-z0-9 ]+$", message = "Họ và tên chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String fullname;
 
     private Date registrationdate;
@@ -60,6 +61,7 @@ public class User implements UserDetails{
 
 
     @NotBlank(message = "Địa chỉ không được để trống")
+    @Pattern(regexp = "^[A-Za-z0-9 ]+$", message = "Địa chỉ chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String address;
 
     @NotBlank(message = "Email không được để trống")
