@@ -27,7 +27,7 @@ private VoucherRepository voucherRepository;
     public Voucher updateVoucher(Long id, Voucher voucher) {
        Voucher voucher1 = voucherRepository.findById(id).orElseThrow();
        voucher1.setDiscountpercentage(voucher.getDiscountpercentage());
-       voucher1.setExchangeamount(voucher.getExchangeamount());
+       voucher1.setMaxamount(voucher.getMaxamount());
        voucher1.setEnddate(voucher.getEnddate());
        voucher1.setUsagecount(voucher.getUsagecount());
        voucher1.setStartdate(voucher.getStartdate());

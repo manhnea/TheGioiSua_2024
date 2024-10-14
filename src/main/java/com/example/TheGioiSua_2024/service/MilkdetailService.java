@@ -30,6 +30,11 @@ public class MilkdetailService implements IMilkdetailService {
 
     @Override
     public String add(Milkdetail milkdetail) {
+        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
+        milkdetail.setMilkdetailcode(milkdetailcode);
+        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
+            return "Mã sản phẩm đã tồn tại.";
+        }
         milkdetail.setStatus(1);
         milkdetailRepository.save(milkdetail);
         return "Thêm thành công";
@@ -42,6 +47,11 @@ public class MilkdetailService implements IMilkdetailService {
         Milktaste milktaste = milktasteRepository.findById(milkdetail1.getMilkTaste().getId()).get();
         Packagingunit packagingunit = packagingunitRepository.findById(milkdetail1.getPackagingUnit().getId()).get();
         Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail1.getUsageCapacity().getId()).get();
+        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
+        milkdetail.setMilkdetailcode(milkdetailcode);
+        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
+            return "Mã sản phẩm đã tồn tại.";
+        }
         milkdetail1.setProduct(product);
         milkdetail1.setMilkTaste(milktaste);
         milkdetail1.setPackagingUnit(packagingunit);

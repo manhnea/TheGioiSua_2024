@@ -24,23 +24,23 @@ public class InvoiceService implements IInvoiceService {
 
     @Override
     public String saveInvoice(@RequestBody Invoice invoice) {
-        String milkbrandName = invoice.getInvoicecode().trim();
-        invoice.setInvoicecode(milkbrandName);
-        if (invoiceRepository.existsByInvoicecode(milkbrandName)) {
+        String invoicecode = invoice.getInvoicecode().trim();
+        invoice.setInvoicecode(invoicecode);
+        if (invoiceRepository.existsByInvoicecode(invoicecode).isPresent()) {
             return "Mã hóa đơn đã tồn tại.";
         }
         invoice.setStatus(1);
         invoiceRepository.save(invoice);
-        return "Invoice added successfully";
+        return "Invoice added successfully!";
     }
 
     @Override
     public String updateInvoice(Long id, Invoice invoice) {
         Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
         Voucher voucher = voucherRepository.findById(existingInvoice.getVoucher().getId()).orElseThrow();
-        String milkbrandName = invoice.getInvoicecode().trim();
-        invoice.setInvoicecode(milkbrandName);
-        if (invoiceRepository.existsByInvoicecode(milkbrandName)) {
+        String invoicecode = invoice.getInvoicecode().trim();
+        invoice.setInvoicecode(invoicecode);
+        if (invoiceRepository.existsByInvoicecode(invoicecode).isPresent()) {
             return "Mã hóa đơn đã tồn tại.";
         }
         existingInvoice.setVoucher(voucher);

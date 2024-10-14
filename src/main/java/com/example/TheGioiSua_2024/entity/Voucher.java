@@ -22,7 +22,7 @@ public class Voucher {
     private Date startdate;
     private Date enddate;
     private int discountpercentage;
-    private double exchangeamount;
+    private double maxamount;
     private int usagecount;
     private int status;
 }
