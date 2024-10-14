@@ -27,13 +27,11 @@ public class UserRestController {
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
         return iUserService.register(registerDto);
     }
-//    @CrossOrigin(origins = "http://127.0.0.1:5500")
-    //RessourceEndPoint:http://localhost:1234/api/user/authenticate
 
+    //RessourceEndPoint:http://localhost:1234/api/user/authenticate
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody LoginDto loginDto) {
-        return ResponseEntity.ok(Collections.singletonMap("token", iUserService.authenticate(loginDto)));
-//        return iUserService.authenticate(loginDto);
+        return iUserService.authenticate(loginDto);
     }
 
     //http://localhost:1234/api/user/id

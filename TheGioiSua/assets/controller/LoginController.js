@@ -23,19 +23,30 @@ app.controller("LoginController", [
         password: $scope.password,
       };
 
-      $http
-        .post("http://localhost:1234/api/user/authenticate", userCredentials)
+      $http.post("http://localhost:1234/api/user/authenticate", userCredentials)
         .then(
           function (response) {
-            localStorage.setItem("token", response.data.token);
-            const userInfo = parseJwt(response.data.token);
-            localStorage.setItem("userInfo", JSON.stringify(userInfo));
-            window.location.href = "/";
+            // Kiểm tra nếu mã trạng thái là 200
+            if (response.status === 200) {
+              localStorage.setItem("token", response.data.token);
+              const userInfo = parseJwt(response.data.token);
+              localStorage.setItem("userInfo", JSON.stringify(userInfo));
+              // window.location.href = "/"; // Chuyển hướng đến trang chính
+            } else {
+              // Xử lý các mã trạng thái khác nếu cần
+              $scope.errorMessage = "Unexpected response: " + response.status;
+            }
           },
-          function () {
-            $scope.errorMessage = "Login failed: Invalid username or password";
+          function (errorResponse) {
+            // Nếu có lỗi trong quá trình đăng nhập
+            if (errorResponse.data && errorResponse.data.error) {
+              $scope.errorMessage = errorResponse.data.error; // Thông báo lỗi từ phản hồi
+            } else {
+              $scope.errorMessage = "Login failed: Invalid username or password"; // Thông báo chung nếu không có thông tin cụ thể
+            }
           }
         );
+
     };
   },
 ]);
