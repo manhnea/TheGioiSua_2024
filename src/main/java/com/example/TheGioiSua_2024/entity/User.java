@@ -51,20 +51,21 @@ public class User implements UserDetails{
     private String password;
 
     @NotBlank(message = "Họ và tên không được để trống")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ ]+$", message = "Họ và tên chỉ được chứa chữ cái và dấu cách")
+    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ]+$", message = "Họ và tên chỉ được chứa chữ cái và dấu cách")
     @Size(max = 100, message = "Họ và tên không được vượt quá 100 ký tự")
     private String fullname;
 
     private Date registrationdate;
 
-    @NotBlank(message = "Số điện thoại không được để trống")
-    @Pattern(regexp = "(84|0[3|5|7|8|9])+([0-9]{8})\\b", message = "Số điện thoại không hợp lệ")
+//    @NotBlank(message = "Số điện thoại không được để trống")
+//    @Pattern(regexp = "(84|0[3|5|7|8|9])+([0-9]{8})\\b", message = "Số điện thoại không hợp lệ")
     private String phonenumber;
 
-    @NotBlank(message = "Địa chỉ không được để trống")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9,./-\\s]+$", message = "Địa chỉ chỉ được chứa chữ cái, số và các ký tự dấu phẩy, chấm, gạch ngang")
-    @Size(max = 150, message = "Địa chỉ không được vượt quá 150 ký tự")
+//    @NotBlank(message = "Địa chỉ không được để trống")
+//    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9,./\\s]+$", message = "Địa chỉ chỉ được chứa chữ cái, số, dấu phẩy, chấm, gạch chéo, và khoảng trắng")
+//    @Size(max = 150, message = "Địa chỉ không được vượt quá 150 ký tự")
     private String address;
+
 
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không hợp lệ")
