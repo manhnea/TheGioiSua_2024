@@ -1,73 +1,194 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-html{
+
+html {
     font-size: 16px;
 }
-.img-size-x{
+
+.body-login {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+}
+
+.container-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 430px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 7px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0.8;
+}
+
+.container-form .registration {
+    display: none;
+}
+
+#check:checked~.registration {
+    display: block;
+}
+
+#check:checked~.login {
+    display: none;
+}
+
+#check {
+    display: none;
+}
+
+.container-form .form {
+    padding: 2rem;
+}
+
+.form header {
+    font-size: 2rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form input {
+    height: 60px;
+    width: 100%;
+    padding: 0 15px;
+    font-size: 17px;
+    margin-bottom: 1.3rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.form input:focus {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.form a {
+    font-size: 16px;
+    color: #009579;
+    text-decoration: none;
+}
+
+.form a:hover {
+    text-decoration: underline;
+}
+
+.form input.button {
+    color: #fff;
+    background-color: #FF9A8B;
+    background-image: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-top: 1.7rem;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.form input.button:hover {
+    background: #E5C0C3;
+}
+
+.signup {
+    font-size: 17px;
+    text-align: center;
+}
+
+.signup label {
+    color: #009579;
+    cursor: pointer;
+}
+
+.signup label:hover {
+    text-decoration: underline;
+}
+
+.img-size-x {
     width: 75px;
 }
-.size-icon{
+
+.size-icon {
     font-size: 16px;
 }
-.bg-coler-yellow{
+
+.bg-coler-yellow {
     background-color: #FFF9C4 !important;
 }
-header nav{
+
+header nav {
     font-size: 1.1rem;
 }
+
 .custom-select {
     width: 100%;
-    max-width: 250px; /* Hoặc đặt chiều rộng tối đa theo nhu cầu */
-    white-space: normal; /* Cho phép xuống dòng */
+    max-width: 250px;
+    /* Hoặc đặt chiều rộng tối đa theo nhu cầu */
+    white-space: normal;
+    /* Cho phép xuống dòng */
 }
+
 .marquee-alert {
-    background-color:#FFF9C4 !important;
-    padding: 10px; /* Thêm khoảng cách cho nội dung */
-    overflow: hidden; /* Ẩn phần tràn ra ngoài */
+    background-color: #FFF9C4 !important;
+    padding: 10px;
+    /* Thêm khoảng cách cho nội dung */
+    overflow: hidden;
+    /* Ẩn phần tràn ra ngoài */
 }
 
 .marquee {
     display: inline-block;
     animation: marquee 10s linear infinite;
     white-space: nowrap;
-    width: 100%; /* Chiếm toàn bộ chiều rộng của alert */
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng của alert */
 }
 
 @keyframes marquee {
     from {
         transform: translateX(100%);
     }
+
     to {
         transform: translateX(-100%);
     }
 }
+
 .row {
     display: flex;
-    flex-wrap: wrap; /* Đảm bảo các card tự động xuống hàng nếu không đủ không gian */
+    flex-wrap: wrap;
+    /* Đảm bảo các card tự động xuống hàng nếu không đủ không gian */
 }
 
 .product-card {
     display: flex;
-    flex-direction: column; /* Đảm bảo thẻ card là một cột */
+    flex-direction: column;
+    /* Đảm bảo thẻ card là một cột */
 }
 
 .card {
-    flex: 1; /* Đảm bảo card chiếm toàn bộ không gian trong container */
+    flex: 1;
+    /* Đảm bảo card chiếm toàn bộ không gian trong container */
     display: flex;
-    flex-direction: column; /* Đảm bảo card-body sắp xếp theo chiều dọc */
+    flex-direction: column;
+    /* Đảm bảo card-body sắp xếp theo chiều dọc */
 }
 
 .card-body {
     display: flex;
-    flex-direction: column; /* Đảm bảo các phần tử trong card-body sắp xếp theo chiều dọc */
-    flex-grow: 1; /* Đẩy nút "Thêm vào giỏ" xuống dưới cùng */
+    flex-direction: column;
+    /* Đảm bảo các phần tử trong card-body sắp xếp theo chiều dọc */
+    flex-grow: 1;
+    /* Đẩy nút "Thêm vào giỏ" xuống dưới cùng */
 }
 
 .mt-auto {
-    margin-top: auto; /* Đẩy nút "Thêm vào giỏ" xuống dưới cùng */
+    margin-top: auto;
+    /* Đẩy nút "Thêm vào giỏ" xuống dưới cùng */
 }
-
-

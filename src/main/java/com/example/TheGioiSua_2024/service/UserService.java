@@ -4,7 +4,6 @@
  */
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.dto.BearerToken;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
@@ -14,6 +13,7 @@ import com.example.TheGioiSua_2024.repository.RoleRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
+import com.example.TheGioiSua_2024.util.EmailValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +23,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -63,6 +59,9 @@ public class UserService implements IUserService {
         } else if (iUserRepository.existsByEmail(registerDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Collections.singletonMap("error", "Email đã được sử dụng!")); // Mã trạng thái 409
+        } else if (!EmailValidator.isValidEmail(registerDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Email không đúng định dạng!")); // Mã trạng thái 409
         } else {
             User user = new User();
             user.setEmail(registerDto.getEmail());

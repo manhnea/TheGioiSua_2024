@@ -37,16 +37,17 @@ public class SpringSecurityConfig {
             .authorizeHttpRequests()
             .requestMatchers("/user/**","/Product/**","/Milkdetail/lst","/Milktype/lst","/Milkbrand/lst","/Targetuser/lst").permitAll()
             .requestMatchers("/admin/**",
-                    "/Size/**",
                     "/Voucher/**",
                     "/Milktype/**",
                     "/Milktaste/**",
-                    "/Container/**",
                     "/Packagingunit/**",
                     "/Targetuser/**",
                     "/Product/**",
                     "/Milkdetail/**",
-                    "/Milkbrand/**",
+                    "/Milkbrand/**",// no o dau
+                    "/Invoicedetail/**",
+                    "/Invoice/**",
+                    "/Userinvoice/**",
                     "/Usagecapacity/**").hasAuthority("Admin");
 //            .requestMatchers("/user/**").hasAuthority("Customer") ;
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

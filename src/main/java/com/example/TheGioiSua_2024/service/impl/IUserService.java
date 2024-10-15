@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface IUserService {
    //ResponseEntity<?> register (RegisterDto registerDto);
- //  ResponseEntity<BearerToken> authenticate(LoginDto loginDto);
+   //  ResponseEntity<BearerToken> authenticate(LoginDto loginDto);
 
    ResponseEntity<?> authenticate(LoginDto loginDto);
    ResponseEntity<?> register (RegisterDto registerDto);

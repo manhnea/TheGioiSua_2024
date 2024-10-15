@@ -1,6 +1,3 @@
-// Khởi tạo ứng dụng AngularJS
-var app = angular.module("myApp");
-
 app.controller("LoginController", [
   "$scope",
   "$http",
@@ -22,6 +19,7 @@ app.controller("LoginController", [
         username: $scope.username,
         password: $scope.password,
       };
+<<<<<<< HEAD
 
       $http.post("http://localhost:1234/api/user/authenticate", userCredentials)
         .then(
@@ -44,9 +42,28 @@ app.controller("LoginController", [
             } else {
               $scope.errorMessage = "Login failed: Invalid username or password"; // Thông báo chung nếu không có thông tin cụ thể
             }
+=======
+      if (!$scope.username || !$scope.password) {
+        $scope.errorMessage = "Vui lòng nhập tên đăng nhập và mật khẩu.";
+        return;
+      }
+      $http
+        .post("http://localhost:1234/api/user/authenticate", userCredentials)
+        .then(
+          function (response) {
+            // Xử lý phản hồi thành công
+            localStorage.setItem("token", response.data.token);
+            const userInfo = parseJwt(response.data.token);
+            localStorage.setItem("userInfo", JSON.stringify(userInfo));
+            $location.path('/home')
+          },
+          function (errorResponse) {
+            $scope.errorMessage = errorResponse.data.error;
+>>>>>>> f42d72b (fix login/register)
           }
         );
 
     };
+
   },
 ]);

@@ -1,6 +1,5 @@
 package com.example.TheGioiSua_2024.service.impl;
 
-import com.example.TheGioiSua_2024.entity.Size;
 import com.example.TheGioiSua_2024.entity.Targetuser;
 
 import java.util.List;

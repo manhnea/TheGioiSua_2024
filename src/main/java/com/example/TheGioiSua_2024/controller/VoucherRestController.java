@@ -2,7 +2,10 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.service.VoucherService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,13 +22,28 @@ public class VoucherRestController {
     }
     //http://localhost:1234/api/Voucher/add
     @PostMapping("/add")
-    public Voucher add(@RequestBody Voucher voucher){
-        return voucherService.saveVoucher(voucher);
+    public String add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult){
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
+        String vour = voucherService.saveVoucher(voucher);
+        return vour;
     }
     //http://localhost:1234/api/Voucher/update/{id}
     @PutMapping("/update/{id}")
-    public Voucher update(@PathVariable("id") Long id, @RequestBody Voucher voucher){
-        return voucherService.updateVoucher(id,voucher);
+    public String update(@PathVariable("id") Long id, @RequestBody @Valid Voucher voucher ,BindingResult bindingResult){
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError fieldError : fieldErrors) {
+            if(fieldError != null){
+                return fieldError.getDefaultMessage();
+            }
+        }
+        String vour = voucherService.updateVoucher(id,voucher);
+        return vour;
+
     }
     //http://localhost:1234/api/Voucher/delete/{id}
     @PutMapping("/delete/{id}")

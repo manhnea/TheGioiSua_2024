@@ -1,14 +1,11 @@
 var app = angular.module("myApp", ["ngRoute"]);
 
-app.config(function ($routeProvider) {
+app.config(function ($routeProvider, $location) {
+  $rootScope.$location = $location;
   $routeProvider
     .when("/", {
       templateUrl: "doc/views/home.html",
       controller: "IndexController",
-    })
-    .when("/home", {
-      templateUrl: "doc/views/home.html",
-      controller: "HomeController",
     })
     .when("/table-data-table", {
       templateUrl: "doc/views/table-data-table.html",
@@ -39,7 +36,7 @@ app.config(function ($routeProvider) {
       controller: "DataProductController",
     })
     .when("/login", {
-      templateUrl: "login.html",
+      templateUrl: "doc/views/login.html",
       controller: "LoginController",
     })
     .otherwise({
