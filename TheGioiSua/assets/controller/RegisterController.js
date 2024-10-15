@@ -1,89 +1,53 @@
-var app = angular.module("myApp");
-
 app.controller("RegisterController", [
   "$scope",
   "$http",
   "$location",
   function ($scope, $http, $location) {
+    // Đối tượng người dùng trong scope
     $scope.user = {
       username: "",
-      password: "",
       fullname: "",
       email: "",
+      password: "",
     };
 
+    $scope.confirmpassword = "";
     $scope.successMessage = "";
     $scope.errorMessage = "";
-    $scope.submitted = false; // Biến theo dõi xem form đã được submit hay chưa
 
-    $scope.submitForm = function () {
-      $scope.submitted = true; // Đánh dấu form đã được submit
-
-      // Kiểm tra tính hợp lệ của form
-      if ($scope.registrationForm.$valid) {
-        // Nếu form hợp lệ, gửi thông tin người dùng đến server để đăng ký
-        $http
-          .post("http://localhost:1234/api/user/register", $scope.user)
-          .then(function (response) {
-            // Lưu thông tin người dùng vào localStorage
-            localStorage.setItem("userInfo", JSON.stringify(response.data));
-            $scope.successMessage = "Registration successful!"; // Hiển thị thông báo thành công
-            $location.path("/detailUser"); // Chuyển hướng đến trang thông tin người dùng sau khi đăng ký thành công
-            $scope.account = response.data.username; // Cập nhật tài khoản trong MainController // Cập nhật giá trị tài khoản
-            $scope.$apply(); // Cập nhật scope
-          })
-          .catch(function (error) {
-            // Kiểm tra nếu error.data tồn tại trước khi truy cập thuộc tính message
-            if (error.data && error.data.message) {
-              $scope.errorMessage =
-                "Registration failed: " + error.data.message;
-            } else {
-              $scope.errorMessage = "Registration failed: Unknown error";
-            }
-          });
-      } else {
-        // Nếu form không hợp lệ
-        $scope.errorMessage =
-          "Form is invalid. Please correct the errors and try again.";
+    $scope.register = function () {
+      // Kiểm tra xem tất cả các trường đã được điền đầy đủ chưa
+      if (!$scope.user.username || !$scope.user.fullname || !$scope.user.email || !$scope.user.password) {
+        $scope.errorMessage = "Vui lòng điền đầy đủ thông tin!";
+        return; // Kết thúc hàm nếu có trường trống
       }
-    };
-  },
-]);
-app.controller("RegisterController", [
-  "$scope",
-  "$http",
-  "$location",
-  function ($scope, $http, $location) {
-    $scope.user = {
-      username: "",
-      password: "",
-      fullname: "",
-      email: "",
-    };
 
-    $scope.successMessage = "";
-    $scope.errorMessage = "";
+      // Kiểm tra mật khẩu và mật khẩu xác nhận
+      if ($scope.user.password !== $scope.confirmpassword) {
+        $scope.errorMessage = "Mật Khẩu Xác Nhận Không Khớp!";
+        return; // Kết thúc hàm nếu mật khẩu không khớp
+      }
 
-    $scope.submitForm = function () {
-      // Gửi thông tin người dùng đến server để đăng ký
-      $http
-        .post("/api/register", $scope.user)
+      // Gửi yêu cầu đăng ký
+      $http.post("http://localhost:1234/api/user/register", $scope.user)
         .then(function (response) {
-          // Lưu thông tin người dùng vào localStorage
-          localStorage.setItem("userInfo", JSON.stringify(response.data));
-
-          // Hiển thị thông báo thành công
-          $scope.successMessage = "Registration successful!";
-
-          // Chuyển hướng đến trang thông tin người dùng
-          $location.path("/detailUser");
-          // Cập nhật tài khoản trong MainController
-          $scope.account = response.data.username; // Cập nhật giá trị tài khoản
-          $scope.$apply(); // Cập nhật scope
-        })
-        .catch(function (error) {
-          $scope.errorMessage = "Registration failed: " + error.data.message;
+          // Kiểm tra mã trạng thái
+          if (response.status === 200) {
+            $scope.successMessage = response.data.message; // Giả định bạn trả về { "message": "Tạo Tài Khoản Thành Công" }
+            $location.path('/login'); // Chuyển hướng đến trang /login
+          } else {
+            // Nếu mã trạng thái không phải là 200, hiển thị thông báo lỗi
+            $scope.errorMessage = response.data.error || "Đã xảy ra lỗi không xác định!";
+          }
+        }, function (errorResponse) {
+          // Kiểm tra thông báo lỗi trong phản hồi
+          if (errorResponse.data && errorResponse.data.error) {
+            $scope.errorMessage = errorResponse.data.error; // Lấy thông điệp lỗi từ phản hồi
+          } else {
+            $scope.errorMessage = "Đã xảy ra lỗi không xác định!"; // Thông báo chung nếu không có thông tin
+          }
         });
+
     };
   },
 ]);

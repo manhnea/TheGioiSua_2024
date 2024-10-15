@@ -4,7 +4,6 @@
  */
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.dto.BearerToken;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
@@ -14,6 +13,7 @@ import com.example.TheGioiSua_2024.repository.RoleRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
+import com.example.TheGioiSua_2024.util.EmailValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +23,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
@@ -56,54 +54,71 @@ public class UserService implements IUserService {
     @Override
     public ResponseEntity<?> register(RegisterDto registerDto) {
         if (iUserRepository.existsByUsername(registerDto.getUsername())) {
-            return new ResponseEntity<>("User is already taken !", HttpStatus.SEE_OTHER);
-        }
-        else if(iUserRepository.existsByEmail(registerDto.getEmail()))  {
-            return new ResponseEntity<>("Email is already taken !", HttpStatus.SEE_OTHER);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Tên Người Dùng Đã Tồn Tại!")); // Mã trạng thái 409
+        } else if (iUserRepository.existsByEmail(registerDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Email đã được sử dụng!")); // Mã trạng thái 409
+        } else if (!EmailValidator.isValidEmail(registerDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Email không đúng định dạng!")); // Mã trạng thái 409
         } else {
             User user = new User();
             user.setEmail(registerDto.getEmail());
             user.setFullname(registerDto.getFullname());
             user.setUsername(registerDto.getUsername());
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-            //By Default , he/she is a simple user
             user.setRegistrationdate(new Date(System.currentTimeMillis()));
-            Role role = iRoleRepository.findById(2l).orElseThrow();//2l user
+            Role role = iRoleRepository.findById(2L).orElseThrow(); // 2L user
             user.setRole(role);
             iUserRepository.save(user);
-            String token = jwtUtilities.generateToken(null, registerDto.getUsername(), role.getRoleName());
-//            return new ResponseEntity<>(new BearerToken(token, "Bearer "), HttpStatus.OK);
-            return new ResponseEntity<>("Tạo Tài Khoản Thành Công", HttpStatus.OK);
-
+            return ResponseEntity.ok(Collections.singletonMap("message", "Tạo Tài Khoản Thành Công")); // Mã trạng thái 200
         }
     }
 
     @Override
-    public String authenticate(LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
-                        loginDto.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = iUserRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<String> rolesNames = new ArrayList<>();
-//        user.getRoles().forEach(r-> rolesNames.add(r.getRoleName()));
+    public ResponseEntity<?> authenticate(LoginDto loginDto) {
+        try {
+            // Xác thực người dùng
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginDto.getUsername(),
+                            loginDto.getPassword()
+                    )
+            );
 
-        String token = jwtUtilities.generateToken(user.getId(), user.getUsername(), user.getRole().getRoleName());
-        return token;
+            // Thiết lập ngữ cảnh bảo mật
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Tìm người dùng trong cơ sở dữ liệu
+            User user = iUserRepository.findByUsername(authentication.getName())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
+
+            // Tạo token
+            String token = jwtUtilities.generateToken(user.getId(), user.getUsername(), user.getRole().getRoleName());
+
+            // Trả về token nếu xác thực thành công
+            return ResponseEntity.ok(Collections.singletonMap("token", token));
+
+        } catch (AuthenticationException e) {
+            // Nếu xác thực thất bại do thông tin không hợp lệ
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Collections.singletonMap("error", "Đăng nhập không thành công"));
+        } catch (ResponseStatusException e) {
+            // Nếu người dùng không tồn tại
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(Collections.singletonMap("error", e.getReason()));
+        }
     }
-    
+
     @Override
     public UserDto findUserById(Long id) {
         User user = iUserRepository.findById(id).orElseThrow();
-        if(user == null){
+        if (user == null) {
             System.out.println("null");
         }
         UserDto userDto = new UserDto(user.getId(), user.getUsername(), user.getFullname(), user.getRegistrationdate(), user.getPhonenumber(), user.getAddress(), user.getEmail(), user.getRole().getRoleName());
         return userDto;
     }
-    
 
 }
