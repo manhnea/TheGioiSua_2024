@@ -1,15 +1,29 @@
-<div class="container" ng-controller="LoginController">
-    <h2>Login</h2>
-    <form ng-submit="login()">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" class="form-control" id="username" ng-model="username" required>
+<div class="body-login">
+    <div class="container-form">
+        <div class="form" ng-controller="LoginController">
+            <header>Login</header>
+            <form action="#">
+                <input type="text" placeholder="Enter your username" ng-model="username" required>
+                <input type="password" placeholder="Enter your password" ng-model="password" required>
+                <div ng-if="errorMessage" class="alert alert-danger mt-2">{{ errorMessage }}</div>
+                <a href="#">Forgot password?</a>
+                <input type="button" class="button" value="Login" ng-click="login()">
+            </form>
+            <div class="signup">
+                <span class="signup">Don't have an account?
+                    <label for="check"><a ng-href="#/register">Signup</a></label>
+                </span>
+            </div>
         </div>
+<<<<<<< HEAD
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" ng-model="password" required>
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
-    <div ng-if="errorMessage" class="alert alert-danger mt-2">{{ errorMessage }}</div>
+
+=======
+    </div>
+>>>>>>> f42d72b (fix login/register)
 </div>
