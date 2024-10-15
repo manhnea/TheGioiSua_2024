@@ -44,7 +44,7 @@ public class SpringSecurityConfig {
                     "/Targetuser/**",
                     "/Product/**",
                     "/Milkdetail/**",
-                    "/Milkbrand/**",
+                    "/Milkbrand/**",// no o dau
                     "/Invoicedetail/**",
                     "/Invoice/**",
                     "/Userinvoice/**",

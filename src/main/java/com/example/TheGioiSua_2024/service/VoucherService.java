@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IVoucherService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoucherService implements IVoucherService {
@@ -18,13 +20,28 @@ private VoucherRepository voucherRepository;
     }
 
     @Override
-    public Voucher saveVoucher(Voucher voucher) {
+    public String  saveVoucher(Voucher voucher) {
+        String trimmedName = voucher.getVouchercode().trim();
+        voucher.setVouchercode(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<Voucher> existingContainer = getVoucherByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
         voucher.setStatus(1);
-        return voucherRepository.save(voucher);
+        voucherRepository.save(voucher);
+        return "Voucher saved";
     }
 
     @Override
-    public Voucher updateVoucher(Long id, Voucher voucher) {
+    public String updateVoucher(Long id, Voucher voucher) {
+        String trimmedName = voucher.getVouchercode().trim();
+        voucher.setVouchercode(trimmedName);
+        // Kiểm tra xem tên  đã tồn tại chưa
+        Optional<Voucher> existingContainer = getVoucherByName(trimmedName);
+        if (existingContainer.isPresent()) {
+            return "Container với tên này đã tồn tại.";
+        }
        Voucher voucher1 = voucherRepository.findById(id).orElseThrow();
        voucher1.setDiscountpercentage(voucher.getDiscountpercentage());
        voucher1.setMaxamount(voucher.getMaxamount());
@@ -32,7 +49,8 @@ private VoucherRepository voucherRepository;
        voucher1.setUsagecount(voucher.getUsagecount());
        voucher1.setStartdate(voucher.getStartdate());
        voucher1.setVouchercode(voucher.getVouchercode());
-      return voucherRepository.save(voucher1);
+      voucherRepository.save(voucher1);
+      return "Voucher updated";
     }
 
     @Override
@@ -40,5 +58,10 @@ private VoucherRepository voucherRepository;
         Voucher voucher1 = voucherRepository.findById(id).orElseThrow();
         voucher1.setStatus(0);
         return voucherRepository.save(voucher1);
+    }
+
+    @Override
+    public Optional<Voucher> getVoucherByName(String voucherName) {
+        return voucherRepository.findByVoucher(voucherName);
     }
 }
