@@ -1,7 +1,6 @@
 var app = angular.module("myApp", ["ngRoute"]);
 
-app.config(function ($routeProvider, $location) {
-  $rootScope.$location = $location;
+app.config(function ($routeProvider) {
   $routeProvider
     .when("/", {
       templateUrl: "doc/views/home.html",
