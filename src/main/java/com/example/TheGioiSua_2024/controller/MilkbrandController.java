@@ -4,12 +4,17 @@ import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.service.MilkbrandService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+import java.util.Map;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/Milkbrand")
 public class MilkbrandController {
@@ -22,32 +27,41 @@ public class MilkbrandController {
     }
     //http://localhost:1234/api/Milkbrand/add
     @PostMapping("/add")
-    public String add(@RequestBody @Valid Milkbrand milkbrand, BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> add(@RequestBody @Valid Milkbrand milkbrand, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-       String mess = milkbrandService.addMilkbrand(milkbrand);
-        return mess;
+
+        String resultMessage = milkbrandService.addMilkbrand(milkbrand);
+        return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
     }
+
     //http://localhost:1234/api/Milkbrand/update/{id}
     @PutMapping("/update/{id}")
-    public String update(@PathVariable Long id, @RequestBody @Valid Milkbrand milkbrand , BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Milkbrand milkbrand , BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        String mess = milkbrandService.updateMilkbrand(id, milkbrand);
-        return mess;
+        return ResponseEntity.ok(Map.of("status", "success", "message", milkbrandService.updateMilkbrand(id, milkbrand)));
     }
     //http://localhost:1234/api/Milkbrand/delete/{id}
     @PutMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, @RequestBody Milkbrand milkbrand) {
+    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody Milkbrand milkbrand) {
         milkbrandService.deleteMilkbrand(id, milkbrand);
-        return "Xóa thành công";
+       return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thương hiệu sữa thành công."));
     }
 }

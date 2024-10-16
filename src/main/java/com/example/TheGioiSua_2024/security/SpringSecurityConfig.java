@@ -35,7 +35,7 @@ public class SpringSecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests()
-            .requestMatchers("/user/**","/Product/**","/Milkdetail/lst","/Milktype/lst","/Milkbrand/lst","/Targetuser/lst").permitAll()
+            .requestMatchers("/user/**","/Product/**","/Milkdetail/add","/Milktype/lst","/Milkbrand/**","/Targetuser/lst").permitAll()
             .requestMatchers("/admin/**",
                     "/Voucher/**",
                     "/Milktype/**",

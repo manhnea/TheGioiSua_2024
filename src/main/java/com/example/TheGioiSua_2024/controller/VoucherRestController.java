@@ -4,12 +4,17 @@ import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.service.VoucherService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+import java.util.Map;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/Voucher")
 public class VoucherRestController {
@@ -22,32 +27,40 @@ public class VoucherRestController {
     }
     //http://localhost:1234/api/Voucher/add
     @PostMapping("/add")
-    public String add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult){
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        String vour = voucherService.saveVoucher(voucher);
-        return vour;
+
+        return ResponseEntity.ok(Map.of("status", "success", "message", voucherService.saveVoucher(voucher)));
     }
     //http://localhost:1234/api/Voucher/update/{id}
     @PutMapping("/update/{id}")
-    public String update(@PathVariable("id") Long id, @RequestBody @Valid Voucher voucher ,BindingResult bindingResult){
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody @Valid Voucher voucher ,BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        String vour = voucherService.updateVoucher(id,voucher);
-        return vour;
+       return ResponseEntity.ok(Map.of("status", "success", "message", voucherService.updateVoucher(id, voucher)));
 
     }
     //http://localhost:1234/api/Voucher/delete/{id}
     @PutMapping("/delete/{id}")
-    public Voucher delete(@PathVariable("id") Long id){
-        return voucherService.deleteVoucher(id);
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+        voucherService.deleteVoucher(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
     }
 }

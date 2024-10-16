@@ -4,12 +4,17 @@ import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.service.MilktypeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+import java.util.Map;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/Milktype")
 public class MilktypeRestController {
@@ -22,29 +27,39 @@ public class MilktypeRestController {
     }
     //http://localhost:1234/api/Milktype/add
     @PostMapping("/add")
-    public String addMilktype(@RequestBody @Valid MilkType milktype, BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> addMilktype(@RequestBody @Valid MilkType milktype, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
          milktypeService.AddMilktype(milktype);
-        return "The milktype has been added successfully";
+        return ResponseEntity.ok(Map.of("status", "success", "message", "The milktype has been added successfully"));
     }//http://localhost:1234/api/Milktype/update/{id}
     @PutMapping("/update/{id}")
-    public String updateMilktype(@PathVariable("id") Long id, @RequestBody @Valid MilkType milktype,BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> updateMilktype(@PathVariable("id") Long id, @RequestBody @Valid MilkType milktype,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-         milktypeService.UpdateMilktype(id, milktype);
-        return "The milktype has been updated successfully";
+
+       return ResponseEntity.ok(Map.of("status", "success", "message", milktypeService.UpdateMilktype(id, milktype)));
     }//http://localhost:1234/api/Milktype/delete/{id}
     @PutMapping("/delete/{id}")
-    public MilkType deleteMilktype(@PathVariable("id") Long id) {
-        return milktypeService.DeleteMilktype(id);
+    public ResponseEntity<?> deleteMilktype(@PathVariable("id") Long id) {
+        milktypeService.DeleteMilktype(id);
+
+        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
     }
 }
