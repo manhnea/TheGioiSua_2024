@@ -4,12 +4,17 @@ import com.example.TheGioiSua_2024.entity.Targetuser;
 import com.example.TheGioiSua_2024.service.TargetuserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+import java.util.Map;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/Targetuser")
 public class TargetuserRestController {
@@ -22,29 +27,39 @@ public class TargetuserRestController {
     }
     //http://localhost:1234/api/Targetuser/add
     @PostMapping("/add")
-    public String add(@RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> add(@RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return targetuserService.addTargetuser(targetuser);
+        return ResponseEntity.ok(Map.of("status", "success", "message", targetuserService.addTargetuser(targetuser)));
     }
     //http://localhost:1234/api/Targetuser/update/{id}
     @PutMapping("/update/{id}")
-    public String update(@RequestBody @Valid Targetuser targetuser,BindingResult bindingResult, @PathVariable("id") Long id) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if(fieldError != null){
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> update(@RequestBody @Valid Targetuser targetuser,BindingResult bindingResult, @PathVariable("id") Long id) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return targetuserService.updateTargetuser(id, targetuser);
+        return ResponseEntity.ok(Map.of("status", "success", "message", targetuserService.updateTargetuser(id, targetuser)));
     }
     //http://localhost:1234/api/Targetuser/delete/{id}
     @PutMapping("/delete/{id}")
-    public Targetuser delete(@PathVariable("id") Long id) {
-        return targetuserService.deleteTargetuser(id);
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        targetuserService.deleteTargetuser(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
     }
+
 }
