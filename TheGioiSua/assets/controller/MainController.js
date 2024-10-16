@@ -12,10 +12,10 @@ app.controller("MainController", [
       $scope.user = JSON.parse(userInfo);
       $scope.account = $scope.user.user;
     }
-    $scope.$on('$locationChangeSuccess', function() {
+    $scope.$on('$locationChangeSuccess', function () {
       $scope.isLoginPage = $location.path() === '/login';
       $scope.isDetailPage = $location.path() === '/detailUser';
-  });
+    });
   },
 ]);
 
