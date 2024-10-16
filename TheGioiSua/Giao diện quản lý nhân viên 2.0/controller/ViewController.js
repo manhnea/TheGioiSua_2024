@@ -6,6 +6,10 @@ app.config(function ($routeProvider) {
       templateUrl: "doc/views/home.html",
       controller: "IndexController",
     })
+    .when("/home", {
+      templateUrl: "doc/views/home.html",
+      controller: "IndexController",
+    })
     .when("/table-data-table", {
       templateUrl: "doc/views/table-data-table.html",
       controller: "DataTableController",
@@ -39,7 +43,7 @@ app.config(function ($routeProvider) {
       controller: "LoginController",
     })
     .otherwise({
-      redirectTo: "/",
+      redirectTo: "/login",
     });
 });
 

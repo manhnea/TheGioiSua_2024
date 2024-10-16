@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <!-- Main CSS -->
+    <!-- CSS links -->
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
@@ -20,29 +20,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <link rel="stylesheet" href="doc/css/form-add-nhan-vien.css">
     <link rel="stylesheet" type="text/css" href="doc/css/main.css">
-
-    <!-- Font-icon CSS -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <script src="/js/readURL.js"></script>
 </head>
 <body ng-app="myApp" onload="time()" class="app sidebar-mini rtl">
 
     <!-- Header chung cho tất cả các trang -->
-     <!-- a -->
+    <!-- Show header, menu, footer only if logged in -->
     <div ng-include="'doc/layout/header.html'"></div>
-    <div ng-include="'doc/layout/menu.html'"></div>
+    <div ng-include="'doc/layout/menu.html'" ></div>
     <div ng-view></div>
-<div ng-include="'doc/layout/footer.html'"></div>
+    <div ng-include="'doc/layout/footer.html'"  ></div>
+
     <!-- Clock Display -->
     <div id="clock"></div>
 
     <!-- AngularJS -->
     <script src="/controller/ViewController.js"></script>
+    <script src="/controller/LoginController.js"></script>
     <script src="doc/js/jquery-3.2.1.min.js"></script>
     <script src="/js/main.js"></script>
     <script src="doc/js/popper.min.js"></script>

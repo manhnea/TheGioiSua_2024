@@ -23,6 +23,10 @@
               <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addtinhtrang"><i
                   class="fas fa-folder-plus"></i> Thêm tình trạng</a>
             </div>
+            <div class="col-sm-2">
+              <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addrole"><i
+                  class="fas fa-folder-plus"></i> Thêm role</a>
+            </div>
           </div>
           <form class="row">
             <div class="form-group col-md-3">
@@ -192,6 +196,50 @@ MODAL DANH MỤC
 MODAL
 -->
 
+<!--
+MODAL DANH MỤC
+-->
+<div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group  col-md-12">
+            <span class="thong-tin-thanh-toan">
+              <h5>Thêm mới danh mục </h5>
+            </span>
+          </div>
+          <div class="form-group col-md-12">
+            <label class="control-label">Nhập tên danh mục mới</label>
+            <input class="form-control" type="text" required>
+          </div>
+          <div class="form-group col-md-12">
+            <label class="control-label">Danh mục sản phẩm hiện đang có</label>
+            <ul style="padding-left: 20px;">
+              <li>Bàn ăn</li>
+            <li>Bàn thông minh</li>
+            <li>Tủ</li>
+            <li>Ghế gỗ</li>
+            <li>Ghế sắt</li>
+            <li>Giường người lớn</li>
+            <li>Giường trẻ em</li>
+            <li>Bàn trang điểm</li>
+            <li>Giá đỡ</li>
+            </ul>
+          </div>
+        </div>
+        <BR>
+        <button class="btn btn-save" type="button">Lưu lại</button>
+        <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+        <BR>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

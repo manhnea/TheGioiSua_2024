@@ -36,6 +36,7 @@ app.controller("LoginController", [
                         if (response.status === 200) {
                             localStorage.setItem("token", response.data.token);
                             const userInfo = parseJwt(response.data.token);
+                            userInfo.fullName = response.data.fullName;
                             localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
                             // Redirect to home page after successful login
