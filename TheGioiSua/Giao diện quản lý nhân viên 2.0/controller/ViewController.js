@@ -2,10 +2,6 @@ var app = angular.module("myApp", ["ngRoute"]);
 
 app.config(function ($routeProvider) {
   $routeProvider
-    .when("/", {
-      templateUrl: "doc/views/home.html",
-      controller: "IndexController",
-    })
     .when("/home", {
       templateUrl: "doc/views/home.html",
       controller: "IndexController",
@@ -46,15 +42,18 @@ app.config(function ($routeProvider) {
       redirectTo: "/login",
     });
 });
+app.service("AuthService", function () {
+  this.getToken = function () {
+    return localStorage.getItem("token");
+  };
 
-app.controller("HomeController", function ($scope) {
-  $scope.message = "Welcome to the Home Page!";
-});
+  this.getUserInfo = function () {
+    const userInfo = localStorage.getItem("userInfo");
+    return userInfo ? JSON.parse(userInfo) : null;
+  };
 
-app.controller("AboutController", function ($scope) {
-  $scope.message = "This is the About Page.";
-});
-
-app.controller("ContactController", function ($scope) {
-  $scope.message = "Contact us at contact@example.com.";
+  this.clearSession = function () {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+  };
 });

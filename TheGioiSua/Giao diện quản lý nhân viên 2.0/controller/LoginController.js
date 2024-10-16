@@ -25,9 +25,8 @@ app.controller("LoginController", [
               console.log(response.data.token);
               localStorage.setItem("token", response.data.token);
               const userInfo = parseJwt(response.data.token);
-
               localStorage.setItem("userInfo", JSON.stringify(userInfo));
-              $location.path("/");
+              $location.path("/home");
             } else {
               $scope.errorMessage = "Unexpected response: " + response.status;
             }

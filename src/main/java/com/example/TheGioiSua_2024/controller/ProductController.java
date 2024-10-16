@@ -8,11 +8,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin
 @RestController
 @RequestMapping("/Product")
 public class ProductController {
@@ -25,33 +29,41 @@ public class ProductController {
     }
     //http://localhost:1234/api/Product/add
     @PostMapping("/add")
-    public String addProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if (fieldError != null) {
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> addProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        String resultMessage = productService.addProduct(product);
 
-        return resultMessage;
+
+        return ResponseEntity.ok(Map.of("status", "success", "message", productService.addProduct(product)));
     }
     //http://localhost:1234/api/Product//update/{id}
     @PutMapping("/update/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError fieldError : fieldErrors) {
-            if (fieldError != null) {
-                return fieldError.getDefaultMessage();
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Map<String, String>> errors = new ArrayList<>();
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("field", fieldError.getField());
+                error.put("message", fieldError.getDefaultMessage());
+                errors.add(error);
             }
+            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return productService.updateProduct(id, product);
+        return ResponseEntity.ok(Map.of("status", "success", "message", productService.updateProduct(id, product)));
     }
     //http://localhost:1234/api/Product/delete/{id}
     @PutMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id, @RequestBody Product product) {
         productService.deleteProduct(id, product);
-        return "Xóa sản phẩm thành công.";
+        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
     }
 
 }
