@@ -2,10 +2,6 @@ var app = angular.module("myApp", ["ngRoute"]);
 
 app.config(function ($routeProvider) {
   $routeProvider
-    .when("/", {
-      templateUrl: "doc/views/home.html",
-      controller: "IndexController",
-    })
     .when("/home", {
       templateUrl: "doc/views/home.html",
       controller: "IndexController",
