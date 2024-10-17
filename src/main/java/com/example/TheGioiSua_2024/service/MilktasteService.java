@@ -29,6 +29,7 @@ public class MilktasteService implements IMilktasteService {
             return "Container với tên này đã tồn tại.";
         }
         milktaste.setStatus(1);
+        milktasteRepository.save(milktaste);
         return "Thêm thành công";
     }
 
