@@ -46,11 +46,20 @@ public class MilkbrandService implements IMilkbrandService {
     }
 
     @Override
-    public void deleteMilkbrand(Long id, Milkbrand milkbrand) {
-        Milkbrand existingMilkbrand = milkbrandRepository.findById(id).orElseThrow();
+    public String deleteMilkbrand(Long id) {
+        Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
         existingMilkbrand.setStatus(0);
         milkbrandRepository.save(existingMilkbrand);
+        return "Xóa thương hiệu sữa thành công.";
     }
+
+    @Override
+    public Milkbrand getMilkbrandById(Long id) {
+
+        return milkbrandRepository.findBydadata(id);
+    }
+
 
 }
 

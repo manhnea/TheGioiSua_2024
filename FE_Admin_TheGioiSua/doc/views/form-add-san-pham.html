@@ -116,53 +116,65 @@
 <!--
 MODAL CHỨC VỤ 
 -->
-<div class="modal fade"  id="addThuongHieu" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-  data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+<div class="modal fade" id="addThuongHieu" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
 
-      <div class="modal-body">
-        <div class="row">
-          <div class="form-group  col-md-12">
-            <span class="thong-tin-thanh-toan">
-              <h5>Thêm mới thương hiệu</h5>
-            </span>
-          </div>
-          <div class="form-group col-md-12">
-            <label class="control-label">Nhập tên thương hiệu mới</label>
-            <input class="form-control" type="text" required>
-          </div>
-          <div class="form-group col-md-12">
-            <label class="control-label">Thêm mô tả thương hiệu</label>
-            <input class="form-control" type="text" required>
-          </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <span class="thong-tin-thanh-toan">
+                            <h5>Thêm mới thương hiệu</h5>
+                        </span>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Nhập tên thương hiệu mới</label>
+                        <input class="form-control" type="text" ng-model="formData.milkbrandname" required>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="control-label">Thêm mô tả thương hiệu</label>
+                        <input class="form-control" type="text" ng-model="formData.description" required>
+                    </div>
+                </div>
+                <h2>Danh sách thương hiệu sữa</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên thương hiệu</th>
+                            <th>Mô tả</th>
+                            <th>Chức Năng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="brand in brands">
+                            <td>{{ brand.id }}</td>
+                            <td>{{ brand.milkbrandname }}</td>
+                            <td>{{ brand.description }}</td>
+                            <td>
+                                <a ng-click="deletebrand(brand.id)" class="btn btn-danger" role="button"
+                                    aria-pressed="true">
+                                    Xóa
+                                </a>
+                                <a ng-click="fillData(brand.id)" class="btn btn-primary" role="button"
+                                    aria-pressed="true">
+                                    Chỉnh sửa
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <button class="btn btn-save" type="button" ng-click="save()">Lưu lại</button>
+                <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
+                <br>
+            </div>
+            <div class="modal-footer">
+            </div>
         </div>
-        <h2>Danh sách thương hiệu sữa</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên thương hiệu</th>
-                    <th>Mô tả</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="brand in brands">
-                    <td>{{ brand.id }}</td>
-                    <td>{{ brand.milkbrandname }}</td>
-                    <td>{{ brand.description }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <BR>
-        <button class="btn btn-save" type="button">Lưu lại</button>
-        <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
-        <BR>
-      </div>
-      <div class="modal-footer">
-      </div>
     </div>
-  </div>
 </div>
 <!--
 MODAL

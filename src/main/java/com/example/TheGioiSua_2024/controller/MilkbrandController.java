@@ -25,6 +25,12 @@ public class MilkbrandController {
     public List<Milkbrand> lst() {
         return milkbrandService.getAllMilkbrands();
     }
+
+    @GetMapping("/lst/{id}")
+    public Milkbrand getMilkbrandById(@PathVariable Long id) {
+        return milkbrandService.getMilkbrandById(id);
+    }
+
     //http://localhost:1234/api/Milkbrand/add
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody @Valid Milkbrand milkbrand, BindingResult bindingResult) {
@@ -59,9 +65,9 @@ public class MilkbrandController {
         return ResponseEntity.ok(Map.of("status", "success", "message", milkbrandService.updateMilkbrand(id, milkbrand)));
     }
     //http://localhost:1234/api/Milkbrand/delete/{id}
-    @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody Milkbrand milkbrand) {
-        milkbrandService.deleteMilkbrand(id, milkbrand);
-       return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thương hiệu sữa thành công."));
+    @DeleteMapping("/delete/{id}") // Change to DELETE method
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        String message = milkbrandService.deleteMilkbrand(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }

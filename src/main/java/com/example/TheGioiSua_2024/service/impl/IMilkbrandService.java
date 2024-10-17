@@ -11,5 +11,7 @@ public interface IMilkbrandService {
 
     String updateMilkbrand(Long id, Milkbrand milkbrand);
 
-    void deleteMilkbrand(Long id, Milkbrand milkbrand);
+    String deleteMilkbrand(Long id);
+
+    Milkbrand getMilkbrandById(Long id);
 }
