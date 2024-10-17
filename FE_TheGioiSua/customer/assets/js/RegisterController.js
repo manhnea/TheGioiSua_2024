@@ -17,7 +17,12 @@ app.controller("RegisterController", [
 
     $scope.register = function () {
       // Kiểm tra xem tất cả các trường đã được điền đầy đủ chưa
-      if (!$scope.user.username || !$scope.user.fullname || !$scope.user.email || !$scope.user.password) {
+      if (
+        !$scope.user.username ||
+        !$scope.user.fullname ||
+        !$scope.user.email ||
+        !$scope.user.password
+      ) {
         $scope.errorMessage = "Vui lòng điền đầy đủ thông tin!";
         return; // Kết thúc hàm nếu có trường trống
       }
@@ -29,25 +34,27 @@ app.controller("RegisterController", [
       }
 
       // Gửi yêu cầu đăng ký
-      $http.post("http://localhost:1234/api/user/register", $scope.user)
-        .then(function (response) {
+      $http.post("http://localhost:1234/api/user/register", $scope.user).then(
+        function (response) {
           // Kiểm tra mã trạng thái
           if (response.status === 200) {
             $scope.successMessage = response.data.message; // Giả định bạn trả về { "message": "Tạo Tài Khoản Thành Công" }
-            $location.path('/login'); // Chuyển hướng đến trang /login
+            $location.path("/login"); // Chuyển hướng đến trang /login
           } else {
             // Nếu mã trạng thái không phải là 200, hiển thị thông báo lỗi
-            $scope.errorMessage = response.data.error || "Đã xảy ra lỗi không xác định!";
+            $scope.errorMessage =
+              response.data.error || "Đã xảy ra lỗi không xác định!";
           }
-        }, function (errorResponse) {
+        },
+        function (errorResponse) {
           // Kiểm tra thông báo lỗi trong phản hồi
           if (errorResponse.data && errorResponse.data.error) {
             $scope.errorMessage = errorResponse.data.error; // Lấy thông điệp lỗi từ phản hồi
           } else {
             $scope.errorMessage = "Đã xảy ra lỗi không xác định!"; // Thông báo chung nếu không có thông tin
           }
-        });
-
+        }
+      );
     };
   },
 ]);
