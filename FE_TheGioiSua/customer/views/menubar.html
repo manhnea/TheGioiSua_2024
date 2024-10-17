@@ -1,0 +1,62 @@
+<div class="mt-4">
+    <div class="card shadow p-3">
+        <div ng-controller="MenuBarController">
+            <!-- Phần chọn loại sản phẩm -->
+            <div class="mb-4">
+                <h6>Chọn loại sản phẩm</h6>
+                <div>
+                    <label for="productSelect">Chọn sản phẩm:</label><br>
+                    <select class="form-select" id="productSelect" ng-model="selectedMilkType">
+                        <option value="">Chọn loại sản phẩm</option>
+                        <option ng-repeat="type in milkTypes" value="{{ type.id }}">{{type.milkTypename}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Phần lọc theo giá -->
+            <div class="mb-4">
+                <h6>Lọc theo giá</h6>
+                <div>
+                    <label for="priceSelect">Chọn khoảng giá:</label><br>
+                    <select class="form-select" id="priceSelect" ng-model="selectedPriceRange">
+                        <option value="" selected>Chọn Khoảng Giá</option>
+                        <option value="0">100,000 - 200,000</option>
+                        <option value="1">200,000 - 300,000</option>
+                        <option value="2">Trên 300,000</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Phần lọc theo hãng sữa -->
+            <div class="mb-4">
+                <h6>Chọn hãng sữa</h6>
+                <div>
+                    <label for="brandSelect">Chọn hãng:</label><br>
+                    <select class="form-select" id="brandSelect" ng-model="selectedMilkBrand">
+                        <option value="">Chọn hãng sữa</option>
+                        <option ng-repeat="brand in milkBrands" value="{{ brand.id }}">{{brand.milkbrandname}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Phần lọc theo đối tượng sử dụng -->
+            <div class="mb-4">
+                <h6>Đối tượng sử dụng</h6>
+                <div>
+                    <label for="userSelect">Chọn đối tượng:</label><br>
+                    <select class="form-select" id="userSelect" ng-model="selectedTargetUser">
+                        <option value="">Chọn đối tượng sử dụng</option>
+                        <option ng-repeat="user in targetUsers" value="{{ user.id }}">{{ user.targetuser }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Nút tìm kiếm -->
+            <div class="text-center">
+                <button type="button" class="btn btn-primary w-100" ng-click="search()">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

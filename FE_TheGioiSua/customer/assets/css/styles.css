@@ -6,6 +6,7 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+/* login */
 .body-login{
   min-height: 100vh;
   width: 100%;
@@ -91,3 +92,41 @@
 .signup label:hover{
   text-decoration: underline;
 }
+/* header */
+.bg-orange {
+  background-color: #ff6b00;
+}
+
+.text-orange {
+  color: #ff6b00;
+}
+
+.img-size-x {
+  width: 150px;
+}
+
+.top-bar {
+  font-size: 14px;
+}
+
+.navbar-nav .nav-link {
+  font-size: 16px;
+  padding: 8px 12px;
+}
+
+.navbar-nav .badge {
+  background-color: #ff6b00;
+  color: white;
+}
+
+.btn-orange {
+  background-color: #ff6b00;
+  border: none;
+  color: white;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #ff6b00;
+}
+

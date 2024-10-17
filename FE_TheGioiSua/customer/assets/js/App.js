@@ -21,7 +21,7 @@ app.config([
         controller: "RegisterController",
       })
       .otherwise({
-        redirectTo: "/login",
+        redirectTo: "/",
       });
     $locationProvider.hashPrefix(""); // Bỏ prefix hash
   },
