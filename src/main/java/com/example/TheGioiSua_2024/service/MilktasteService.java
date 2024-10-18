@@ -13,6 +13,7 @@ import java.util.Optional;
 public class MilktasteService implements IMilktasteService {
     @Autowired
     private MilktasteRepository milktasteRepository;
+
     @Override
     public List<Milktaste> getAllMilktaste() {
         return milktasteRepository.findAll();
@@ -23,29 +24,28 @@ public class MilktasteService implements IMilktasteService {
         // Loại bỏ khoảng trắng ở đầu và cuối tên
         String trimmedName = milktaste.getMilktastename().trim();
         milktaste.setMilktastename(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
+        // Kiểm tra xem tên đã tồn tại chưa
         Optional<Milktaste> existingContainer = getMilktasteByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+            return "Tên vị sữa này đã tồn tại.";
         }
         milktaste.setStatus(1);
-        return "Thêm thành công";
+        milktasteRepository.save(milktaste); // Lưu đối tượng milktaste vào cơ sở dữ liệu
+        return "Thêm vị sữa thành công";
     }
 
     @Override
     public String updateMilktaste(Long id, Milktaste milktaste) {
-        // Loại bỏ khoảng trắng ở đầu và cuối tên
+        Milktaste m = milktasteRepository.findById(id).orElseThrow();
         String trimmedName = milktaste.getMilktastename().trim();
         milktaste.setMilktastename(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
         Optional<Milktaste> existingContainer = getMilktasteByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+            return "Tên vị sữa này đã tồn tại.";
         }
-        Milktaste m = milktasteRepository.findById(id).orElseThrow();
         m.setMilktastename(milktaste.getMilktastename());
         milktasteRepository.save(m);
-        return "Thêm thành công";
+        return "Cập nhật vị sữa thành công"; // Đã thay đổi thông báo
     }
 
     @Override

@@ -32,7 +32,7 @@ public class InvoicedetailService implements IInvoicedetailService {
     public String saveInvoicedetail(Invoicedetail invoicedetail) {
         invoicedetail.setStatus(1);
         invoicedetailRepository.save(invoicedetail);
-        return "Invoicedetail added successfully";
+        return "Thêm chi tiết hóa đơn thành công";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class InvoicedetailService implements IInvoicedetailService {
         existingInvoicedetail.setPrice(invoicedetail.getPrice());
         existingInvoicedetail.setTotalprice(invoicedetail.getTotalprice());
         existingInvoicedetail.setStatus(1);
-        return "Invoicedetail updated successfully!";
+        return "Cập nhật chi tiết hóa đơn thành công!";
     }
 
     @Override
@@ -55,7 +55,6 @@ public class InvoicedetailService implements IInvoicedetailService {
         existingInvoicedetail.setStatus(0);
         invoicedetailRepository.save(existingInvoicedetail);
     }
-
 
     public Invoicedetail getInvoicedetailById(Long id) {
         return invoicedetailRepository.findById(id).orElseThrow();

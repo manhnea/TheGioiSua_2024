@@ -1,6 +1,5 @@
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IVoucherService;
@@ -12,58 +11,65 @@ import java.util.Optional;
 
 @Service
 public class VoucherService implements IVoucherService {
-@Autowired
-private VoucherRepository voucherRepository;
+
+    @Autowired
+    private VoucherRepository voucherRepository;
+
     @Override
     public List<Voucher> getVoucherList() {
         return voucherRepository.findAll();
     }
 
     @Override
-    public String  saveVoucher(Voucher voucher) {
+    public String saveVoucher(Voucher voucher) {
+        // Loại bỏ khoảng trắng ở đầu và cuối mã voucher
         String trimmedName = voucher.getVouchercode().trim();
         voucher.setVouchercode(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
-        Optional<Voucher> existingContainer = getVoucherByName(trimmedName);
-        if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+        // Kiểm tra xem mã voucher đã tồn tại chưa
+        Optional<Voucher> existingVoucher = getVoucherByName(trimmedName);
+        if (existingVoucher.isPresent()) {
+            return "Voucher với mã này đã tồn tại.";
         }
-        voucher.setStatus(1);
+        voucher.setStatus(1); // Kích hoạt voucher
         voucherRepository.save(voucher);
-        return "Voucher saved";
+        return "Đã lưu voucher thành công.";
     }
 
     @Override
     public String updateVoucher(Long id, Voucher voucher) {
-       Voucher voucher1 = voucherRepository.findById(id).orElseThrow();
-        String trimmedName = voucher1.getVouchercode();
-        if (trimmedName.equals(voucher.getVouchercode())) {
-            voucher1.setDiscountpercentage(voucher.getDiscountpercentage());
-            voucher1.setMaxamount(voucher.getMaxamount());
-            voucher1.setEnddate(voucher.getEnddate());
-            voucher1.setUsagecount(voucher.getUsagecount());
-            voucher1.setStartdate(voucher.getStartdate());
-            voucher1.setVouchercode(voucher.getVouchercode());
-            voucherRepository.save(voucher1);
-            return "Voucher updated";
-        } else if (voucherRepository.findByVoucher(voucher.getVouchercode()).isPresent()) {
-            return "Tên này đã tồn tại.";
+        Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
+        String currentVoucherCode = existingVoucher.getVouchercode();
+
+        // Nếu mã voucher không thay đổi
+        if (currentVoucherCode.equals(voucher.getVouchercode())) {
+            existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
+            existingVoucher.setMaxamount(voucher.getMaxamount());
+            existingVoucher.setEnddate(voucher.getEnddate());
+            existingVoucher.setUsagecount(voucher.getUsagecount());
+            existingVoucher.setStartdate(voucher.getStartdate());
+            voucherRepository.save(existingVoucher);
+            return "Đã cập nhật voucher thành công.";
         }
-       voucher1.setDiscountpercentage(voucher.getDiscountpercentage());
-       voucher1.setMaxamount(voucher.getMaxamount());
-       voucher1.setEnddate(voucher.getEnddate());
-       voucher1.setUsagecount(voucher.getUsagecount());
-       voucher1.setStartdate(voucher.getStartdate());
-       voucher1.setVouchercode(voucher.getVouchercode());
-      voucherRepository.save(voucher1);
-      return "Voucher updated";
+        // Nếu mã voucher thay đổi, kiểm tra xem mã mới đã tồn tại chưa
+        else if (voucherRepository.findByVoucher(voucher.getVouchercode()).isPresent()) {
+            return "Mã voucher này đã tồn tại.";
+        }
+
+        existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
+        existingVoucher.setMaxamount(voucher.getMaxamount());
+        existingVoucher.setEnddate(voucher.getEnddate());
+        existingVoucher.setUsagecount(voucher.getUsagecount());
+        existingVoucher.setStartdate(voucher.getStartdate());
+        existingVoucher.setVouchercode(voucher.getVouchercode());
+        voucherRepository.save(existingVoucher);
+        return "Đã cập nhật voucher thành công.";
     }
 
     @Override
     public Voucher deleteVoucher(Long id) {
-        Voucher voucher1 = voucherRepository.findById(id).orElseThrow();
-        voucher1.setStatus(0);
-        return voucherRepository.save(voucher1);
+        Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
+        existingVoucher.setStatus(0); // Ngừng hoạt động voucher
+        return voucherRepository.save(existingVoucher);
     }
 
     @Override

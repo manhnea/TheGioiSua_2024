@@ -22,7 +22,7 @@ public class MilktypeService implements IMilktypeService {
         // Kiểm tra xem tên  đã tồn tại chưa
         Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+            return "Tên này đã tồn tại.";
         }
         milktype.setStatus(1);
         milktypeRepository.save(milktype);
