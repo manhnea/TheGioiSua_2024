@@ -62,9 +62,9 @@ public class MilkdetailRestController {
     }
     //http://localhost:1234/api/Milkdetail/delete/{id}
     @PutMapping("/delete/{id}")
-    private ResponseEntity<?> delete(@PathVariable("id") Long id, @RequestBody Milkdetail milkdetail){
-    milkdetailService.delete(id, milkdetail);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+    private ResponseEntity<?> delete(@PathVariable("id") Long id){
+    String message = milkdetailService.delete(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 
 }

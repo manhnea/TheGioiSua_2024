@@ -63,9 +63,9 @@ public class ProductRestController {
     }
     //http://localhost:1234/api/Product/delete/{id}
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        productService.deleteProduct(id, product);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
+        String message = productService.deleteProduct(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 
 }

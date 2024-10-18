@@ -67,11 +67,18 @@ public class MilkdetailService implements IMilkdetailService {
     }
 
     @Override
-    public String delete(Long id, Milkdetail milkdetail) {
+    public String delete(Long id) {
         Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        milkdetail1.setStatus(0);
-        milkdetailRepository.save(milkdetail1);
-        return "Xóa thành công";
+        if(milkdetail1.getStatus() == 0) {
+            milkdetail1.setStatus(1);
+            milkdetailRepository.save(milkdetail1);
+            return "Khôi phục thành công";
+        }else {
+            milkdetail1.setStatus(0);
+            milkdetailRepository.save(milkdetail1);
+            return "Xóa thành công";
+        }
+
     }
 
     @Override

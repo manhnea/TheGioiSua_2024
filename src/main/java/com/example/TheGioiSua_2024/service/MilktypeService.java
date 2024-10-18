@@ -45,10 +45,17 @@ public class MilktypeService implements IMilktypeService {
          return "Sua Thanh Cong";
     }
     @Override
-    public MilkType DeleteMilktype(Long id) {
+    public String DeleteMilktype(Long id) {
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
-        milktype1.setStatus(0);
-        return milktypeRepository.save(milktype1);
+        if (milktype1.getStatus() == 0) {
+            milktype1.setStatus(1);
+            milktypeRepository.save(milktype1);
+            return "Khôi phục loại sữa thành công!";
+        } else {
+            milktype1.setStatus(0);
+            milktypeRepository.save(milktype1);
+            return "Xóa Thanh Cong";
+        }
     }
 
     @Override

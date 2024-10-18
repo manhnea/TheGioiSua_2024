@@ -64,7 +64,7 @@ public class VoucherRestController {
     //http://localhost:1234/api/Voucher/delete/{id}
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id){
-        voucherService.deleteVoucher(id);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+        String message = voucherService.deleteVoucher(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }

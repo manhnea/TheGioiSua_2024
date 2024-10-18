@@ -51,10 +51,17 @@ public class UsagecapacityService implements IUsagecapacityService {
     }
 
     @Override
-    public Usagecapacity deleteUsagecapacity(Long id) {
+    public String deleteUsagecapacity(Long id) {
         Usagecapacity existingUsagecapacity = usagecapacityRepository.findById(id).orElseThrow();
-        existingUsagecapacity.setStatus(0);  // Đặt trạng thái ngừng hoạt động
-        return usagecapacityRepository.save(existingUsagecapacity);
+        if (existingUsagecapacity.getStatus() == 0) {
+            existingUsagecapacity.setStatus(1);
+            usagecapacityRepository.save(existingUsagecapacity);
+            return "Khôi phục đơn vị sử dụng thành công.";
+        } else {
+            existingUsagecapacity.setStatus(0);
+            usagecapacityRepository.save(existingUsagecapacity);
+            return "Đã xóa đơn vị sử dụng thành công.";
+        }
     }
 
     @Override

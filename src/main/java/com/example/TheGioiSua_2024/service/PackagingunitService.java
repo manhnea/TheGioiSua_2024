@@ -51,10 +51,15 @@ public class PackagingunitService implements IPackagingunitService {
     }
 
     @Override
-    public Packagingunit deletePackagingunit(Long id) {
+    public String deletePackagingunit(Long id) {
         Packagingunit existingPackagingunit = packagingunitRepository.findById(id).orElseThrow();
-        existingPackagingunit.setStatus(0);
-        return packagingunitRepository.save(existingPackagingunit);
+        if (existingPackagingunit.getStatus() == 0) {
+            existingPackagingunit.setStatus(1);
+            return "Khôi phục đơn vị đóng gói thành công.";
+        }else {
+            existingPackagingunit.setStatus(0);
+            return "Xóa đơn vị đóng gói thành công.";
+        }
     }
 
     @Override

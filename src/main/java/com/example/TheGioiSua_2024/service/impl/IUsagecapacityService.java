@@ -8,7 +8,7 @@ public interface IUsagecapacityService {
     List<Usagecapacity> getAllUsagecapacity();
     String addUsagecapacity(Usagecapacity usagecapacity);
     String updateUsagecapacity(Long id, Usagecapacity usagecapacity);
-    Usagecapacity deleteUsagecapacity(Long id);
+    String deleteUsagecapacity(Long id);
 
     Usagecapacity getUsagecapacityById(Long id);
 }

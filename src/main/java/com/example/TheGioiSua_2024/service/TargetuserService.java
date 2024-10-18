@@ -57,10 +57,17 @@ public class TargetuserService implements ITargetuserService {
     }
 
     @Override
-    public Targetuser deleteTargetuser(Long id) {
+    public String deleteTargetuser(Long id) {
         Targetuser existingTargetuser = targetuserRepository.findById(id).orElseThrow();
-        existingTargetuser.setStatus(0);  // Đặt trạng thái ngừng hoạt động
-        return targetuserRepository.save(existingTargetuser);
+       if (existingTargetuser.getStatus() == 0) {
+            existingTargetuser.setStatus(1);
+            targetuserRepository.save(existingTargetuser);
+            return "Khôi phục người dùng mục tiêu thành công.";
+        } else {
+            existingTargetuser.setStatus(0);
+            targetuserRepository.save(existingTargetuser);
+            return "Xóa người dùng mục tiêu thành công.";
+        }
     }
 
     @Override

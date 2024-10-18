@@ -55,10 +55,17 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public void deleteInvoice(Long id, Invoice invoice) {
+    public String deleteInvoice(Long id) {
         Invoice invoice1 = invoiceRepository.findById(id).orElseThrow();
-        invoice1.setStatus(0);
-        invoiceRepository.save(invoice1);
+        if(invoice1.getStatus() == 0) {
+            invoice1.setStatus(1);
+            invoiceRepository.save(invoice1);
+            return "Hóa đơn đã được khôi phục!";
+        } else {
+            invoice1.setStatus(0);
+            invoiceRepository.save(invoice1);
+            return "Hóa đơn đã được xóa!";
+        }
     }
 
     @Override

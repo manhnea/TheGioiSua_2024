@@ -49,10 +49,17 @@ public class MilktasteService implements IMilktasteService {
     }
 
     @Override
-    public Milktaste deleteMilktaste(Long id) {
-        Milktaste m = milktasteRepository.findById(id).orElseThrow();
-        m.setStatus(0);
-        return milktasteRepository.save(m);
+    public String deleteMilktaste(Long id) {
+        Milktaste existingMilktaste = milktasteRepository.findById(id).orElseThrow();
+        if (existingMilktaste.getStatus() == 0) {
+            existingMilktaste.setStatus(1);
+            milktasteRepository.save(existingMilktaste);
+            return "Khôi phục vị sữa thành công!";
+        } else {
+            existingMilktaste.setStatus(0);
+            milktasteRepository.save(existingMilktaste);
+            return "Xóa vị sữa thành công!";
+        }
     }
 
     @Override

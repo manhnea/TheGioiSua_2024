@@ -66,8 +66,8 @@ public class InvoiceRestController {
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteInvoice(@PathVariable Long id ,@RequestBody Invoice invoice) {
-        invoiceService.deleteInvoice(id, invoice);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Delete success"));
+    public ResponseEntity<?> deleteInvoice(@PathVariable Long id) {
+       String message =  invoiceService.deleteInvoice(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }
