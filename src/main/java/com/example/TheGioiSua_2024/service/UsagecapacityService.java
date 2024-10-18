@@ -13,9 +13,9 @@ public class UsagecapacityService implements IUsagecapacityService {
     @Autowired
     UsagecapacityRepository usagecapacityRepository;
     @Override
-    public Usagecapacity addUsagecapacity(Usagecapacity usagecapacity) {
+    public String addUsagecapacity(Usagecapacity usagecapacity) {
         usagecapacity.setStatus(1);
-        return usagecapacityRepository.save(usagecapacity);
+        return "Đã thêm thành công.";
     }
 
     @Override
@@ -24,11 +24,20 @@ public class UsagecapacityService implements IUsagecapacityService {
     }
 
     @Override
-    public Usagecapacity updateUsagecapacity(Long id, Usagecapacity usagecapacity) {
+    public String updateUsagecapacity(Long id, Usagecapacity usagecapacity) {
         Usagecapacity  usagecapacity1 = usagecapacityRepository.findById(id).orElseThrow();
+        String currentunit = usagecapacity1.getUnit();
+        if (currentunit.equals(usagecapacity.getUnit())) {
+            usagecapacity1.setCapacity(usagecapacity.getCapacity());
+            usagecapacity1.setStatus(1);
+            return "Đã cập nhật thành công.";
+        } else if (usagecapacityRepository.findByUnit(usagecapacity.getUnit()).isPresent()) {
+            return "Đơn vị này đã tồn tại.";
+        }
         usagecapacity1.setCapacity(usagecapacity.getCapacity());
         usagecapacity1.setUnit(usagecapacity.getUnit());
-        return usagecapacityRepository.save(usagecapacity1);
+        usagecapacity1.setStatus(1);
+        return "Đã cập nhật thành công.";
     }
 
     @Override
@@ -36,5 +45,10 @@ public class UsagecapacityService implements IUsagecapacityService {
         Usagecapacity  usagecapacity1 = usagecapacityRepository.findById(id).orElseThrow();
         usagecapacity1.setStatus(0);
         return usagecapacityRepository.save(usagecapacity1);
+    }
+
+    @Override
+    public Usagecapacity getUsagecapacityById(Long id) {
+        return usagecapacityRepository.findById(id).orElseThrow();
     }
 }

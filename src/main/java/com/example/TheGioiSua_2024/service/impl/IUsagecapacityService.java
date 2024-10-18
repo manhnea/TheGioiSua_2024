@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface IUsagecapacityService {
     List<Usagecapacity> getAllUsagecapacity();
-    Usagecapacity addUsagecapacity(Usagecapacity usagecapacity);
-    Usagecapacity updateUsagecapacity(Long id, Usagecapacity usagecapacity);
+    String addUsagecapacity(Usagecapacity usagecapacity);
+    String updateUsagecapacity(Long id, Usagecapacity usagecapacity);
     Usagecapacity deleteUsagecapacity(Long id);
+
+    Usagecapacity getUsagecapacityById(Long id);
 }

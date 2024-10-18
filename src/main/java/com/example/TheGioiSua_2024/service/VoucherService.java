@@ -35,14 +35,20 @@ private VoucherRepository voucherRepository;
 
     @Override
     public String updateVoucher(Long id, Voucher voucher) {
-        String trimmedName = voucher.getVouchercode().trim();
-        voucher.setVouchercode(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
-        Optional<Voucher> existingContainer = getVoucherByName(trimmedName);
-        if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
-        }
        Voucher voucher1 = voucherRepository.findById(id).orElseThrow();
+        String trimmedName = voucher1.getVouchercode();
+        if (trimmedName.equals(voucher.getVouchercode())) {
+            voucher1.setDiscountpercentage(voucher.getDiscountpercentage());
+            voucher1.setMaxamount(voucher.getMaxamount());
+            voucher1.setEnddate(voucher.getEnddate());
+            voucher1.setUsagecount(voucher.getUsagecount());
+            voucher1.setStartdate(voucher.getStartdate());
+            voucher1.setVouchercode(voucher.getVouchercode());
+            voucherRepository.save(voucher1);
+            return "Voucher updated";
+        } else if (voucherRepository.findByVoucher(voucher.getVouchercode()).isPresent()) {
+            return "Tên này đã tồn tại.";
+        }
        voucher1.setDiscountpercentage(voucher.getDiscountpercentage());
        voucher1.setMaxamount(voucher.getMaxamount());
        voucher1.setEnddate(voucher.getEnddate());
@@ -63,5 +69,10 @@ private VoucherRepository voucherRepository;
     @Override
     public Optional<Voucher> getVoucherByName(String voucherName) {
         return voucherRepository.findByVoucher(voucherName);
+    }
+
+    @Override
+    public Voucher getVoucherById(Long id) {
+        return voucherRepository.findById(id).orElseThrow();
     }
 }

@@ -1,7 +1,7 @@
 package com.example.TheGioiSua_2024.controller;
 
-import com.example.TheGioiSua_2024.entity.Invoice;
-import com.example.TheGioiSua_2024.service.InvoiceService;
+import com.example.TheGioiSua_2024.entity.Userinvoice;
+import com.example.TheGioiSua_2024.service.UserinvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,23 +13,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @CrossOrigin
 @RestController
-@RequestMapping("/Invoice")
-public class InvoiceController {
+@RequestMapping("/Userinvoice")
+public class UserinvoiceRestController {
     @Autowired
-    private InvoiceService invoiceService;
+    private UserinvoiceService userinvoiceService;
 
-    //RessourceEndPoint:http://localhost:1234/api/Invoice/lst
+    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/lst
     @GetMapping("/lst")
-    public List<Invoice> listInvoice() {
-        return invoiceService.getInvoiceList();
+    public List<Userinvoice> listUserinvoice() {
+        return userinvoiceService.getUserinvoiceList();
     }
-
-    //RessourceEndPoint:http://localhost:1234/api/Invoice/add
+@GetMapping("/lst/{id}")
+    public Userinvoice getUserinvoice(@PathVariable Long id) {
+        return userinvoiceService.getUserinvoiceById(id);
+    }
+//    http://localhost:1234/Userinvoice/add
     @PostMapping("/add")
-    public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
+    public ResponseEntity<?> addUserinvoice(@RequestBody @Valid Userinvoice userinvoice, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -40,13 +42,12 @@ public class InvoiceController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-
-        return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.saveInvoice(invoice)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", userinvoiceService.saveUserinvoice(userinvoice)));
     }
 
-    //RessourceEndPoint:http://localhost:1234/api/Invoice/update
-    @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateInvoice(@PathVariable Long id,@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
+    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/update
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateUserinvoice(@PathVariable Long id, @RequestBody @Valid Userinvoice userinvoice, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -57,13 +58,14 @@ public class InvoiceController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-       return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", userinvoiceService.updateUserinvoice(id, userinvoice)));
     }
 
-    //RessourceEndPoint:http://localhost:1234/api/Invoice/delete
+    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteInvoice(@PathVariable Long id ,@RequestBody Invoice invoice) {
-        invoiceService.deleteInvoice(id, invoice);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Delete success"));
+    public ResponseEntity<?> deleteUserinvoice(@PathVariable Long id, @RequestBody Userinvoice userinvoice) {
+        userinvoiceService.deleteUserinvoice(id, userinvoice);
+        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
     }
+
 }

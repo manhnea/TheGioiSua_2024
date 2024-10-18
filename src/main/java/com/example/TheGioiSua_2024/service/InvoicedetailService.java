@@ -57,4 +57,7 @@ public class InvoicedetailService implements IInvoicedetailService {
     }
 
 
+    public Invoicedetail getInvoicedetailById(Long id) {
+        return invoicedetailRepository.findById(id).orElseThrow();
+    }
 }

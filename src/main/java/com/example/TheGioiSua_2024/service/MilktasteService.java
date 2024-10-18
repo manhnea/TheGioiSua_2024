@@ -59,4 +59,9 @@ public class MilktasteService implements IMilktasteService {
     public Optional<Milktaste> getMilktasteByName(String milktasteName) {
         return milktasteRepository.findByMilktastename(milktasteName);
     }
+
+    @Override
+    public Milktaste getMilktasteById(Long id) {
+        return milktasteRepository.findById(id).orElseThrow();
+    }
 }

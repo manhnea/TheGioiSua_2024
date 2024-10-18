@@ -13,4 +13,6 @@ public interface IInvoiceService {
     String updateInvoice(Long id, Invoice invoice);
 
     void deleteInvoice(Long id, Invoice invoice);
+
+    Invoice getInvoiceById(Long id);
 }

@@ -59,5 +59,10 @@ public class InvoiceService implements IInvoiceService {
         invoiceRepository.save(invoice1);
     }
 
+    @Override
+    public Invoice getInvoiceById(Long id) {
+        return invoiceRepository.findById(id).orElseThrow();
+    }
+
 
 }

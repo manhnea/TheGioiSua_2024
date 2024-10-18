@@ -51,4 +51,9 @@ public class UserinvoiceService implements IUserinvoiceService {
         existingUserinvoice.setStatus(0);
         userinvoiceRepository.save(existingUserinvoice);
     }
+
+    @Override
+    public Userinvoice getUserinvoiceById(Long id) {
+        return userinvoiceRepository.findById(id).orElseThrow();
+    }
 }

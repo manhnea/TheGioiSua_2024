@@ -61,4 +61,9 @@ public class PackagingunitService implements IPackagingunitService {
     public Optional<Packagingunit> getPackagingunitByName(String packagingunitName) {
         return Optional.empty();
     }
+
+    @Override
+    public Packagingunit getPackagingunitById(Long id) {
+        return packagingunitRepository.findById(id).orElseThrow();
+    }
 }

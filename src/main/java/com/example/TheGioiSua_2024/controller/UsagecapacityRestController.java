@@ -40,6 +40,10 @@ public class UsagecapacityRestController {
         }
        return ResponseEntity.ok(Map.of("status", "success", "message", usagecapacityService.addUsagecapacity(usagecapacity)));
     }
+    @GetMapping("/lst/{id}")
+    public Usagecapacity getUsagecapacity(@PathVariable("id") Long id){
+        return usagecapacityService.getUsagecapacityById(id);
+    }
     //http://localhost:1234/api/Usagecapacity/update/{id}
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUsagecapacity(@PathVariable("id") Long id, @RequestBody @Valid Usagecapacity usagecapacity, BindingResult bindingResult){

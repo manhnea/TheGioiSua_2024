@@ -25,6 +25,10 @@ public class MilktypeRestController {
     public List<MilkType> getAllMilktype() {
         return milktypeService.GetAllMilktype();
     }
+    @GetMapping("/lst/{id}")
+    public MilkType getMilktype(@PathVariable("id") Long id) {
+        return milktypeService.GetMilktypeById(id);
+    }
     //http://localhost:1234/api/Milktype/add
     @PostMapping("/add")
     public ResponseEntity<?> addMilktype(@RequestBody @Valid MilkType milktype, BindingResult bindingResult) {

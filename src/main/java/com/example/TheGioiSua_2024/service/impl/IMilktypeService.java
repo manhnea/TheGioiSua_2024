@@ -12,4 +12,6 @@ public interface IMilktypeService {
     String UpdateMilktype(Long id,MilkType milktype);
     MilkType DeleteMilktype(Long id);
     Optional<MilkType> getMilkTypeByName(String milkTypeName);
+
+    MilkType GetMilktypeById(Long id);
 }

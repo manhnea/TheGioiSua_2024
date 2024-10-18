@@ -12,4 +12,6 @@ public interface IPackagingunitService {
     String updatePackagingunit(Long id,Packagingunit packagingunit);
     Packagingunit deletePackagingunit(Long id);
     Optional<Packagingunit> getPackagingunitByName(String packagingunitName);
+
+    Packagingunit getPackagingunitById(Long id);
 }

@@ -35,15 +35,16 @@ public class TargetuserService implements ITargetuserService {
 
     @Override
     public String updateTargetuser(Long id, Targetuser targetuser) {
-        // Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = targetuser.getTargetName().trim();
-        targetuser.setTargetName(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
-        Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
-        if (existingContainer.isPresent()) {
-            return "Targetuser với tên này đã tồn tại.";
-        }
         Targetuser targetuser1 = targetuserRepository.findById(id).orElseThrow();
+        String currentProductName = targetuser1.getTargetName();
+        if (currentProductName.equals(targetuser.getTargetName())) {
+            targetuser1.setDescription(targetuser.getDescription());
+            targetuser1.setStatus(1);
+            targetuserRepository.save(targetuser1);
+            return "Updated Successfully";
+        } else if (targetuserRepository.findByTargetusername(targetuser.getTargetName()).isPresent()) {
+            return "Tên này đã tồn tại.";
+        }
         targetuser1.setDescription(targetuser.getDescription());
         targetuser1.setTargetName(targetuser.getTargetName());
          targetuserRepository.save(targetuser1);
@@ -60,6 +61,11 @@ public class TargetuserService implements ITargetuserService {
     @Override
     public Optional<Targetuser> getTargetuserByName(String targetname) {
         return targetuserRepository.findByTargetusername(targetname);
+    }
+
+    @Override
+    public Targetuser getTargetuserById(Long id) {
+        return targetuserRepository.findById(id).orElseThrow();
     }
 
 

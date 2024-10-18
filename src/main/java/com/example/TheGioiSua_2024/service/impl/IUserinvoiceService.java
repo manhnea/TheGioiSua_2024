@@ -12,4 +12,6 @@ public interface IUserinvoiceService {
     String updateUserinvoice(Long id, Userinvoice userinvoice);
 
     void deleteUserinvoice(Long id, Userinvoice userinvoice);
+
+    Userinvoice getUserinvoiceById(Long id);
 }

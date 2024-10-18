@@ -13,13 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 @CrossOrigin
 @RestController
 @RequestMapping("/Product")
-public class ProductController {
+public class ProductRestController {
     @Autowired
     private ProductService productService;
     //http://localhost:1234/api/Product/lst
@@ -43,6 +41,10 @@ public class ProductController {
 
 
         return ResponseEntity.ok(Map.of("status", "success", "message", productService.addProduct(product)));
+    }
+    @GetMapping("/lst/{id}")
+    public Product getProduct(@PathVariable("id") Long id) {
+        return productService.getProductById(id);
     }
     //http://localhost:1234/api/Product//update/{id}
     @PutMapping("/update/{id}")

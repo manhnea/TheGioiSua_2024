@@ -25,6 +25,10 @@ public class MilktasteRestController {
     public List<Milktaste> lst() {
         return milktasteService.getAllMilktaste();
     }
+    @GetMapping("/lst/{id}")
+    public Milktaste lst(@PathVariable("id") Long id) {
+        return milktasteService.getMilktasteById(id);
+    }
     //http://localhost:1234/api/Milktaste/add
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody @Valid Milktaste milktaste, BindingResult bindingResult) {

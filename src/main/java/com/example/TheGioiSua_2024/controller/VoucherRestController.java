@@ -26,6 +26,10 @@ public class VoucherRestController {
         return voucherService.getVoucherList();
     }
     //http://localhost:1234/api/Voucher/add
+    @GetMapping("/lst/{id}")
+    public Voucher get(@PathVariable("id") Long id){
+        return voucherService.getVoucherById(id);
+    }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {

@@ -1,7 +1,7 @@
 package com.example.TheGioiSua_2024.controller;
 
-import com.example.TheGioiSua_2024.entity.Userinvoice;
-import com.example.TheGioiSua_2024.service.UserinvoiceService;
+import com.example.TheGioiSua_2024.entity.Milkbrand;
+import com.example.TheGioiSua_2024.service.MilkbrandService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +13,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @CrossOrigin
 @RestController
-@RequestMapping("/Userinvoice")
-public class UserinvoiceController {
+@RequestMapping("/Milkbrand")
+public class MilkbrandRestController {
     @Autowired
-    private UserinvoiceService userinvoiceService;
-
-    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/lst
+    private MilkbrandService milkbrandService;
+    //http://localhost:1234/api/Milkbrand/lst
     @GetMapping("/lst")
-    public List<Userinvoice> listUserinvoice() {
-        return userinvoiceService.getUserinvoiceList();
+    public List<Milkbrand> lst() {
+        return milkbrandService.getAllMilkbrands();
     }
 
-//    http://localhost:1234/Userinvoice/add
+    @GetMapping("/lst/{id}")
+    public Milkbrand getMilkbrandById(@PathVariable Long id) {
+        return milkbrandService.getMilkbrandById(id);
+    }
+
+    //http://localhost:1234/api/Milkbrand/add
     @PostMapping("/add")
-    public ResponseEntity<?> addUserinvoice(@RequestBody @Valid Userinvoice userinvoice, BindingResult bindingResult) {
+    public ResponseEntity<?> add(@RequestBody @Valid Milkbrand milkbrand, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -39,12 +44,14 @@ public class UserinvoiceController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", userinvoiceService.saveUserinvoice(userinvoice)));
+
+        String resultMessage = milkbrandService.addMilkbrand(milkbrand);
+        return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
     }
 
-    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/update
+    //http://localhost:1234/api/Milkbrand/update/{id}
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateUserinvoice(@PathVariable Long id, @RequestBody @Valid Userinvoice userinvoice, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Milkbrand milkbrand , BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -55,14 +62,12 @@ public class UserinvoiceController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", userinvoiceService.updateUserinvoice(id, userinvoice)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", milkbrandService.updateMilkbrand(id, milkbrand)));
     }
-
-    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/delete
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUserinvoice(@PathVariable Long id, @RequestBody Userinvoice userinvoice) {
-        userinvoiceService.deleteUserinvoice(id, userinvoice);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+    //http://localhost:1234/api/Milkbrand/delete/{id}
+    @DeleteMapping("/delete/{id}") // Change to DELETE method
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        String message = milkbrandService.deleteMilkbrand(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
-
 }
