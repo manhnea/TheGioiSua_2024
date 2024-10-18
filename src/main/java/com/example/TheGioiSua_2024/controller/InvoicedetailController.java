@@ -26,6 +26,11 @@ public class InvoicedetailController {
         return invoicedetailService.getInvoicedetailList();
     }
 
+    //    http://localhost:1234/Invoicedetail/lst/1
+    @GetMapping("/lst/{id}")
+    public Invoicedetail getInvoicedetailById(@PathVariable Long id) {
+        return invoicedetailService.getInvoicedetailById(id);
+    }
 //    http://localhost:1234/Invoicedetail/add
     @PostMapping("/add")
     public ResponseEntity<?> saveInvoicedetail(@RequestBody @Valid Invoicedetail invoicedetail, BindingResult bindingResult) {

@@ -14,4 +14,6 @@ public interface IMilkdetailService {
     String update(Long id, Milkdetail milkdetail);
 
     String delete(Long id, Milkdetail milkdetail);
+
+    Milkdetail getById(Long id);
 }

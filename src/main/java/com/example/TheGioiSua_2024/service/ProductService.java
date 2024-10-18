@@ -47,8 +47,6 @@ public class ProductService implements IProductService {
         if (productRepository.findByProductCode(productCode).isPresent()) {
             return "Sản phẩm với mã này đã tồn tại.";
         }
-
-
         product.setStatus(1);
         productRepository.save(product);
         return "Thêm sản phẩm thành công.";
@@ -56,20 +54,25 @@ public class ProductService implements IProductService {
 
     @Override
     public String updateProduct(Long id, Product product) {
-
-        String productCode = product.getProductCode().trim();
-        product.setProductCode(productCode);
-
-
-        if (productRepository.findByProductCode(productCode).isPresent()) {
-            return "Sản phẩm với mã này đã tồn tại.";
-        }
-
-
         Product existingProduct = productRepository.findById(id).orElseThrow();
         MilkType milkType = milktypeRepository.findById(existingProduct.getMilkType().getId()).orElseThrow();
         Milkbrand milkbrand = milkbrandRepository.findById(existingProduct.getMilkBrand().getId()).orElseThrow();
         Targetuser targetuser = targetuserRepository.findById(existingProduct.getTargetUser().getId()).orElseThrow();
+        String currentProductName = existingProduct.getProductname();
+        String currentProductCode = existingProduct.getProductCode();
+        if (currentProductName.equals(product.getProductname()) && currentProductCode.equals(product.getProductCode())) {
+            existingProduct.setMilkType(milkType);
+            existingProduct.setMilkBrand(milkbrand);
+            existingProduct.setTargetUser(targetuser);
+            existingProduct.setProductCode(product.getProductCode());
+            existingProduct.setStatus(1);
+            productRepository.save(existingProduct);
+            return "Cập nhật sản phẩm thành công.";
+        } else if (productRepository.findByProductname(product.getProductname()).isPresent()) {
+            return "Sản phẩm với tên này đã tồn tại.";
+        } else if (productRepository.findByProductCode(product.getProductCode()).isPresent()) {
+            return "Sản phẩm với mã này đã tồn tại.";
+        }
         existingProduct.setMilkType(milkType);
         existingProduct.setMilkBrand(milkbrand);
         existingProduct.setTargetUser(targetuser);
@@ -84,5 +87,10 @@ public class ProductService implements IProductService {
         Product existingProduct = productRepository.findById(id).orElseThrow();
         existingProduct.setStatus(0);
         productRepository.save(existingProduct);
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow();
     }
 }

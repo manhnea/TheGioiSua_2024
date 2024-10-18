@@ -26,6 +26,10 @@ public class PackagingunitRestController {
     public List<Packagingunit> getAllPackagingunit(){
         return packagingunitService.getAllPackagingunit();
     }
+    @GetMapping("/lst/{id}")
+    public Packagingunit getPackagingunit(@PathVariable("id") Long id){
+        return packagingunitService.getPackagingunitById(id);
+    }
     //http://localhost:1234/api/Packagingunit/add
     @PostMapping("/add")
     public ResponseEntity<?> addPackagingunit(@RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult){

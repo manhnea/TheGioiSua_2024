@@ -22,7 +22,7 @@ public class MilktypeService implements IMilktypeService {
         // Kiểm tra xem tên  đã tồn tại chưa
         Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+            return "Tên này đã tồn tại.";
         }
         milktype.setStatus(1);
         milktypeRepository.save(milktype);
@@ -31,13 +31,15 @@ public class MilktypeService implements IMilktypeService {
 
     @Override
     public String UpdateMilktype(Long id, MilkType milktype) {
-// Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = milktype.getMilkTypename().trim();
-        milktype.setMilkTypename(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
-        Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
-        if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+        MilkType existingMilkType = milktypeRepository.findById(id).orElseThrow();
+        String currentMilkTypeName = existingMilkType.getMilkTypename();
+        if (currentMilkTypeName.equals(milktype.getMilkTypename())) {
+            existingMilkType.setDescription(milktype.getDescription());
+            existingMilkType.setStatus(1);
+            milktypeRepository.save(existingMilkType);
+            return "Cập nhật mô tả thương hiệu sữa thành công.";
+        } else if (milktypeRepository.findByMilkTypename(milktype.getMilkTypename()).isPresent()) {
+            return "Thương hiệu sữa này đã tồn tại.";
         }
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
         milktype1.setDescription(milktype.getDescription());
@@ -56,6 +58,11 @@ public class MilktypeService implements IMilktypeService {
     @Override
     public Optional<MilkType> getMilkTypeByName(String milktypename) {
         return milktypeRepository.findByMilkTypename(milktypename);
+    }
+
+    @Override
+    public MilkType GetMilktypeById(Long id) {
+        return milktypeRepository.findById(id).orElseThrow();
     }
 
 

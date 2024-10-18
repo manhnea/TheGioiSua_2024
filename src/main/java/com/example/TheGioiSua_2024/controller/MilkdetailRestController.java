@@ -25,6 +25,10 @@ public class MilkdetailRestController {
     private List<Milkdetail> lst(){
         return milkdetailService.getAll();
     }
+    @GetMapping("/lst/{id}")
+    private Milkdetail getMilkdetailById(@PathVariable Long id){
+        return milkdetailService.getById(id);
+    }
     //http://localhost:1234/api/Milkdetail/add
     @PostMapping("/add")
     private ResponseEntity<?> add(@RequestBody @Valid Milkdetail milkdetail, BindingResult bindingResult){

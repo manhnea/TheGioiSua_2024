@@ -12,4 +12,6 @@ public interface IMilktasteService {
     String updateMilktaste(Long id,Milktaste milktaste);
     Milktaste deleteMilktaste(Long id);
     Optional<Milktaste> getMilktasteByName(String milktasteName);
+
+    Milktaste getMilktasteById(Long id);
 }

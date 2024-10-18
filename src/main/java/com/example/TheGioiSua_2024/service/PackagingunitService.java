@@ -1,6 +1,5 @@
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Packagingunit;
 import com.example.TheGioiSua_2024.repository.PackagingunitRepository;
 import com.example.TheGioiSua_2024.service.impl.IPackagingunitService;
@@ -14,19 +13,20 @@ import java.util.Optional;
 public class PackagingunitService implements IPackagingunitService {
     @Autowired
     private PackagingunitRepository packagingunitRepository;
+
     @Override
     public String addPackagingunit(Packagingunit packagingunit) {
         // Loại bỏ khoảng trắng ở đầu và cuối tên
         String trimmedName = packagingunit.getPackagingunitname().trim();
         packagingunit.setPackagingunitname(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
+        // Kiểm tra xem tên đã tồn tại chưa
         Optional<Packagingunit> existingContainer = getPackagingunitByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Packagingunit với tên này đã tồn tại.";
+            return "Đơn vị đóng gói với tên này đã tồn tại.";
         }
         packagingunit.setStatus(1);
-         packagingunitRepository.save(packagingunit);
-         return "Them thanh cong";
+        packagingunitRepository.save(packagingunit);
+        return "Thêm đơn vị đóng gói thành công.";
     }
 
     @Override
@@ -39,26 +39,31 @@ public class PackagingunitService implements IPackagingunitService {
         // Loại bỏ khoảng trắng ở đầu và cuối tên
         String trimmedName = packagingunit.getPackagingunitname().trim();
         packagingunit.setPackagingunitname(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
+        // Kiểm tra xem tên đã tồn tại chưa
         Optional<Packagingunit> existingContainer = getPackagingunitByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Packagingunit với tên này đã tồn tại.";
+            return "Tên đơn vị đóng gói này đã tồn tại.";
         }
-        Packagingunit packagingunit1 = packagingunitRepository.findById(id).orElseThrow();
-        packagingunit1.setPackagingunitname(packagingunit.getPackagingunitname());
-         packagingunitRepository.save(packagingunit1);
-         return "Sua thanh cong";
+        Packagingunit existingPackagingunit = packagingunitRepository.findById(id).orElseThrow();
+        existingPackagingunit.setPackagingunitname(packagingunit.getPackagingunitname());
+        packagingunitRepository.save(existingPackagingunit);
+        return "Cập nhật đơn vị đóng gói thành công.";
     }
 
     @Override
     public Packagingunit deletePackagingunit(Long id) {
-        Packagingunit packagingunit1 = packagingunitRepository.findById(id).orElseThrow();
-        packagingunit1.setStatus(0);
-        return packagingunitRepository.save(packagingunit1);
+        Packagingunit existingPackagingunit = packagingunitRepository.findById(id).orElseThrow();
+        existingPackagingunit.setStatus(0);
+        return packagingunitRepository.save(existingPackagingunit);
     }
 
     @Override
     public Optional<Packagingunit> getPackagingunitByName(String packagingunitName) {
-        return Optional.empty();
+        return packagingunitRepository.findByPackagingunitname(packagingunitName); // Đã sửa để trả về đối tượng thực tế
+    }
+
+    @Override
+    public Packagingunit getPackagingunitById(Long id) {
+        return packagingunitRepository.findById(id).orElseThrow();
     }
 }

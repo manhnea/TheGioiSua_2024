@@ -12,4 +12,6 @@ public interface IVoucherService {
     String updateVoucher(Long id, Voucher voucher);
     Voucher deleteVoucher(Long id);
     Optional<Voucher> getVoucherByName(String voucherName);
+
+    Voucher getVoucherById(Long id);
 }

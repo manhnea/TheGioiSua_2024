@@ -21,6 +21,7 @@ public class Milkbrand {
     @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Tên thương hiệu sữa chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     @NotBlank(message = "Tên thương hiệu sữa không được để trống")
     @Size(max = 100, message = "Tên thương hiệu sữa không được dài quá 100 ký tự")
+    @Column(unique = true)
     private String milkbrandname;
 
     @NotBlank(message = "Mô tả không được để trống")
