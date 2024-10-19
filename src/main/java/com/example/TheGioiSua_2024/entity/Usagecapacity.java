@@ -2,6 +2,7 @@ package com.example.TheGioiSua_2024.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,8 @@ public class Usagecapacity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int capacity;
-    @NotBlank(message = "Don vi không được để trống")
+    @NotBlank(message = " Đơn vị không được để trống")
+    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Đơn vị chỉ được chứa các ký tự chữ và số (A-Z, a-z)")
     private String unit;
     private int status;
 }

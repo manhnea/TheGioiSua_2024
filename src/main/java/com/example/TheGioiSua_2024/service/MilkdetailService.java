@@ -16,10 +16,6 @@ public class MilkdetailService implements IMilkdetailService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ContainerRepository containerRepository;
-    @Autowired
-    private SizeRepository sizeRepository;
-    @Autowired
     private MilktasteRepository milktasteRepository;
     @Autowired
     private PackagingunitRepository packagingunitRepository;
@@ -34,6 +30,11 @@ public class MilkdetailService implements IMilkdetailService {
 
     @Override
     public String add(Milkdetail milkdetail) {
+        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
+        milkdetail.setMilkdetailcode(milkdetailcode);
+        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
+            return "Mã sản phẩm đã tồn tại.";
+        }
         milkdetail.setStatus(1);
         milkdetailRepository.save(milkdetail);
         return "Thêm thành công";
@@ -42,18 +43,20 @@ public class MilkdetailService implements IMilkdetailService {
     @Override
     public String update(Long id, Milkdetail milkdetail) {
         Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        Product product = productRepository.findById(milkdetail.getProduct().getId()).get();
-        Size size = sizeRepository.findById(milkdetail.getSize().getId()).get();
-        Container container = containerRepository.findById(milkdetail.getContainer().getId()).get();
-        Milktaste milktaste = milktasteRepository.findById(milkdetail.getMilktaste().getId()).get();
-        Packagingunit packagingunit = packagingunitRepository.findById(milkdetail.getPackagingunit().getId()).get();
-        Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail.getUsagecapacity().getId()).get();
+        Product product = productRepository.findById(milkdetail1.getProduct().getId()).get();
+        Milktaste milktaste = milktasteRepository.findById(milkdetail1.getMilkTaste().getId()).get();
+        Packagingunit packagingunit = packagingunitRepository.findById(milkdetail1.getPackagingunit().getId()).get();
+        Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail1.getUsageCapacity().getId()).get();
+        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
+        milkdetail.setMilkdetailcode(milkdetailcode);
+        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
+            return "Mã sản phẩm đã tồn tại.";
+        }
         milkdetail1.setProduct(product);
-        milkdetail1.setSize(size);
-        milkdetail1.setContainer(container);
-        milkdetail1.setMilktaste(milktaste);
+        milkdetail1.setMilkTaste(milktaste);
         milkdetail1.setPackagingunit(packagingunit);
-        milkdetail1.setUsagecapacity(usagecapacity);
+        milkdetail1.setUsageCapacity(usagecapacity);
+        milkdetail1.setMilkdetailcode(milkdetail.getMilkdetailcode());
         milkdetail1.setPrice(milkdetail.getPrice());
         milkdetail1.setExpirationdate(milkdetail.getExpirationdate());
         milkdetail1.setDescription(milkdetail.getDescription());
@@ -64,11 +67,23 @@ public class MilkdetailService implements IMilkdetailService {
     }
 
     @Override
-    public String delete(Long id, Milkdetail milkdetail) {
+    public String delete(Long id) {
         Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        milkdetail1.setStatus(0);
-        milkdetailRepository.save(milkdetail1);
-        return "Xóa thành công";
+        if(milkdetail1.getStatus() == 0) {
+            milkdetail1.setStatus(1);
+            milkdetailRepository.save(milkdetail1);
+            return "Khôi phục thành công";
+        }else {
+            milkdetail1.setStatus(0);
+            milkdetailRepository.save(milkdetail1);
+            return "Xóa thành công";
+        }
+
+    }
+
+    @Override
+    public Milkdetail getById(Long id) {
+        return milkdetailRepository.findById(id).get();
     }
 
 }

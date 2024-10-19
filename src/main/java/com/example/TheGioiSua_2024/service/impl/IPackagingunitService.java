@@ -10,6 +10,8 @@ public interface IPackagingunitService {
     List<Packagingunit> getAllPackagingunit();
     String addPackagingunit(Packagingunit packagingunit);
     String updatePackagingunit(Long id,Packagingunit packagingunit);
-    Packagingunit deletePackagingunit(Long id);
+    String deletePackagingunit(Long id);
     Optional<Packagingunit> getPackagingunitByName(String packagingunitName);
+
+    Packagingunit getPackagingunitById(Long id);
 }

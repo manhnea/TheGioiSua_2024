@@ -10,6 +10,8 @@ public interface IMilktypeService {
     List<MilkType> GetAllMilktype();
     String AddMilktype(MilkType milktype);
     String UpdateMilktype(Long id,MilkType milktype);
-    MilkType DeleteMilktype(Long id);
+    String DeleteMilktype(Long id);
     Optional<MilkType> getMilkTypeByName(String milkTypeName);
+
+    MilkType GetMilktypeById(Long id);
 }

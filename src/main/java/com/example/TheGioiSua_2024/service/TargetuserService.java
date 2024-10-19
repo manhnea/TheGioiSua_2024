@@ -13,6 +13,7 @@ import java.util.Optional;
 public class TargetuserService implements ITargetuserService {
     @Autowired
     private TargetuserRepository targetuserRepository;
+
     @Override
     public List<Targetuser> getAllTargetuser() {
         return targetuserRepository.findAll();
@@ -23,38 +24,50 @@ public class TargetuserService implements ITargetuserService {
         // Loại bỏ khoảng trắng ở đầu và cuối tên
         String trimmedName = targetuser.getTargetName().trim();
         targetuser.setTargetName(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
+        // Kiểm tra xem tên đã tồn tại chưa
         Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Targetuser với tên này đã tồn tại.";
+            return "Tên người dùng mục tiêu này đã tồn tại.";
         }
         targetuser.setStatus(1);
-         targetuserRepository.save(targetuser);
-         return "Added Successfully";
+        targetuserRepository.save(targetuser);
+        return "Thêm người dùng mục tiêu thành công.";
     }
 
     @Override
     public String updateTargetuser(Long id, Targetuser targetuser) {
-        // Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = targetuser.getTargetName().trim();
-        targetuser.setTargetName(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
-        Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
-        if (existingContainer.isPresent()) {
-            return "Targetuser với tên này đã tồn tại.";
+        Targetuser existingTargetuser = targetuserRepository.findById(id).orElseThrow();
+        String currentTargetName = existingTargetuser.getTargetName();
+        // Nếu tên không thay đổi, chỉ cập nhật mô tả
+        if (currentTargetName.equals(targetuser.getTargetName())) {
+            existingTargetuser.setDescription(targetuser.getDescription());
+            existingTargetuser.setStatus(1);
+            targetuserRepository.save(existingTargetuser);
+            return "Cập nhật người dùng mục tiêu thành công.";
         }
-        Targetuser targetuser1 = targetuserRepository.findById(id).orElseThrow();
-        targetuser1.setDescription(targetuser.getDescription());
-        targetuser1.setTargetName(targetuser.getTargetName());
-         targetuserRepository.save(targetuser1);
-         return "Updated Successfully";
+        // Kiểm tra xem tên mới có bị trùng không
+        else if (targetuserRepository.findByTargetusername(targetuser.getTargetName()).isPresent()) {
+            return "Tên người dùng mục tiêu này đã tồn tại.";
+        }
+        // Cập nhật tên và mô tả mới
+        existingTargetuser.setDescription(targetuser.getDescription());
+        existingTargetuser.setTargetName(targetuser.getTargetName());
+        targetuserRepository.save(existingTargetuser);
+        return "Cập nhật người dùng mục tiêu thành công.";
     }
 
     @Override
-    public Targetuser deleteTargetuser(Long id) {
-        Targetuser targetuser1 = targetuserRepository.findById(id).orElseThrow();
-        targetuser1.setStatus(0);
-        return targetuserRepository.save(targetuser1);
+    public String deleteTargetuser(Long id) {
+        Targetuser existingTargetuser = targetuserRepository.findById(id).orElseThrow();
+       if (existingTargetuser.getStatus() == 0) {
+            existingTargetuser.setStatus(1);
+            targetuserRepository.save(existingTargetuser);
+            return "Khôi phục người dùng mục tiêu thành công.";
+        } else {
+            existingTargetuser.setStatus(0);
+            targetuserRepository.save(existingTargetuser);
+            return "Xóa người dùng mục tiêu thành công.";
+        }
     }
 
     @Override
@@ -62,5 +75,8 @@ public class TargetuserService implements ITargetuserService {
         return targetuserRepository.findByTargetusername(targetname);
     }
 
-
+    @Override
+    public Targetuser getTargetuserById(Long id) {
+        return targetuserRepository.findById(id).orElseThrow();
+    }
 }

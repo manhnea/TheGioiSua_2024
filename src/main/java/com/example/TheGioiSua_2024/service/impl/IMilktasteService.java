@@ -10,6 +10,8 @@ public interface IMilktasteService {
     List<Milktaste> getAllMilktaste();
     String addMilktaste(Milktaste milktaste);
     String updateMilktaste(Long id,Milktaste milktaste);
-    Milktaste deleteMilktaste(Long id);
+    String deleteMilktaste(Long id);
     Optional<Milktaste> getMilktasteByName(String milktasteName);
+
+    Milktaste getMilktasteById(Long id);
 }

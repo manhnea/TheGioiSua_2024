@@ -7,6 +7,7 @@ package com.example.TheGioiSua_2024.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class SpringSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter ;
@@ -33,15 +35,19 @@ public class SpringSecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests()
-            .requestMatchers("/user/**").permitAll()
+            .requestMatchers("/user/**","/Product/**","/Userinvoice/lst","/Packagingunit/lst","/Usagecapacity/lst","/Milkdetail/lst","/Milktype/lst","/Milkbrand/lst","/Targetuser/lst","/Milktaste/lst","/Invoice/lst").permitAll()
             .requestMatchers("/admin/**",
-                    "/Size/**",
                     "/Voucher/**",
                     "/Milktype/**",
                     "/Milktaste/**",
-                    "/Container/**",
                     "/Packagingunit/**",
                     "/Targetuser/**",
+                    "/Product/**",
+                    "/Milkdetail/**",
+                    "/Milkbrand/**",
+                    "/Invoicedetail/**",
+                    "/Invoice/**",
+                    "/Userinvoice/**",
                     "/Usagecapacity/**").hasAuthority("Admin");
 //            .requestMatchers("/user/**").hasAuthority("Customer") ;
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
