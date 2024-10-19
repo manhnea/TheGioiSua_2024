@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.*;
 import com.example.TheGioiSua_2024.repository.*;
 import com.example.TheGioiSua_2024.service.impl.IMilkdetailService;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
@@ -72,6 +75,11 @@ public class MilkdetailService implements IMilkdetailService {
         milkdetail1.setStatus(0);
         milkdetailRepository.save(milkdetail1);
         return "Xóa thành công";
+    }
+
+    @Override
+    public Page<MilkDetailDto> getPageMilkDetail(Pageable pageable) {
+        return milkdetailRepository.getPageMilkDetail(pageable);
     }
 
 }

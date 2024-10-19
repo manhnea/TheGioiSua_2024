@@ -21,15 +21,14 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductDto {
+public class MilkDetailDto {
     Long id;
     String productCode; // Sửa thành camelCase
+    String milkdetailcode;
     String packagingunitname; // Sửa thành camelCase
-    String containername; // Sửa thành camelCase
     String milkTypename; // Sửa thành camelCase
     String milkbrandname; // Sửa thành camelCase
     String milktastename; // Sửa thành camelCase
-    String sizename; // Sửa thành camelCase
     int capacity; // Sửa thành camelCase
     String unit;
     String targetName; // Sửa thành camelCase
