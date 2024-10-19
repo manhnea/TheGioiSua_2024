@@ -13,7 +13,7 @@ import com.example.TheGioiSua_2024.repository.RoleRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
-import com.example.TheGioiSua_2024.util.EmailValidator;
+import com.example.TheGioiSua_2024.util.UserValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
 import lombok.RequiredArgsConstructor;
@@ -53,28 +53,67 @@ public class UserService implements IUserService {
 
     @Override
     public ResponseEntity<?> register(RegisterDto registerDto) {
-        if (iUserRepository.existsByUsername(registerDto.getUsername())) {
+        // Validate username
+        if (registerDto.getUsername() == null || registerDto.getUsername().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Tên người dùng không được để trống!"));
+        } else if (!UserValidator.isValidUsername(registerDto.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Tên người dùng không hợp lệ hoặc chứa dấu cách!"));
+        } else if (iUserRepository.existsByUsername(registerDto.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Collections.singletonMap("error", "Tên Người Dùng Đã Tồn Tại!")); // Mã trạng thái 409
+        }
+
+        // Validate password
+        if (registerDto.getPassword() == null || registerDto.getPassword().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Mật khẩu không được để trống!"));
+        } else if (registerDto.getPassword().length() < 6) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Mật khẩu phải có ít nhất 6 ký tự!"));
+        } else if (registerDto.getPassword().contains(" ")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Mật khẩu không được chứa dấu cách!"));
+        }
+
+        // Validate fullname
+        if (registerDto.getFullname() == null || registerDto.getFullname().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Họ tên không được để trống!"));
+        } else if (!UserValidator.isValidFullName(registerDto.getFullname())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Họ tên không đúng định dạng!"));
+        }
+
+        // Validate email
+        if (registerDto.getEmail() == null || registerDto.getEmail().trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("error", "Email không được để trống!"));
+        } else if (!UserValidator.isValidEmail(registerDto.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", "Email không đúng định dạng hoặc chứa dấu cách!")); // Mã trạng thái 409
         } else if (iUserRepository.existsByEmail(registerDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Collections.singletonMap("error", "Email đã được sử dụng!")); // Mã trạng thái 409
-        } else if (!EmailValidator.isValidEmail(registerDto.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Collections.singletonMap("error", "Email không đúng định dạng!")); // Mã trạng thái 409
-        } else {
-            User user = new User();
-            user.setEmail(registerDto.getEmail());
-            user.setFullname(registerDto.getFullname());
-            user.setUsername(registerDto.getUsername());
-            user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-            user.setRegistrationdate(new Date(System.currentTimeMillis()));
-            Role role = iRoleRepository.findById(2L).orElseThrow(); // 2L user
-            user.setRole(role);
-            iUserRepository.save(user);
-            return ResponseEntity.ok(Collections.singletonMap("message", "Tạo Tài Khoản Thành Công")); // Mã trạng thái 200
         }
+
+        // Save new user if all validations pass
+        User user = new User();
+        user.setEmail(registerDto.getEmail());
+        user.setFullname(registerDto.getFullname());
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setRegistrationdate(new Date(System.currentTimeMillis()));
+        Role role = iRoleRepository.findById(2L).orElseThrow(); // 2L user role
+        user.setRole(role);
+        iUserRepository.save(user);
+
+        return ResponseEntity.ok(Collections.singletonMap("message", "Tạo Tài Khoản Thành Công")); // Mã trạng thái 200
     }
+
+
+
 
     @Override
     public ResponseEntity<?> authenticate(LoginDto loginDto) {

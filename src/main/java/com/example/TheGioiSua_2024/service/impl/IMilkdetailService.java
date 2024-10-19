@@ -13,7 +13,7 @@ public interface IMilkdetailService {
 
     String update(Long id, Milkdetail milkdetail);
 
-    String delete(Long id, Milkdetail milkdetail);
+    String delete(Long id);
 
     Milkdetail getById(Long id);
 }

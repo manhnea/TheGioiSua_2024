@@ -50,9 +50,9 @@ public class User implements UserDetails{
     @Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
     private String password;
 
-    @NotBlank(message = "Họ và tên không được để trống")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ]+$", message = "Họ và tên chỉ được chứa chữ cái và dấu cách")
-    @Size(max = 100, message = "Họ và tên không được vượt quá 100 ký tự")
+//    @NotBlank(message = "Họ và tên không được để trống")
+//    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ ]+$", message = "Họ và tên chỉ được chứa chữ cái và dấu cách")
+//    @Size(max = 100, message = "Họ và tên không được vượt quá 100 ký tự")
     private String fullname;
 
     private Date registrationdate;

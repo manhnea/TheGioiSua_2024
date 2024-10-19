@@ -50,10 +50,17 @@ public class InvoicedetailService implements IInvoicedetailService {
     }
 
     @Override
-    public void deleteInvoicedetail(Long id, Invoicedetail invoicedetail) {
+    public String deleteInvoicedetail(Long id) {
         Invoicedetail existingInvoicedetail = invoicedetailRepository.findById(id).orElseThrow();
-        existingInvoicedetail.setStatus(0);
-        invoicedetailRepository.save(existingInvoicedetail);
+        if(existingInvoicedetail.getStatus() == 0) {
+            existingInvoicedetail.setStatus(1);
+            invoicedetailRepository.save(existingInvoicedetail);
+            return "Chi tiết hóa đơn đã bị xóa!";
+        }else {
+            existingInvoicedetail.setStatus(0);
+            invoicedetailRepository.save(existingInvoicedetail);
+            return "Xóa chi tiết hóa đơn thành công!";
+        }
     }
 
     public Invoicedetail getInvoicedetailById(Long id) {

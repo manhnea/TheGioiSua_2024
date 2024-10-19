@@ -66,10 +66,17 @@ public class VoucherService implements IVoucherService {
     }
 
     @Override
-    public Voucher deleteVoucher(Long id) {
+    public String deleteVoucher(Long id) {
         Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
-        existingVoucher.setStatus(0); // Ngừng hoạt động voucher
-        return voucherRepository.save(existingVoucher);
+       if (existingVoucher.getStatus() == 0) {
+            existingVoucher.setStatus(1);
+            voucherRepository.save(existingVoucher);
+            return "Khôi phục voucher thành công.";
+        } else {
+            existingVoucher.setStatus(0);
+            voucherRepository.save(existingVoucher);
+            return "Đã xóa voucher thành công.";
+        }
     }
 
     @Override
