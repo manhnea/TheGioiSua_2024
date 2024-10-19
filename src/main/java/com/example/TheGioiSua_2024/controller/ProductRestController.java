@@ -1,10 +1,9 @@
 package com.example.TheGioiSua_2024.controller;
 
-import com.example.TheGioiSua_2024.entity.Milkbrand;
-import com.example.TheGioiSua_2024.service.MilkbrandService;
+import com.example.TheGioiSua_2024.entity.Product;
+import com.example.TheGioiSua_2024.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -14,20 +13,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 @CrossOrigin
 @RestController
-@RequestMapping("/Milkbrand")
-public class MilkbrandController {
+@RequestMapping("/Product")
+public class ProductRestController {
     @Autowired
-    private MilkbrandService milkbrandService;
-    //http://localhost:1234/api/Milkbrand/lst
+    private ProductService productService;
+    //http://localhost:1234/api/Product/lst
     @GetMapping("/lst")
-    public List<Milkbrand> lst() {
-        return milkbrandService.getAllMilkbrands();
+    public List<Product> getAllProduct() {
+        return productService.getAllProduct();
     }
-    //http://localhost:1234/api/Milkbrand/add
+    //http://localhost:1234/api/Product/add
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody @Valid Milkbrand milkbrand, BindingResult bindingResult) {
+    public ResponseEntity<?> addProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -39,13 +39,16 @@ public class MilkbrandController {
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
 
-        String resultMessage = milkbrandService.addMilkbrand(milkbrand);
-        return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
-    }
 
-    //http://localhost:1234/api/Milkbrand/update/{id}
+        return ResponseEntity.ok(Map.of("status", "success", "message", productService.addProduct(product)));
+    }
+    @GetMapping("/lst/{id}")
+    public Product getProduct(@PathVariable("id") Long id) {
+        return productService.getProductById(id);
+    }
+    //http://localhost:1234/api/Product//update/{id}
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Milkbrand milkbrand , BindingResult bindingResult) {
+    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -56,12 +59,13 @@ public class MilkbrandController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", milkbrandService.updateMilkbrand(id, milkbrand)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", productService.updateProduct(id, product)));
     }
-    //http://localhost:1234/api/Milkbrand/delete/{id}
+    //http://localhost:1234/api/Product/delete/{id}
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody Milkbrand milkbrand) {
-        milkbrandService.deleteMilkbrand(id, milkbrand);
-       return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thương hiệu sữa thành công."));
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
+        String message = productService.deleteProduct(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
+
 }

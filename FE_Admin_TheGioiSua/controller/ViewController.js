@@ -2,10 +2,6 @@ var app = angular.module("myApp", ["ngRoute"]);
 
 app.config(function ($routeProvider) {
   $routeProvider
-    .when("/", {
-      templateUrl: "doc/views/home.html",
-      controller: "IndexController",
-    })
     .when("/home", {
       templateUrl: "doc/views/home.html",
       controller: "IndexController",
@@ -46,7 +42,19 @@ app.config(function ($routeProvider) {
       redirectTo: "/login",
     });
 });
+app.controller("IndexController", function ($scope) {
+  var userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
+  if (userInfo && userInfo.sub) {
+    $scope.user = {
+      fullName: userInfo.sub,
+    };
+  } else {
+    $scope.user = {
+      fullName: "Guest",
+    };
+  }
+});
 app.controller("HomeController", function ($scope) {
   $scope.message = "Welcome to the Home Page!";
 });

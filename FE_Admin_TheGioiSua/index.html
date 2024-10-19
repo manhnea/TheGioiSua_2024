@@ -25,7 +25,8 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
-    <script src="/js/readURL.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </head>
 <body ng-app="myApp" onload="time()" class="app sidebar-mini rtl">
 
@@ -35,14 +36,10 @@
 <div ng-include="'doc/layout/menu.html'" ></div>
 <div ng-view></div>
 <div ng-include="'doc/layout/footer.html'"  ></div>
-
-<!-- Clock Display -->
 <div id="clock"></div>
-
-<!-- AngularJS -->
-<script src="/controller/ThuocTinhController.js"></script>
 <script src="/controller/ViewController.js"></script>
 <script src="/controller/LoginController.js"></script>
+<script src="/controller/ThuocTinhController.js"></script>
 <script src="doc/js/jquery-3.2.1.min.js"></script>
 <script src="/js/main.js"></script>
 <script src="doc/js/popper.min.js"></script>
@@ -51,6 +48,7 @@
 <script src="doc/js/plugins/pace.min.js"></script>
 <script type="text/javascript" src="js/plugins/chart.js"></script>
 <script src="/js/time.js"></script>
+<script src="/js/readURL.js"></script>
 <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 <script src="vendor/bootstrap/js/popper.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>

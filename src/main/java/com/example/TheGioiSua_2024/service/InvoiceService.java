@@ -15,8 +15,10 @@ import java.util.List;
 public class InvoiceService implements IInvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepository;
+
     @Autowired
     private VoucherRepository voucherRepository;
+
     @Override
     public List<Invoice> getInvoiceList() {
         return invoiceRepository.findAll();
@@ -31,7 +33,7 @@ public class InvoiceService implements IInvoiceService {
         }
         invoice.setStatus(1);
         invoiceRepository.save(invoice);
-        return "Invoice added successfully!";
+        return "Thêm hóa đơn thành công!";
     }
 
     @Override
@@ -49,15 +51,25 @@ public class InvoiceService implements IInvoiceService {
         existingInvoice.setTotalamount(invoice.getTotalamount());
         existingInvoice.setStatus(1);
         invoiceRepository.save(existingInvoice);
-        return "Invoice updated successfully!";
+        return "Cập nhật hóa đơn thành công!";
     }
 
     @Override
-    public void deleteInvoice(Long id, Invoice invoice) {
+    public String deleteInvoice(Long id) {
         Invoice invoice1 = invoiceRepository.findById(id).orElseThrow();
-        invoice1.setStatus(0);
-        invoiceRepository.save(invoice1);
+        if(invoice1.getStatus() == 0) {
+            invoice1.setStatus(1);
+            invoiceRepository.save(invoice1);
+            return "Hóa đơn đã được khôi phục!";
+        } else {
+            invoice1.setStatus(0);
+            invoiceRepository.save(invoice1);
+            return "Hóa đơn đã được xóa!";
+        }
     }
 
-
+    @Override
+    public Invoice getInvoiceById(Long id) {
+        return invoiceRepository.findById(id).orElseThrow();
+    }
 }

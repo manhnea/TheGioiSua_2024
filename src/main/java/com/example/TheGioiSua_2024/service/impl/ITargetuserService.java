@@ -9,6 +9,8 @@ public interface ITargetuserService {
     List<Targetuser> getAllTargetuser();
     String addTargetuser(Targetuser targetuser);
     String updateTargetuser(Long id,Targetuser targetuser);
-    Targetuser deleteTargetuser(Long id);
+    String deleteTargetuser(Long id);
     Optional<Targetuser> getTargetuserByName(String targetname);
+
+    Targetuser getTargetuserById(Long id);
 }

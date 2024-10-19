@@ -1,9 +1,10 @@
 package com.example.TheGioiSua_2024.controller;
 
-import com.example.TheGioiSua_2024.entity.Product;
-import com.example.TheGioiSua_2024.service.ProductService;
+import com.example.TheGioiSua_2024.entity.Milkbrand;
+import com.example.TheGioiSua_2024.service.MilkbrandService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -13,23 +14,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 @CrossOrigin
 @RestController
-@RequestMapping("/Product")
-public class ProductController {
+@RequestMapping("/Milkbrand")
+public class MilkbrandRestController {
     @Autowired
-    private ProductService productService;
-    //http://localhost:1234/api/Product/lst
+    private MilkbrandService milkbrandService;
+    //http://localhost:1234/api/Milkbrand/lst
     @GetMapping("/lst")
-    public List<Product> getAllProduct() {
-        return productService.getAllProduct();
+    public List<Milkbrand> lst() {
+        return milkbrandService.getAllMilkbrands();
     }
-    //http://localhost:1234/api/Product/add
+
+    @GetMapping("/lst/{id}")
+    public Milkbrand getMilkbrandById(@PathVariable Long id) {
+        return milkbrandService.getMilkbrandById(id);
+    }
+
+    //http://localhost:1234/api/Milkbrand/add
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody @Valid Product product, BindingResult bindingResult) {
+    public ResponseEntity<?> add(@RequestBody @Valid Milkbrand milkbrand, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -41,12 +45,13 @@ public class ProductController {
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
 
-
-        return ResponseEntity.ok(Map.of("status", "success", "message", productService.addProduct(product)));
+        String resultMessage = milkbrandService.addMilkbrand(milkbrand);
+        return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
     }
-    //http://localhost:1234/api/Product//update/{id}
+
+    //http://localhost:1234/api/Milkbrand/update/{id}
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable("id") Long id, @RequestBody @Valid Product product, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Milkbrand milkbrand , BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -57,13 +62,12 @@ public class ProductController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", productService.updateProduct(id, product)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", milkbrandService.updateMilkbrand(id, milkbrand)));
     }
-    //http://localhost:1234/api/Product/delete/{id}
-    @PutMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        productService.deleteProduct(id, product);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+    //http://localhost:1234/api/Milkbrand/delete/{id}
+    @DeleteMapping("/delete/{id}") // Change to DELETE method
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        String message = milkbrandService.deleteMilkbrand(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
-
 }

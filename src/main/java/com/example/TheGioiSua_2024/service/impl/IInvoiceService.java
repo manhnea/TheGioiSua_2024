@@ -12,5 +12,7 @@ public interface IInvoiceService {
 
     String updateInvoice(Long id, Invoice invoice);
 
-    void deleteInvoice(Long id, Invoice invoice);
+    String deleteInvoice(Long id);
+
+    Invoice getInvoiceById(Long id);
 }

@@ -40,6 +40,10 @@ public class TargetuserRestController {
         }
         return ResponseEntity.ok(Map.of("status", "success", "message", targetuserService.addTargetuser(targetuser)));
     }
+    @GetMapping("/lst/{id}")
+    public Targetuser get(@PathVariable("id") Long id) {
+        return targetuserService.getTargetuserById(id);
+    }
     //http://localhost:1234/api/Targetuser/update/{id}
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@RequestBody @Valid Targetuser targetuser,BindingResult bindingResult, @PathVariable("id") Long id) {
@@ -58,8 +62,8 @@ public class TargetuserRestController {
     //http://localhost:1234/api/Targetuser/delete/{id}
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        targetuserService.deleteTargetuser(id);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+        String message = targetuserService.deleteTargetuser(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 
 }

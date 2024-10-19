@@ -10,6 +10,8 @@ public interface IVoucherService {
     List<Voucher> getVoucherList();
     String saveVoucher(Voucher voucher);
     String updateVoucher(Long id, Voucher voucher);
-    Voucher deleteVoucher(Long id);
+    String deleteVoucher(Long id);
     Optional<Voucher> getVoucherByName(String voucherName);
+
+    Voucher getVoucherById(Long id);
 }

@@ -11,11 +11,13 @@ import java.util.List;
 @Service
 public class UsagecapacityService implements IUsagecapacityService {
     @Autowired
-    UsagecapacityRepository usagecapacityRepository;
+    private UsagecapacityRepository usagecapacityRepository;
+
     @Override
-    public Usagecapacity addUsagecapacity(Usagecapacity usagecapacity) {
+    public String addUsagecapacity(Usagecapacity usagecapacity) {
         usagecapacity.setStatus(1);
-        return usagecapacityRepository.save(usagecapacity);
+        usagecapacityRepository.save(usagecapacity);
+        return "Đã thêm đơn vị sử dụng thành công.";
     }
 
     @Override
@@ -24,17 +26,46 @@ public class UsagecapacityService implements IUsagecapacityService {
     }
 
     @Override
-    public Usagecapacity updateUsagecapacity(Long id, Usagecapacity usagecapacity) {
-        Usagecapacity  usagecapacity1 = usagecapacityRepository.findById(id).orElseThrow();
-        usagecapacity1.setCapacity(usagecapacity.getCapacity());
-        usagecapacity1.setUnit(usagecapacity.getUnit());
-        return usagecapacityRepository.save(usagecapacity1);
+    public String updateUsagecapacity(Long id, Usagecapacity usagecapacity) {
+        Usagecapacity existingUsagecapacity = usagecapacityRepository.findById(id).orElseThrow();
+        String currentUnit = existingUsagecapacity.getUnit();
+
+        if (currentUnit.equals(usagecapacity.getUnit())) {
+            // Nếu đơn vị không thay đổi, chỉ cập nhật dung lượng
+            existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
+            existingUsagecapacity.setStatus(1);
+            usagecapacityRepository.save(existingUsagecapacity);
+            return "Đã cập nhật đơn vị sử dụng thành công.";
+        }
+        // Kiểm tra xem đơn vị mới có bị trùng không
+        else if (usagecapacityRepository.findByUnit(usagecapacity.getUnit()).isPresent()) {
+            return "Đơn vị này đã tồn tại.";
+        }
+
+        // Cập nhật đơn vị và dung lượng mới
+        existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
+        existingUsagecapacity.setUnit(usagecapacity.getUnit());
+        existingUsagecapacity.setStatus(1);
+        usagecapacityRepository.save(existingUsagecapacity);
+        return "Đã cập nhật đơn vị sử dụng thành công.";
     }
 
     @Override
-    public Usagecapacity deleteUsagecapacity(Long id) {
-        Usagecapacity  usagecapacity1 = usagecapacityRepository.findById(id).orElseThrow();
-        usagecapacity1.setStatus(0);
-        return usagecapacityRepository.save(usagecapacity1);
+    public String deleteUsagecapacity(Long id) {
+        Usagecapacity existingUsagecapacity = usagecapacityRepository.findById(id).orElseThrow();
+        if (existingUsagecapacity.getStatus() == 0) {
+            existingUsagecapacity.setStatus(1);
+            usagecapacityRepository.save(existingUsagecapacity);
+            return "Khôi phục đơn vị sử dụng thành công.";
+        } else {
+            existingUsagecapacity.setStatus(0);
+            usagecapacityRepository.save(existingUsagecapacity);
+            return "Đã xóa đơn vị sử dụng thành công.";
+        }
+    }
+
+    @Override
+    public Usagecapacity getUsagecapacityById(Long id) {
+        return usagecapacityRepository.findById(id).orElseThrow();
     }
 }

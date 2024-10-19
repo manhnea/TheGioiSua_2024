@@ -40,6 +40,10 @@ public class UsagecapacityRestController {
         }
        return ResponseEntity.ok(Map.of("status", "success", "message", usagecapacityService.addUsagecapacity(usagecapacity)));
     }
+    @GetMapping("/lst/{id}")
+    public Usagecapacity getUsagecapacity(@PathVariable("id") Long id){
+        return usagecapacityService.getUsagecapacityById(id);
+    }
     //http://localhost:1234/api/Usagecapacity/update/{id}
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUsagecapacity(@PathVariable("id") Long id, @RequestBody @Valid Usagecapacity usagecapacity, BindingResult bindingResult){
@@ -58,7 +62,7 @@ public class UsagecapacityRestController {
     //http://localhost:1234/api/Usagecapacity/delete/{id}
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> deleteUsagecapacity(@PathVariable("id") Long id){
-        usagecapacityService.deleteUsagecapacity(id);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+       String message = usagecapacityService.deleteUsagecapacity(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }

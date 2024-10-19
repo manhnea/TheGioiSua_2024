@@ -26,6 +26,11 @@ public class InvoicedetailController {
         return invoicedetailService.getInvoicedetailList();
     }
 
+    //    http://localhost:1234/Invoicedetail/lst/1
+    @GetMapping("/lst/{id}")
+    public Invoicedetail getInvoicedetailById(@PathVariable Long id) {
+        return invoicedetailService.getInvoicedetailById(id);
+    }
 //    http://localhost:1234/Invoicedetail/add
     @PostMapping("/add")
     public ResponseEntity<?> saveInvoicedetail(@RequestBody @Valid Invoicedetail invoicedetail, BindingResult bindingResult) {
@@ -61,9 +66,9 @@ public class InvoicedetailController {
 
 //    http://localhost:1234/Invoicedetail/delete/1
     @PutMapping("/delete/{id}")
-    public ResponseEntity<?> deleteInvoicedetail(@PathVariable Long id, @RequestBody Invoicedetail invoicedetail) {
-        invoicedetailService.deleteInvoicedetail(id, invoicedetail);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Invoicedetail deleted successfully"));
+    public ResponseEntity<?> deleteInvoicedetail(@PathVariable Long id) {
+        String message = invoicedetailService.deleteInvoicedetail(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 
 }

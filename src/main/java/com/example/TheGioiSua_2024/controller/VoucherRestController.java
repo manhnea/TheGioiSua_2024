@@ -26,6 +26,10 @@ public class VoucherRestController {
         return voucherService.getVoucherList();
     }
     //http://localhost:1234/api/Voucher/add
+    @GetMapping("/lst/{id}")
+    public Voucher get(@PathVariable("id") Long id){
+        return voucherService.getVoucherById(id);
+    }
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
@@ -60,7 +64,7 @@ public class VoucherRestController {
     //http://localhost:1234/api/Voucher/delete/{id}
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id){
-        voucherService.deleteVoucher(id);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+        String message = voucherService.deleteVoucher(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }

@@ -11,5 +11,7 @@ public interface IInvoicedetailService {
 
     String updateInvoicedetail(Long id, Invoicedetail invoicedetail);
 
-    void deleteInvoicedetail(Long id, Invoicedetail invoicedetail);
+    String  deleteInvoicedetail(Long id);
+
+    Invoicedetail getInvoicedetailById(Long id);
 }

@@ -14,30 +14,29 @@ import java.util.Optional;
 public class MilktypeService implements IMilktypeService {
     @Autowired
     MilktypeRepository milktypeRepository;
-
     @Override
     public String AddMilktype(MilkType milktype) {
         String trimmedName = milktype.getMilkTypename().trim();
         milktype.setMilkTypename(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
         Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
         if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+            return "Tên này đã tồn tại.";
         }
         milktype.setStatus(1);
         milktypeRepository.save(milktype);
         return "Them Thanh Cong";
     }
-
     @Override
     public String UpdateMilktype(Long id, MilkType milktype) {
-// Loại bỏ khoảng trắng ở đầu và cuối tên
-        String trimmedName = milktype.getMilkTypename().trim();
-        milktype.setMilkTypename(trimmedName);
-        // Kiểm tra xem tên  đã tồn tại chưa
-        Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
-        if (existingContainer.isPresent()) {
-            return "Container với tên này đã tồn tại.";
+        MilkType existingMilkType = milktypeRepository.findById(id).orElseThrow();
+        String currentMilkTypeName = existingMilkType.getMilkTypename();
+        if (currentMilkTypeName.equals(milktype.getMilkTypename())) {
+            existingMilkType.setDescription(milktype.getDescription());
+            existingMilkType.setStatus(1);
+            milktypeRepository.save(existingMilkType);
+            return "Cập nhật mô tả loại sữa sữa thành công.";
+        } else if (milktypeRepository.findByMilkTypename(milktype.getMilkTypename()).isPresent()) {
+            return "loại sữa sữa này đã tồn tại.";
         }
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
         milktype1.setDescription(milktype.getDescription());
@@ -45,20 +44,28 @@ public class MilktypeService implements IMilktypeService {
          milktypeRepository.save(milktype1);
          return "Sua Thanh Cong";
     }
-
     @Override
-    public MilkType DeleteMilktype(Long id) {
+    public String DeleteMilktype(Long id) {
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
-        milktype1.setStatus(0);
-        return milktypeRepository.save(milktype1);
+        if (milktype1.getStatus() == 0) {
+            milktype1.setStatus(1);
+            milktypeRepository.save(milktype1);
+            return "Khôi phục loại sữa thành công!";
+        } else {
+            milktype1.setStatus(0);
+            milktypeRepository.save(milktype1);
+            return "Xóa Thanh Cong";
+        }
     }
 
     @Override
     public Optional<MilkType> getMilkTypeByName(String milktypename) {
         return milktypeRepository.findByMilkTypename(milktypename);
     }
-
-
+    @Override
+    public MilkType GetMilktypeById(Long id) {
+        return milktypeRepository.findById(id).orElseThrow();
+    }
     @Override
     public List<MilkType> GetAllMilktype() {
         return milktypeRepository.findAll();

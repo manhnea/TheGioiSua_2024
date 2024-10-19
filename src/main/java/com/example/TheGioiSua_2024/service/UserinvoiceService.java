@@ -31,7 +31,7 @@ public class UserinvoiceService implements IUserinvoiceService {
     public String saveUserinvoice(Userinvoice userinvoice) {
         userinvoice.setStatus(1);
         userinvoiceRepository.save(userinvoice);
-        return "Userinvoice added successfully";
+        return "Đã thêm hoá đơn người dùng thành công.";
     }
 
     @Override
@@ -39,16 +39,24 @@ public class UserinvoiceService implements IUserinvoiceService {
         Userinvoice existingUserinvoice = userinvoiceRepository.findById(id).orElseThrow();
         User user = userRepository.findById(existingUserinvoice.getUser().getId()).orElseThrow();
         Invoice invoice = invoiceRepository.findById(existingUserinvoice.getInvoice().getId()).orElseThrow();
+
         existingUserinvoice.setUser(user);
         existingUserinvoice.setInvoice(invoice);
         existingUserinvoice.setStatus(1);
-        return "Userinvoice updated successfully!";
+        userinvoiceRepository.save(existingUserinvoice);
+
+        return "Đã cập nhật hoá đơn người dùng thành công!";
     }
 
     @Override
     public void deleteUserinvoice(Long id, Userinvoice userinvoice) {
         Userinvoice existingUserinvoice = userinvoiceRepository.findById(id).orElseThrow();
-        existingUserinvoice.setStatus(0);
+        existingUserinvoice.setStatus(0); // Ngừng hoạt động hoá đơn
         userinvoiceRepository.save(existingUserinvoice);
+    }
+
+    @Override
+    public Userinvoice getUserinvoiceById(Long id) {
+        return userinvoiceRepository.findById(id).orElseThrow();
     }
 }

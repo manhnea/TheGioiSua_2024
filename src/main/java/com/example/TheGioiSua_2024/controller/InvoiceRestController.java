@@ -1,7 +1,7 @@
 package com.example.TheGioiSua_2024.controller;
 
-import com.example.TheGioiSua_2024.entity.Userinvoice;
-import com.example.TheGioiSua_2024.service.UserinvoiceService;
+import com.example.TheGioiSua_2024.entity.Invoice;
+import com.example.TheGioiSua_2024.service.InvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +13,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @CrossOrigin
 @RestController
-@RequestMapping("/Userinvoice")
-public class UserinvoiceController {
+@RequestMapping("/Invoice")
+public class InvoiceRestController {
     @Autowired
-    private UserinvoiceService userinvoiceService;
+    private InvoiceService invoiceService;
 
-    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/lst
+    //RessourceEndPoint:http://localhost:1234/api/Invoice/lst
     @GetMapping("/lst")
-    public List<Userinvoice> listUserinvoice() {
-        return userinvoiceService.getUserinvoiceList();
+    public List<Invoice> listInvoice() {
+        return invoiceService.getInvoiceList();
+    }
+    @GetMapping("/lst/{id}")
+    public Invoice getInvoiceById(@PathVariable Long id) {
+        return invoiceService.getInvoiceById(id);
     }
 
-//    http://localhost:1234/Userinvoice/add
+    //RessourceEndPoint:http://localhost:1234/api/Invoice/add
     @PostMapping("/add")
-    public ResponseEntity<?> addUserinvoice(@RequestBody @Valid Userinvoice userinvoice, BindingResult bindingResult) {
+    public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -39,12 +44,13 @@ public class UserinvoiceController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", userinvoiceService.saveUserinvoice(userinvoice)));
+
+        return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.saveInvoice(invoice)));
     }
 
-    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/update
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateUserinvoice(@PathVariable Long id, @RequestBody @Valid Userinvoice userinvoice, BindingResult bindingResult) {
+    //RessourceEndPoint:http://localhost:1234/api/Invoice/update
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updateInvoice(@PathVariable Long id,@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -55,14 +61,13 @@ public class UserinvoiceController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", userinvoiceService.updateUserinvoice(id, userinvoice)));
+       return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
     }
 
-    //RessourceEndPoint:http://localhost:1234/api/Userinvoice/delete
+    //RessourceEndPoint:http://localhost:1234/api/Invoice/delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUserinvoice(@PathVariable Long id, @RequestBody Userinvoice userinvoice) {
-        userinvoiceService.deleteUserinvoice(id, userinvoice);
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+    public ResponseEntity<?> deleteInvoice(@PathVariable Long id) {
+       String message =  invoiceService.deleteInvoice(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
-
 }

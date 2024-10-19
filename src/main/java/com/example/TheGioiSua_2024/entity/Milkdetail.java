@@ -34,8 +34,8 @@ public class Milkdetail {
     private Milktaste milkTaste;
 
     @ManyToOne
-    @JoinColumn(name = "packagingunitid", nullable = false)
-    private Packagingunit packagingUnit;
+    @JoinColumn(name = "packagingunitid")
+    private Packagingunit packagingunit;
 
     @ManyToOne
     @JoinColumn(name = "usagecapacityid", nullable = false)

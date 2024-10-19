@@ -25,6 +25,10 @@ public class MilktasteRestController {
     public List<Milktaste> lst() {
         return milktasteService.getAllMilktaste();
     }
+    @GetMapping("/lst/{id}")
+    public Milktaste lst(@PathVariable("id") Long id) {
+        return milktasteService.getMilktasteById(id);
+    }
     //http://localhost:1234/api/Milktaste/add
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestBody @Valid Milktaste milktaste, BindingResult bindingResult) {
@@ -58,8 +62,8 @@ public class MilktasteRestController {
     //http://localhost:1234/api/Milktaste/delete/{id}
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-
-        return ResponseEntity.ok(Map.of("status", "success", "message", milktasteService.deleteMilktaste(id)));
+        String message = milktasteService.deleteMilktaste(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message",message ));
     }
 
 }

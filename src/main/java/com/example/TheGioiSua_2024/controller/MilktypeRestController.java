@@ -25,6 +25,10 @@ public class MilktypeRestController {
     public List<MilkType> getAllMilktype() {
         return milktypeService.GetAllMilktype();
     }
+    @GetMapping("/lst/{id}")
+    public MilkType getMilktype(@PathVariable("id") Long id) {
+        return milktypeService.GetMilktypeById(id);
+    }
     //http://localhost:1234/api/Milktype/add
     @PostMapping("/add")
     public ResponseEntity<?> addMilktype(@RequestBody @Valid MilkType milktype, BindingResult bindingResult) {
@@ -58,8 +62,7 @@ public class MilktypeRestController {
     }//http://localhost:1234/api/Milktype/delete/{id}
     @PutMapping("/delete/{id}")
     public ResponseEntity<?> deleteMilktype(@PathVariable("id") Long id) {
-        milktypeService.DeleteMilktype(id);
-
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Xóa thành công"));
+        String message = milktypeService.DeleteMilktype(id);
+        return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }

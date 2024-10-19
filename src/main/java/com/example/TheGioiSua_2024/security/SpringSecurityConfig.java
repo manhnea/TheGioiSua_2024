@@ -35,7 +35,7 @@ public class SpringSecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests()
-            .requestMatchers("/user/**","/Product/**","/Milkdetail/add","/Milktype/lst","/Milkbrand/**","/Targetuser/lst").permitAll()
+            .requestMatchers("/user/**","/Product/**","/Userinvoice/lst","/Packagingunit/lst","/Usagecapacity/lst","/Milkdetail/lst","/Milktype/lst","/Milkbrand/lst","/Targetuser/lst","/Milktaste/lst","/Invoice/lst").permitAll()
             .requestMatchers("/admin/**",
                     "/Voucher/**",
                     "/Milktype/**",
@@ -44,7 +44,7 @@ public class SpringSecurityConfig {
                     "/Targetuser/**",
                     "/Product/**",
                     "/Milkdetail/**",
-                    "/Milkbrand/**",// no o dau
+                    "/Milkbrand/**",
                     "/Invoicedetail/**",
                     "/Invoice/**",
                     "/Userinvoice/**",
