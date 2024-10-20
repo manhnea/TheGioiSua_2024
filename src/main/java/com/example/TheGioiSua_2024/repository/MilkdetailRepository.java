@@ -24,7 +24,7 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
             + "JOIN p.milkType mt "
             + "JOIN p.targetUser tt "
             + "JOIN md.usageCapacity uc "
-            + "JOIN md.packagingUnit pu "
+            + "JOIN md.packagingunit pu "
             + "JOIN md.milkTaste mtt")
     Page<MilkDetailDto> getPageMilkDetail(Pageable pageable);
 
