@@ -34,6 +34,16 @@ public class MilkdetailService implements IMilkdetailService {
     @Override
     public String add(Milkdetail milkdetail) {
         String milkdetailcode = milkdetail.getMilkdetailcode().trim();
+//        Integer maxId = milkdetailRepository.findMaxId();
+//
+//        if (maxId == null) {
+//            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
+//        } else {
+//            maxId++;
+//        }
+//
+//        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
+//        String milkdetailcode = String.format("MD%03d", maxId);
         milkdetail.setMilkdetailcode(milkdetailcode);
         if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
             return "Mã sản phẩm đã tồn tại.";

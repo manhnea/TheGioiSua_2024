@@ -1,164 +1,161 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cửa Hàng Bán Sữa</title>
-    <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        padding-top: 60px;
-      }
-      .product-card {
-        margin-bottom: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-      <a class="navbar-brand" href="#">Cửa Hàng Bán Sữa</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sữa.vn - Dinh Dưỡng Đầy Đủ Cho Cả Nhà</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <a href="#" class="logo">
+            <img src="logo.png" alt="Sữa.vn">
+          </a>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="contact-info">
+            <p>Hotline: 0788222762 (8:00 - 20:00)</p>
+            <a href="#" class="btn btn-primary">Đăng ký thành viên</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Trang Chủ</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#products">Sản Phẩm</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#promotions">Khuyến Mãi</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#shipping">Giao Hàng</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#returns">Đổi Trả</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#contact">Liên Hệ</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="#">Trang chủ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Giới thiệu</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Sản phẩm</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Kiến thức</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Khuyến mãi</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
         </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
 
+  <!-- Main Banner -->
+  <section class="banner">
     <div class="container">
-      <div class="jumbotron text-center">
-        <h1>Chào Mừng Đến Với Cửa Hàng Bán Sữa</h1>
-        <p>Sản phẩm sữa chất lượng cao, bổ dưỡng cho sức khỏe</p>
-      </div>
-
-      <div id="products" class="row">
-        <h2 class="col-12">Sản Phẩm</h2>
-        <div class="col-md-4 product-card">
-          <div class="card">
-            <img
-              class="card-img-top"
-              src="image_link_here"
-              alt="Sữa tươi tiệt trùng ABC"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Sữa tươi tiệt trùng ABC</h5>
-              <p class="card-text">
-                Giá: 50,000 VND<br />Khối lượng: 1L<br />Hạn sử dụng: 30 ngày<br />Đặc
-                điểm nổi bật: giàu dinh dưỡng, không chất bảo quản
-              </p>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-md-9">
+          <img src="banner_image.jpg" alt="Dinh dưỡng đầy đủ" class="img-fluid">
         </div>
-        <div class="col-md-4 product-card">
-          <div class="card">
-            <img
-              class="card-img-top"
-              src="image_link_here"
-              alt="Sữa đậu nành XYZ"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Sữa đậu nành XYZ</h5>
-              <p class="card-text">
-                Giá: 30,000 VND<br />Khối lượng: 500ml<br />Hạn sử dụng: 20
-                ngày<br />Đặc điểm nổi bật: giàu protein, tốt cho sức khỏe
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 product-card">
-          <div class="card">
-            <img
-              class="card-img-top"
-              src="image_link_here"
-              alt="Sữa chua DEF"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Sữa chua DEF</h5>
-              <p class="card-text">
-                Giá: 40,000 VND<br />Khối lượng: 200ml<br />Hạn sử dụng: 15
-                ngày<br />Đặc điểm nổi bật: giúp tiêu hóa tốt, bổ sung canxi
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="promotions" class="row">
-        <h2 class="col-12">Chương Trình Khuyến Mãi</h2>
-        <div class="col-12">
-          <div class="alert alert-info" role="alert">
-            Tên chương trình: Mua 1 tặng 1<br />
-            Thời gian áp dụng: Từ ngày 01/11/2024 đến 30/11/2024<br />
-            Chi tiết: Mua một sản phẩm bất kỳ, tặng thêm một sản phẩm cùng loại
-            miễn phí.
-          </div>
-        </div>
-      </div>
-
-      <div id="shipping" class="row">
-        <h2 class="col-12">Chính Sách Giao Hàng</h2>
-        <div class="col-12">
-          <p>
-            Thời gian giao hàng: Trong vòng 2-3 ngày<br />Phí giao hàng: Miễn
-            phí cho đơn hàng từ 100,000 VND<br />Khu vực giao hàng: Toàn quốc
-          </p>
-        </div>
-      </div>
-
-      <div id="returns" class="row">
-        <h2 class="col-12">Chính Sách Đổi Trả</h2>
-        <div class="col-12">
-          <p>
-            Điều kiện đổi trả: Sản phẩm còn nguyên tem mác, hóa đơn mua hàng<br />Thời
-            gian đổi trả: Trong vòng 7 ngày từ ngày mua<br />Liên hệ đổi trả:
-            [Số điện thoại và email hỗ trợ khách hàng]
-          </p>
-        </div>
-      </div>
-
-      <div id="contact" class="row">
-        <h2 class="col-12">Liên Hệ</h2>
-        <div class="col-12">
-          <p>
-            Tên cửa hàng: [Tên cửa hàng của bạn]<br />Địa chỉ: [Địa chỉ cửa hàng
-            của bạn]<br />Liên hệ: [Số điện thoại và email của bạn]
-          </p>
+        <div class="col-md-3 text-center banner-text">
+          <h2>Mua sữa tốt, quà hấp dẫn</h2>
+          <a href="#" class="btn btn-warning">Mua ngay</a>
         </div>
       </div>
     </div>
+  </section>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+  <!-- Menubar -->
+  <section class="menubar bg-light py-3">
+    <div class="container">
+      <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Sữa bột dinh dưỡng</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tã bỉm cho bé</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Yến sào Bionest</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Đồ dùng mẹ và bé</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Product Section -->
+  <section class="product-section mt-5">
+    <div class="container">
+      <h2 class="text-center">Sản phẩm mới</h2>
+      <div class="row text-center mt-4">
+        <div class="col-md-3">
+          <div class="product-card">
+            <img src="product1.jpg" alt="Sữa bột" class="img-fluid">
+            <div class="product-info">
+              <h5>Sữa bột NeoCare</h5>
+              <p>Giá: 900,000 đ</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="product-card">
+            <img src="product2.jpg" alt="Sữa Enfama A+" class="img-fluid">
+            <div class="product-info">
+              <h5>Bộ 4 Sữa Enfama A+</h5>
+              <p>Giá: 830,000 đ</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="product-card">
+            <img src="product3.jpg" alt="Aptamil" class="img-fluid">
+            <div class="product-info">
+              <h5>Sữa Aptamil New Zealand</h5>
+              <p>Giá: 700,000 đ</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="product-card">
+            <img src="product4.jpg" alt="Yến sào Bionest" class="img-fluid">
+            <div class="product-info">
+              <h5>Yến sào Bionest Kids</h5>
+              <p>Giá: 1,200,000 đ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section bg-light py-5 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Về Sữa.vn</h2>
+          <p>Chúng tôi tự hào cung cấp các sản phẩm dinh dưỡng tốt nhất cho gia đình bạn. Với nhiều năm kinh nghiệm
+            trong ngành, chúng tôi mang đến những sản phẩm chất lượng cao với giá thành hợp lý. Hãy để chúng tôi đồng
+            hành cùng sự phát triển của bé yêu nhà bạn.</p>
+        </div>
+        <div class="col-md-6">
+          <img src="about_image.jpg" alt="Về chúng tôi" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer mt-5">
+    <div class="container text-center">
+      <p>© 2024 Sữa.vn - Bảo hành lỗi 1 đổi 1 | Hỗ trợ trả góp</p>
+      <a href="#" class="btn btn-primary">Liên hệ ngay</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
 </html>

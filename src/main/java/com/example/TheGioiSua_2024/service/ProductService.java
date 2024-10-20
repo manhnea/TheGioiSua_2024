@@ -10,6 +10,8 @@ import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.repository.ProductRepository;
 import com.example.TheGioiSua_2024.repository.TargetuserRepository;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
+import com.example.TheGioiSua_2024.util.RandomNumberGenerator;
+import com.example.TheGioiSua_2024.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,20 +38,26 @@ public class ProductService implements IProductService {
 
     @Override
     public String addProduct(Product product) {
-
         String productname = product.getProductname().trim();
         String productCode = product.getProductCode().trim();
         product.setProductCode(productCode);
         product.setProductname(productname);
-        if (productRepository.findByProductname(productname).isPresent()) {
-            return "Sản phẩm với tên này đã tồn tại.";
-        }
-        if (productRepository.findByProductCode(productCode).isPresent()) {
-            return "Sản phẩm với mã này đã tồn tại.";
-        }
-        product.setStatus(1);
-        productRepository.save(product);
-        return "Thêm sản phẩm thành công.";
+        MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).get();
+        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).get();
+        String nameMilkBrand = milkbrand.getMilkbrandname();
+        String nameMilkType = milkType.getMilkTypename();
+
+        String url = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
+//        if (productRepository.findByProductname(productname).isPresent()) {
+//            return "Sản phẩm với tên này đã tồn tại.";
+//        }
+//        if (productRepository.findByProductCode(productCode).isPresent()) {
+//            return "Sản phẩm với mã này đã tồn tại.";
+//        }
+//        product.setStatus(1);
+//        productRepository.save(product);
+//        return "Thêm sản phẩm thành công.";
+        return StringUtil.removeAccent(url);
     }
 
     @Override
@@ -85,7 +93,7 @@ public class ProductService implements IProductService {
     @Override
     public String deleteProduct(Long id) {
         Product existingProduct = productRepository.findById(id).orElseThrow();
-       if (existingProduct.getStatus() == 0) {
+        if (existingProduct.getStatus() == 0) {
             existingProduct.setStatus(1);
             productRepository.save(existingProduct);
             return "Khôi phục sản phẩm thành công.";
