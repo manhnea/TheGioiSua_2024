@@ -65,7 +65,7 @@ public class InvoicedetailController {
 
 
 //    http://localhost:1234/Invoicedetail/delete/1
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteInvoicedetail(@PathVariable Long id) {
         String message = invoicedetailService.deleteInvoicedetail(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));

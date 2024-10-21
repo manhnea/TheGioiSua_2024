@@ -1,6 +1,6 @@
 package com.example.TheGioiSua_2024.service.impl;
 
-import com.example.TheGioiSua_2024.dto.ProductDto;
+import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.Product;
 
 import java.util.List;
