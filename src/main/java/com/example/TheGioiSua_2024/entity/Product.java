@@ -47,6 +47,7 @@ public class Product {
     @JoinColumn(name = "targetuserid", nullable = false)
     private Targetuser targetUser;
     private String productUrl;
+    private String imgUrl;
     @Min(value = 0, message = "Trạng thái không hợp lệ")
     @Max(value = 1, message = "Trạng thái không hợp lệ")
     private int status;
