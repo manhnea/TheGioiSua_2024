@@ -96,12 +96,12 @@ public class ProductService implements IProductService {
     @Override
     public String deleteProduct(Long id) {
         Product existingProduct = productRepository.findById(id).orElseThrow();
-        if (existingProduct.getStatus() == 0) {
-            existingProduct.setStatus(1);
+        if (existingProduct.getStatus() == Status.Delete) {
+            existingProduct.setStatus(Status.Active);
             productRepository.save(existingProduct);
             return "Khôi phục sản phẩm thành công.";
         } else {
-            existingProduct.setStatus(0);
+            existingProduct.setStatus(Status.Delete);
             productRepository.save(existingProduct);
             return "Xóa sản phẩm thành công.";
         }
