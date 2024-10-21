@@ -9,5 +9,7 @@ package com.example.TheGioiSua_2024.util;
  * @author Hieu
  */
 public class Status {
-    public static int  Delete = 0;
+
+    public static int Delete = 0;
+    public static int Active = 1;
 }

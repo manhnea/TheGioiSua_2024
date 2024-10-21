@@ -18,24 +18,25 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByProductCode(String productCode);
 
+    Optional<Product> findByProductUrl(String productUrl);
+
     @Query("SELECT p FROM Product p WHERE p.productname = :productname")
     Optional<Object> findByProductname(String productname);
 
-    @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDto( " +
-       "p.id, " +
-       "mt.id, " +
-       "mb.id, " +
-       "tt.id, " +
-       "mt.milkTypename, " +
-       "mb.milkbrandname, " +
-       "tt.targetName, " +
-       "p.status) " +
-       "FROM Product p " +
-       "JOIN p.milkBrand mb " + 
-       "JOIN p.milkType mt " +  
-       "JOIN p.targetUser tt " + 
-       "WHERE p.status = 1")
-Page<ProductDto> getPageProduct(Pageable pageable);
-
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDto( "
+            + "p.id, "
+            + "mt.id, "
+            + "mb.id, "
+            + "tt.id, "
+            + "mt.milkTypename, "
+            + "mb.milkbrandname, "
+            + "tt.targetName, "
+            + "p.status) "
+            + "FROM Product p "
+            + "JOIN p.milkBrand mb "
+            + "JOIN p.milkType mt "
+            + "JOIN p.targetUser tt "
+            + "WHERE p.status = 1")
+    Page<ProductDto> getPageProduct(Pageable pageable);
 
 }

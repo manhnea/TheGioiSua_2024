@@ -11,6 +11,7 @@ import com.example.TheGioiSua_2024.repository.ProductRepository;
 import com.example.TheGioiSua_2024.repository.TargetuserRepository;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
 import com.example.TheGioiSua_2024.util.RandomNumberGenerator;
+import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,18 +47,20 @@ public class ProductService implements IProductService {
         Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).get();
         String nameMilkBrand = milkbrand.getMilkbrandname();
         String nameMilkType = milkType.getMilkTypename();
-
-        String url = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
-//        if (productRepository.findByProductname(productname).isPresent()) {
-//            return "Sản phẩm với tên này đã tồn tại.";
-//        }
-//        if (productRepository.findByProductCode(productCode).isPresent()) {
-//            return "Sản phẩm với mã này đã tồn tại.";
-//        }
-//        product.setStatus(1);
-//        productRepository.save(product);
-//        return "Thêm sản phẩm thành công.";
-        return StringUtil.removeAccent(url);
+        String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
+        if (productRepository.findByProductname(productname).isPresent()) {
+            return "Sản phẩm với tên này đã tồn tại.";
+        }
+        if (productRepository.findByProductCode(productCode).isPresent()) {
+            return "Sản phẩm với mã này đã tồn tại.";
+        }
+        while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {            
+            urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
+        }
+        product.setProductUrl(StringUtil.removeAccent(urlProduct));
+        product.setStatus(Status.Active);
+        productRepository.save(product);
+        return "Thêm sản phẩm thành công.";
     }
 
     @Override
