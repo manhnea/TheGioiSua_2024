@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Milktaste;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.service.impl.IMilktypeService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class MilktypeService implements IMilktypeService {
         if (existingContainer.isPresent()) {
             return "Tên này đã tồn tại.";
         }
-        milktype.setStatus(1);
+        milktype.setStatus(Status.Active);
         milktypeRepository.save(milktype);
         return "Them Thanh Cong";
     }
@@ -32,7 +33,7 @@ public class MilktypeService implements IMilktypeService {
         String currentMilkTypeName = existingMilkType.getMilkTypename();
         if (currentMilkTypeName.equals(milktype.getMilkTypename())) {
             existingMilkType.setDescription(milktype.getDescription());
-            existingMilkType.setStatus(1);
+            existingMilkType.setStatus(Status.Active);
             milktypeRepository.save(existingMilkType);
             return "Cập nhật mô tả loại sữa sữa thành công.";
         } else if (milktypeRepository.findByMilkTypename(milktype.getMilkTypename()).isPresent()) {
@@ -47,12 +48,12 @@ public class MilktypeService implements IMilktypeService {
     @Override
     public String DeleteMilktype(Long id) {
         MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
-        if (milktype1.getStatus() == 0) {
-            milktype1.setStatus(1);
+        if (milktype1.getStatus() == Status.Delete) {
+            milktype1.setStatus(Status.Active);
             milktypeRepository.save(milktype1);
             return "Khôi phục loại sữa thành công!";
         } else {
-            milktype1.setStatus(0);
+            milktype1.setStatus(Status.Delete);
             milktypeRepository.save(milktype1);
             return "Xóa Thanh Cong";
         }

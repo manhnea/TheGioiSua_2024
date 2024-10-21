@@ -39,58 +39,94 @@ public class ProductService implements IProductService {
 
     @Override
     public String addProduct(Product product) {
-        String productname = product.getProductname().trim();
-        String productCode = product.getProductCode().trim();
-        product.setProductCode(productCode);
-        product.setProductname(productname);
-        MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).get();
-        Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).get();
-        String nameMilkBrand = milkbrand.getMilkbrandname();
-        String nameMilkType = milkType.getMilkTypename();
-        String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
-        if (productRepository.findByProductname(productname).isPresent()) {
-            return "Sản phẩm với tên này đã tồn tại.";
+        try {
+            if (product.getMilkBrand().getId() == null) {
+                return "Thương Hiệu Không Được Để Trống.";
+            }
+            if (product.getMilkType().getId() == null) {
+                return "Loại Sữa Không Được Để Trống.";
+            }
+            if (product.getTargetUser().getId() == null) {
+                return "Đối Tượng Sử Dụng Không Được Để Trống.";
+            }
+            String productname = product.getProductname().trim();
+            String productCode = product.getProductCode().trim();
+            product.setProductCode(productCode);
+            product.setProductname(productname);
+            MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
+            Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId()).orElseThrow(() -> new RuntimeException("Hãng Sữa Không Tồn Tại"));
+            String nameMilkBrand = milkbrand.getMilkbrandname();
+            String nameMilkType = milkType.getMilkTypename();
+            String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
+
+            if (productRepository.findByProductname(productname).isPresent()) {
+                return "Sản phẩm với tên này đã tồn tại.";
+            }
+            if (productRepository.findByProductCode(productCode).isPresent()) {
+                return "Sản phẩm với mã này đã tồn tại.";
+            }
+            while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {
+                urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
+            }
+            product.setProductUrl(StringUtil.removeAccent(urlProduct));
+            product.setStatus(Status.Active);
+            productRepository.save(product);
+            return "Thêm sản phẩm thành công.";
+        } catch (RuntimeException e) {
+            return e.getMessage();
         }
-        if (productRepository.findByProductCode(productCode).isPresent()) {
-            return "Sản phẩm với mã này đã tồn tại.";
-        }
-        while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {            
-            urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_" + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_" + RandomNumberGenerator.generateRandom4Digits();
-        }
-        product.setProductUrl(StringUtil.removeAccent(urlProduct));
-        product.setStatus(Status.Active);
-        productRepository.save(product);
-        return "Thêm sản phẩm thành công.";
     }
 
     @Override
     public String updateProduct(Long id, Product product) {
-        Product existingProduct = productRepository.findById(id).orElseThrow();
-        MilkType milkType = milktypeRepository.findById(existingProduct.getMilkType().getId()).orElseThrow();
-        Milkbrand milkbrand = milkbrandRepository.findById(existingProduct.getMilkBrand().getId()).orElseThrow();
-        Targetuser targetuser = targetuserRepository.findById(existingProduct.getTargetUser().getId()).orElseThrow();
-        String currentProductName = existingProduct.getProductname();
-        String currentProductCode = existingProduct.getProductCode();
-        if (currentProductName.equals(product.getProductname()) && currentProductCode.equals(product.getProductCode())) {
+        try {
+            if (product.getMilkBrand().getId() == null) {
+                return "Thương Hiệu Không Được Để Trống.";
+            }
+            if (product.getMilkType().getId() == null) {
+                return "Loại Sữa Không Được Để Trống.";
+            }
+            if (product.getTargetUser().getId() == null) {
+                return "Đối Tượng Sử Dụng Không Được Để Trống.";
+            }
+            // Kiểm tra xem sản phẩm hiện tại có tồn tại hay không
+            Product existingProduct = productRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
+
+            // Kiểm tra các thuộc tính liên quan
+            MilkType milkType = milktypeRepository.findById(existingProduct.getMilkType().getId())
+                    .orElseThrow(() -> new RuntimeException("Loại sữa không tồn tại"));
+            Milkbrand milkbrand = milkbrandRepository.findById(existingProduct.getMilkBrand().getId())
+                    .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
+            Targetuser targetuser = targetuserRepository.findById(existingProduct.getTargetUser().getId())
+                    .orElseThrow(() -> new RuntimeException("Người dùng mục tiêu không tồn tại"));
+
+            // Kiểm tra xem tên hoặc mã sản phẩm có trùng không
+            if (!existingProduct.getProductname().equals(product.getProductname())
+                    && productRepository.findByProductname(product.getProductname()).isPresent()) {
+                return "Sản phẩm với tên này đã tồn tại.";
+            }
+
+            if (!existingProduct.getProductCode().equals(product.getProductCode())
+                    && productRepository.findByProductCode(product.getProductCode()).isPresent()) {
+                return "Sản phẩm với mã này đã tồn tại.";
+            }
+
+            // Cập nhật thông tin sản phẩm
             existingProduct.setMilkType(milkType);
             existingProduct.setMilkBrand(milkbrand);
             existingProduct.setTargetUser(targetuser);
             existingProduct.setProductCode(product.getProductCode());
-            existingProduct.setStatus(1);
+            existingProduct.setStatus(Status.Active);  // Assuming Status.Active is 1
+
             productRepository.save(existingProduct);
+
             return "Cập nhật sản phẩm thành công.";
-        } else if (productRepository.findByProductname(product.getProductname()).isPresent()) {
-            return "Sản phẩm với tên này đã tồn tại.";
-        } else if (productRepository.findByProductCode(product.getProductCode()).isPresent()) {
-            return "Sản phẩm với mã này đã tồn tại.";
+
+        } catch (RuntimeException e) {
+            // Trả về thông báo lỗi cụ thể
+            return e.getMessage();
         }
-        existingProduct.setMilkType(milkType);
-        existingProduct.setMilkBrand(milkbrand);
-        existingProduct.setTargetUser(targetuser);
-        existingProduct.setProductCode(product.getProductCode());
-        existingProduct.setStatus(1);
-        productRepository.save(existingProduct);
-        return "Cập nhật sản phẩm thành công.";
     }
 
     @Override

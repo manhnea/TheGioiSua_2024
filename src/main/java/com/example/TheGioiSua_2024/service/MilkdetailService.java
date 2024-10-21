@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.*;
 import com.example.TheGioiSua_2024.repository.*;
 import com.example.TheGioiSua_2024.service.impl.IMilkdetailService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class MilkdetailService implements IMilkdetailService {
         if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
             return "Mã sản phẩm đã tồn tại.";
         }
-        milkdetail.setStatus(1);
+        milkdetail.setStatus(Status.Active);
         milkdetailRepository.save(milkdetail);
         return "Thêm thành công";
     }
@@ -74,7 +75,7 @@ public class MilkdetailService implements IMilkdetailService {
         milkdetail1.setExpirationdate(milkdetail.getExpirationdate());
         milkdetail1.setDescription(milkdetail.getDescription());
         milkdetail1.setStockquantity(milkdetail.getStockquantity());
-        milkdetail1.setStatus(1);
+        milkdetail1.setStatus(Status.Active);
         milkdetailRepository.save(milkdetail1);
         return "Sửa thành công";
     }
@@ -82,12 +83,12 @@ public class MilkdetailService implements IMilkdetailService {
     @Override
     public String delete(Long id) {
         Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        if(milkdetail1.getStatus() == 0) {
-            milkdetail1.setStatus(1);
+        if(milkdetail1.getStatus() == Status.Delete) {
+            milkdetail1.setStatus(Status.Active);
             milkdetailRepository.save(milkdetail1);
             return "Khôi phục thành công";
         }else {
-            milkdetail1.setStatus(0);
+            milkdetail1.setStatus(Status.Delete);
             milkdetailRepository.save(milkdetail1);
             return "Xóa thành công";
         }

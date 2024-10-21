@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.entity.Packagingunit;
 import com.example.TheGioiSua_2024.repository.PackagingunitRepository;
 import com.example.TheGioiSua_2024.service.impl.IPackagingunitService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class PackagingunitService implements IPackagingunitService {
         if (existingContainer.isPresent()) {
             return "Đơn vị đóng gói với tên này đã tồn tại.";
         }
-        packagingunit.setStatus(1);
+        packagingunit.setStatus(Status.Active);
         packagingunitRepository.save(packagingunit);
         return "Thêm đơn vị đóng gói thành công.";
     }
@@ -53,11 +54,11 @@ public class PackagingunitService implements IPackagingunitService {
     @Override
     public String deletePackagingunit(Long id) {
         Packagingunit existingPackagingunit = packagingunitRepository.findById(id).orElseThrow();
-        if (existingPackagingunit.getStatus() == 0) {
-            existingPackagingunit.setStatus(1);
+        if (existingPackagingunit.getStatus() == Status.Delete) {
+            existingPackagingunit.setStatus(Status.Active);
             return "Khôi phục đơn vị đóng gói thành công.";
         }else {
-            existingPackagingunit.setStatus(0);
+            existingPackagingunit.setStatus(Status.Delete);
             return "Xóa đơn vị đóng gói thành công.";
         }
     }

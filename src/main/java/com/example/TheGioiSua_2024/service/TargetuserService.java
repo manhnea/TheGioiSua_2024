@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.entity.Targetuser;
 import com.example.TheGioiSua_2024.repository.TargetuserRepository;
 import com.example.TheGioiSua_2024.service.impl.ITargetuserService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class TargetuserService implements ITargetuserService {
         if (existingContainer.isPresent()) {
             return "Tên người dùng mục tiêu này đã tồn tại.";
         }
-        targetuser.setStatus(1);
+        targetuser.setStatus(Status.Active);
         targetuserRepository.save(targetuser);
         return "Thêm người dùng mục tiêu thành công.";
     }
@@ -41,7 +42,7 @@ public class TargetuserService implements ITargetuserService {
         // Nếu tên không thay đổi, chỉ cập nhật mô tả
         if (currentTargetName.equals(targetuser.getTargetName())) {
             existingTargetuser.setDescription(targetuser.getDescription());
-            existingTargetuser.setStatus(1);
+            existingTargetuser.setStatus(Status.Active);
             targetuserRepository.save(existingTargetuser);
             return "Cập nhật người dùng mục tiêu thành công.";
         }
@@ -59,12 +60,12 @@ public class TargetuserService implements ITargetuserService {
     @Override
     public String deleteTargetuser(Long id) {
         Targetuser existingTargetuser = targetuserRepository.findById(id).orElseThrow();
-       if (existingTargetuser.getStatus() == 0) {
-            existingTargetuser.setStatus(1);
+       if (existingTargetuser.getStatus() == Status.Delete) {
+            existingTargetuser.setStatus(Status.Active);
             targetuserRepository.save(existingTargetuser);
             return "Khôi phục người dùng mục tiêu thành công.";
         } else {
-            existingTargetuser.setStatus(0);
+            existingTargetuser.setStatus(Status.Delete);
             targetuserRepository.save(existingTargetuser);
             return "Xóa người dùng mục tiêu thành công.";
         }
