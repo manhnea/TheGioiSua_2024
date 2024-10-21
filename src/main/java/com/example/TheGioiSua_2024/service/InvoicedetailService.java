@@ -7,6 +7,7 @@ import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
 import com.example.TheGioiSua_2024.repository.MilkdetailRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoicedetailService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class InvoicedetailService implements IInvoicedetailService {
 
     @Override
     public String saveInvoicedetail(Invoicedetail invoicedetail) {
-        invoicedetail.setStatus(1);
+        invoicedetail.setStatus(Status.Active);
         invoicedetailRepository.save(invoicedetail);
         return "Thêm chi tiết hóa đơn thành công";
     }
@@ -45,19 +46,19 @@ public class InvoicedetailService implements IInvoicedetailService {
         existingInvoicedetail.setQuantity(invoicedetail.getQuantity());
         existingInvoicedetail.setPrice(invoicedetail.getPrice());
         existingInvoicedetail.setTotalprice(invoicedetail.getTotalprice());
-        existingInvoicedetail.setStatus(1);
+        existingInvoicedetail.setStatus(Status.Active);
         return "Cập nhật chi tiết hóa đơn thành công!";
     }
 
     @Override
     public String deleteInvoicedetail(Long id) {
         Invoicedetail existingInvoicedetail = invoicedetailRepository.findById(id).orElseThrow();
-        if(existingInvoicedetail.getStatus() == 0) {
-            existingInvoicedetail.setStatus(1);
+        if(existingInvoicedetail.getStatus() == Status.Delete) {
+            existingInvoicedetail.setStatus(Status.Active);
             invoicedetailRepository.save(existingInvoicedetail);
             return "Chi tiết hóa đơn đã bị xóa!";
         }else {
-            existingInvoicedetail.setStatus(0);
+            existingInvoicedetail.setStatus(Status.Delete);
             invoicedetailRepository.save(existingInvoicedetail);
             return "Xóa chi tiết hóa đơn thành công!";
         }

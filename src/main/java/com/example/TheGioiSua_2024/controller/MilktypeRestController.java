@@ -60,7 +60,7 @@ public class MilktypeRestController {
 
        return ResponseEntity.ok(Map.of("status", "success", "message", milktypeService.UpdateMilktype(id, milktype)));
     }//http://localhost:1234/api/Milktype/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteMilktype(@PathVariable("id") Long id) {
         String message = milktypeService.DeleteMilktype(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));

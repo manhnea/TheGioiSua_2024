@@ -62,7 +62,7 @@ public class ProductRestController {
         return ResponseEntity.ok(Map.of("status", "success", "message", productService.updateProduct(id, product)));
     }
     //http://localhost:1234/api/Product/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id) {
         String message = productService.deleteProduct(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));

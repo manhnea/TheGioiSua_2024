@@ -60,7 +60,7 @@ public class TargetuserRestController {
         return ResponseEntity.ok(Map.of("status", "success", "message", targetuserService.updateTargetuser(id, targetuser)));
     }
     //http://localhost:1234/api/Targetuser/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         String message = targetuserService.deleteTargetuser(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));

@@ -7,6 +7,7 @@ import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.repository.UserinvoiceRepository;
 import com.example.TheGioiSua_2024.service.impl.IUserinvoiceService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class UserinvoiceService implements IUserinvoiceService {
 
     @Override
     public String saveUserinvoice(Userinvoice userinvoice) {
-        userinvoice.setStatus(1);
+        userinvoice.setStatus(Status.Active);
         userinvoiceRepository.save(userinvoice);
         return "Đã thêm hoá đơn người dùng thành công.";
     }
@@ -42,7 +43,7 @@ public class UserinvoiceService implements IUserinvoiceService {
 
         existingUserinvoice.setUser(user);
         existingUserinvoice.setInvoice(invoice);
-        existingUserinvoice.setStatus(1);
+        existingUserinvoice.setStatus(Status.Active);
         userinvoiceRepository.save(existingUserinvoice);
 
         return "Đã cập nhật hoá đơn người dùng thành công!";
@@ -51,7 +52,7 @@ public class UserinvoiceService implements IUserinvoiceService {
     @Override
     public void deleteUserinvoice(Long id, Userinvoice userinvoice) {
         Userinvoice existingUserinvoice = userinvoiceRepository.findById(id).orElseThrow();
-        existingUserinvoice.setStatus(0); // Ngừng hoạt động hoá đơn
+        existingUserinvoice.setStatus(Status.Delete); // Ngừng hoạt động hoá đơn
         userinvoiceRepository.save(existingUserinvoice);
     }
 

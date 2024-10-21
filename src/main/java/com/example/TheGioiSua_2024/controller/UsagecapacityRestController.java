@@ -60,7 +60,7 @@ public class UsagecapacityRestController {
         return ResponseEntity.ok(Map.of("status", "success", "message", usagecapacityService.updateUsagecapacity(id, usagecapacity)));
     }
     //http://localhost:1234/api/Usagecapacity/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUsagecapacity(@PathVariable("id") Long id){
        String message = usagecapacityService.deleteUsagecapacity(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));

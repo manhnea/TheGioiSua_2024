@@ -1,73 +1,87 @@
 /* Import Google font - Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+
 /* login */
-.body-login{
+.body-login {
   min-height: 100vh;
   width: 100%;
   background-color: #FFDEE9;
   background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
 }
-.container-form{
+
+.container-form {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   max-width: 430px;
   width: 100%;
   background-color: #fff;
   border-radius: 7px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   opacity: 0.8;
 }
-.container-form .registration{
+
+.container-form .registration {
   display: none;
 }
-#check:checked ~ .registration{
+
+#check:checked~.registration {
   display: block;
 }
-#check:checked ~ .login{
+
+#check:checked~.login {
   display: none;
 }
-#check{
+
+#check {
   display: none;
 }
-.container-form .form{
+
+.container-form .form {
   padding: 2rem;
 }
-.form header{
+
+.form header {
   font-size: 2rem;
   font-weight: 500;
   text-align: center;
   margin-bottom: 1.5rem;
 }
- .form input{
-   height: 60px;
-   width: 100%;
-   padding: 0 15px;
-   font-size: 17px;
-   margin-bottom: 1.3rem;
-   border: 1px solid #ddd;
-   border-radius: 6px;
-   outline: none;
- }
- .form input:focus{
-   box-shadow: 0 1px 0 rgba(0,0,0,0.2);
- }
-.form a{
+
+.form input {
+  height: 60px;
+  width: 100%;
+  padding: 0 15px;
+  font-size: 17px;
+  margin-bottom: 1.3rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+
+.form input:focus {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.form a {
   font-size: 16px;
   color: #009579;
   text-decoration: none;
 }
-.form a:hover{
+
+.form a:hover {
   text-decoration: underline;
 }
-.form input.button{
+
+.form input.button {
   color: #fff;
   background-color: #FF9A8B;
   background-image: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
@@ -78,20 +92,25 @@
   cursor: pointer;
   transition: 0.4s;
 }
-.form input.button:hover{
+
+.form input.button:hover {
   background: #E5C0C3;
 }
-.signup{
+
+.signup {
   font-size: 17px;
   text-align: center;
 }
-.signup label{
+
+.signup label {
   color: #009579;
   cursor: pointer;
 }
-.signup label:hover{
+
+.signup label:hover {
   text-decoration: underline;
 }
+
 /* header */
 .bg-orange {
   background-color: #ff6b00;
@@ -129,4 +148,3 @@
   box-shadow: none;
   border-color: #ff6b00;
 }
-

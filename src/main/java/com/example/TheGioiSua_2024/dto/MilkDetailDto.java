@@ -6,6 +6,7 @@ package com.example.TheGioiSua_2024.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,13 +21,21 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductDto {
-    Long productID;
-    Long milkBrandID;
-    Long milkTypeID;
-    Long targetuserID;
-    String milktypename;
+public class MilkDetailDto {
+    Long milktypeID;
+    Long milkbrandID;
+    String packagingunitname;
+    String milkTypename;
     String milkbrandname;
-    String targetname;
+    String milktastename;
+    int capacity;
+    String unit;
+    String targetName;
+    float price;
+    int stockquantity;
+    String description;
     int status;
+
+    
+    
 }

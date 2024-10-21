@@ -5,6 +5,7 @@ import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +32,7 @@ public class InvoiceService implements IInvoiceService {
         if (invoiceRepository.existsByInvoicecode(invoicecode).isPresent()) {
             return "Mã hóa đơn đã tồn tại.";
         }
-        invoice.setStatus(1);
+        invoice.setStatus(Status.Active);
         invoiceRepository.save(invoice);
         return "Thêm hóa đơn thành công!";
     }
@@ -49,7 +50,7 @@ public class InvoiceService implements IInvoiceService {
         existingInvoice.setInvoicecode(invoice.getInvoicecode());
         existingInvoice.setDiscountamount(invoice.getDiscountamount());
         existingInvoice.setTotalamount(invoice.getTotalamount());
-        existingInvoice.setStatus(1);
+        existingInvoice.setStatus(Status.Active);
         invoiceRepository.save(existingInvoice);
         return "Cập nhật hóa đơn thành công!";
     }
@@ -57,12 +58,12 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public String deleteInvoice(Long id) {
         Invoice invoice1 = invoiceRepository.findById(id).orElseThrow();
-        if(invoice1.getStatus() == 0) {
-            invoice1.setStatus(1);
+        if(invoice1.getStatus() == Status.Delete) {
+            invoice1.setStatus(Status.Active);
             invoiceRepository.save(invoice1);
             return "Hóa đơn đã được khôi phục!";
         } else {
-            invoice1.setStatus(0);
+            invoice1.setStatus(Status.Delete);
             invoiceRepository.save(invoice1);
             return "Hóa đơn đã được xóa!";
         }
