@@ -16,7 +16,7 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
     Optional<Milkdetail> existsBymilkdetailcode(String milkdetailcode);
 
     @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
-            + "mt.id,\n"
+            + "md.id,\n"
             + "mb.id, "
             + "pu.packagingunitname, mt.milkTypename, mb.milkbrandname, mtt.milktastename, "
             + "uc.capacity, uc.unit, tt.targetName, md.price, md.stockquantity, md.description, p.status) "

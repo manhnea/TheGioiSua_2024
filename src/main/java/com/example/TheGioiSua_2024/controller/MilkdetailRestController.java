@@ -68,6 +68,7 @@ public class MilkdetailRestController {
     String message = milkdetailService.delete(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
+    //http://localhost:1234/api/Milkdetail/page
     @GetMapping("/page")
     private ResponseEntity<?>getPageMilkDetail(
             @RequestParam(defaultValue = "0") int page,

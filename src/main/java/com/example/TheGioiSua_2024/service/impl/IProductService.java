@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.service.impl;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
+import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.Product;
 
 import java.util.List;
@@ -16,4 +17,12 @@ public interface IProductService {
     String deleteProduct(Long id);
 
     Product getProductById(Long id);
+    
+    Page<ProductDto> getPageProduct(Pageable pageable);
+    
+    Page<ProductDto> getPageProductByTypeMilk(Pageable pageable,Long id);
+    
+    Page<ProductDto> getPageProductByBrandMilk(Pageable pageable,Long id);
+    
+    Page<ProductDto> getPageProductByTargetUser(Pageable pageable,Long id);
 }

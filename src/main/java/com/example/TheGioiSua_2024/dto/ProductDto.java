@@ -28,5 +28,7 @@ public class ProductDto {
     String milktypename;
     String milkbrandname;
     String targetname;
+    String productURL;
+    String imgUrl;
     int status;
 }
