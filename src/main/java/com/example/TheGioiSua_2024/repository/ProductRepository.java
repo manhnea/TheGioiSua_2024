@@ -31,6 +31,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "mt.milkTypename, "
             + "mb.milkbrandname, "
             + "tt.targetName, "
+            + "p.productUrl, "
+            + "p.imgUrl, "
             + "p.status) "
             + "FROM Product p "
             + "JOIN p.milkBrand mb "
@@ -38,5 +40,58 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "JOIN p.targetUser tt "
             + "WHERE p.status = 1")
     Page<ProductDto> getPageProduct(Pageable pageable);
-
+    
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDto( "
+            + "p.id, "
+            + "mt.id, "
+            + "mb.id, "
+            + "tt.id, "
+            + "mt.milkTypename, "
+            + "mb.milkbrandname, "
+            + "tt.targetName, "
+            + "p.productUrl, "
+            + "p.imgUrl, "
+            + "p.status) "
+            + "FROM Product p "
+            + "JOIN p.milkBrand mb "
+            + "JOIN p.milkType mt "
+            + "JOIN p.targetUser tt "
+            + "WHERE p.status = 1 AND mt.id =:id")
+    Page<ProductDto> getPageProductByTypeMilk(Pageable pageable,Long id);
+    
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDto( "
+            + "p.id, "
+            + "mt.id, "
+            + "mb.id, "
+            + "tt.id, "
+            + "mt.milkTypename, "
+            + "mb.milkbrandname, "
+            + "tt.targetName, "
+            + "p.productUrl, "
+            + "p.imgUrl, "
+            + "p.status) "
+            + "FROM Product p "
+            + "JOIN p.milkBrand mb "
+            + "JOIN p.milkType mt "
+            + "JOIN p.targetUser tt "
+            + "WHERE p.status = 1 AND mb.id =:id")
+    Page<ProductDto> getPageProductByBrandMilk(Pageable pageable,Long id);
+    
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDto( "
+            + "p.id, "
+            + "mt.id, "
+            + "mb.id, "
+            + "tt.id, "
+            + "mt.milkTypename, "
+            + "mb.milkbrandname, "
+            + "tt.targetName, "
+            + "p.productUrl, "
+            + "p.imgUrl, "
+            + "p.status) "
+            + "FROM Product p "
+            + "JOIN p.milkBrand mb "
+            + "JOIN p.milkType mt "
+            + "JOIN p.targetUser tt "
+            + "WHERE p.status = 1 AND tt.id =:id")
+    Page<ProductDto> getPageProductByTargetUser(Pageable pageable,Long id);
 }

@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
+import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Product;
@@ -146,5 +147,25 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public Page<ProductDto> getPageProduct(Pageable pageable) {
+        return productRepository.getPageProduct(pageable);
+    }
+
+    @Override
+    public Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id) {
+        return productRepository.getPageProductByTypeMilk(pageable,id);
+    }
+
+    @Override
+    public Page<ProductDto> getPageProductByBrandMilk(Pageable pageable, Long id) {
+        return productRepository.getPageProductByBrandMilk(pageable,id);
+    }
+
+    @Override
+    public Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id) {
+        return productRepository.getPageProductByTargetUser(pageable,id);
     }
 }
