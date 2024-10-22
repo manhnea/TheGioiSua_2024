@@ -114,15 +114,18 @@ public class MilkdetailService implements IMilkdetailService {
     }
 
     @Override
-    public MilkDetailDto getMilkDetail(MilkDetailDto milkDetailDto) {
-        return milkdetailRepository.getMilkDetail(
-                milkDetailDto.getMilktypeID(),
-                milkDetailDto.getMilkBrandID(),
-                milkDetailDto.getPackagingunitID(),
-                milkDetailDto.getMilktasteID(),
-                milkDetailDto.getProductID(),
-                milkDetailDto.getTargetuserID(),
-                milkDetailDto.getUsagecapacityID());
+//    public MilkDetailDto getMilkDetail(MilkDetailDto milkDetailDto) {
+//        return milkdetailRepository.getMilkDetail(
+//                milkDetailDto.getMilktypeID(),
+//                milkDetailDto.getMilkBrandID(),
+//                milkDetailDto.getPackagingunitID(),
+//                milkDetailDto.getMilktasteID(),
+//                milkDetailDto.getProductID(),
+//                milkDetailDto.getTargetuserID(),
+//                milkDetailDto.getUsagecapacityID());
+//    }
+    public MilkDetailDto getMilkDetail(Long milktypeID, Long milkBrandID, Long packagingunitID, Long milktasteID, Long productID, Long targetuserID, Long usagecapacityID) {
+        return milkdetailRepository.getMilkDetail(milktypeID, milkBrandID, packagingunitID, milktasteID, productID, targetuserID, usagecapacityID);
     }
 
 }
