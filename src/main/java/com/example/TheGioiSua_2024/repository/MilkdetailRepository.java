@@ -15,7 +15,9 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
     Optional<Milkdetail> existsBymilkdetailcode(String milkdetailcode);
 
-    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto(md.id, p.productCode, md.milkdetailcode, "
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
+            + "md.id,\n"
+            + "mb.id, "
             + "pu.packagingunitname, mt.milkTypename, mb.milkbrandname, mtt.milktastename, "
             + "uc.capacity, uc.unit, tt.targetName, md.price, md.stockquantity, md.description, p.status) "
             + "FROM Milkdetail md "
@@ -25,7 +27,10 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
             + "JOIN p.targetUser tt "
             + "JOIN md.usageCapacity uc "
             + "JOIN md.packagingunit pu "
-            + "JOIN md.milkTaste mtt")
+            + "JOIN md.milkTaste mtt "
+            + "WHERE md.status = 1")
     Page<MilkDetailDto> getPageMilkDetail(Pageable pageable);
 
+    @Query("SELECT COALESCE(MAX(m.id), 0) FROM Milkdetail m")
+    Integer findMaxId();
 }

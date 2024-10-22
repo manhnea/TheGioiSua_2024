@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.entity.Usagecapacity;
 import com.example.TheGioiSua_2024.repository.UsagecapacityRepository;
 import com.example.TheGioiSua_2024.service.impl.IUsagecapacityService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class UsagecapacityService implements IUsagecapacityService {
         if (currentUnit.equals(usagecapacity.getUnit())) {
             // Nếu đơn vị không thay đổi, chỉ cập nhật dung lượng
             existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
-            existingUsagecapacity.setStatus(1);
+            existingUsagecapacity.setStatus(Status.Active);
             usagecapacityRepository.save(existingUsagecapacity);
             return "Đã cập nhật đơn vị sử dụng thành công.";
         }
@@ -45,7 +46,7 @@ public class UsagecapacityService implements IUsagecapacityService {
         // Cập nhật đơn vị và dung lượng mới
         existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
         existingUsagecapacity.setUnit(usagecapacity.getUnit());
-        existingUsagecapacity.setStatus(1);
+        existingUsagecapacity.setStatus(Status.Active);
         usagecapacityRepository.save(existingUsagecapacity);
         return "Đã cập nhật đơn vị sử dụng thành công.";
     }
@@ -53,12 +54,12 @@ public class UsagecapacityService implements IUsagecapacityService {
     @Override
     public String deleteUsagecapacity(Long id) {
         Usagecapacity existingUsagecapacity = usagecapacityRepository.findById(id).orElseThrow();
-        if (existingUsagecapacity.getStatus() == 0) {
-            existingUsagecapacity.setStatus(1);
+        if (existingUsagecapacity.getStatus() == Status.Delete) {
+            existingUsagecapacity.setStatus(Status.Active);
             usagecapacityRepository.save(existingUsagecapacity);
             return "Khôi phục đơn vị sử dụng thành công.";
         } else {
-            existingUsagecapacity.setStatus(0);
+            existingUsagecapacity.setStatus(Status.Delete);
             usagecapacityRepository.save(existingUsagecapacity);
             return "Đã xóa đơn vị sử dụng thành công.";
         }

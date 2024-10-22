@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.entity.Milktaste;
 import com.example.TheGioiSua_2024.repository.MilktasteRepository;
 import com.example.TheGioiSua_2024.service.impl.IMilktasteService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class MilktasteService implements IMilktasteService {
         if (existingContainer.isPresent()) {
             return "Tên vị sữa này đã tồn tại.";
         }
-        milktaste.setStatus(1);
+        milktaste.setStatus(Status.Active);
         milktasteRepository.save(milktaste); // Lưu đối tượng milktaste vào cơ sở dữ liệu
         return "Thêm vị sữa thành công";
     }
@@ -51,12 +52,12 @@ public class MilktasteService implements IMilktasteService {
     @Override
     public String deleteMilktaste(Long id) {
         Milktaste existingMilktaste = milktasteRepository.findById(id).orElseThrow();
-        if (existingMilktaste.getStatus() == 0) {
-            existingMilktaste.setStatus(1);
+        if (existingMilktaste.getStatus() == Status.Delete) {
+            existingMilktaste.setStatus(Status.Active);
             milktasteRepository.save(existingMilktaste);
             return "Khôi phục vị sữa thành công!";
         } else {
-            existingMilktaste.setStatus(0);
+            existingMilktaste.setStatus(Status.Delete);
             milktasteRepository.save(existingMilktaste);
             return "Xóa vị sữa thành công!";
         }

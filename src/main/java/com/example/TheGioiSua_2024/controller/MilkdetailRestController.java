@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @CrossOrigin
 @RestController
@@ -61,10 +63,17 @@ public class MilkdetailRestController {
         return ResponseEntity.ok(Map.of("status", "success", "message", milkdetailService.update(id, milkdetail)));
     }
     //http://localhost:1234/api/Milkdetail/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     private ResponseEntity<?> delete(@PathVariable("id") Long id){
     String message = milkdetailService.delete(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
-
+    //http://localhost:1234/api/Milkdetail/page
+    @GetMapping("/page")
+    private ResponseEntity<?>getPageMilkDetail(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(Map.of("status", "success", "message", milkdetailService.getPageMilkDetail(pageable)));
+    }
 }

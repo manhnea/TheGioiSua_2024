@@ -60,7 +60,7 @@ public class MilktasteRestController {
         return ResponseEntity.ok(Map.of("status", "success", "message", milktasteService.updateMilktaste(id, milktaste)));
     }
     //http://localhost:1234/api/Milktaste/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         String message = milktasteService.deleteMilktaste(id);
         return ResponseEntity.ok(Map.of("status", "success", "message",message ));

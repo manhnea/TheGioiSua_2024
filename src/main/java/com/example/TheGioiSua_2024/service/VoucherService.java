@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IVoucherService;
+import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class VoucherService implements IVoucherService {
         if (existingVoucher.isPresent()) {
             return "Voucher với mã này đã tồn tại.";
         }
-        voucher.setStatus(1); // Kích hoạt voucher
+        voucher.setStatus(Status.Active); // Kích hoạt voucher
         voucherRepository.save(voucher);
         return "Đã lưu voucher thành công.";
     }
@@ -68,12 +69,12 @@ public class VoucherService implements IVoucherService {
     @Override
     public String deleteVoucher(Long id) {
         Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
-       if (existingVoucher.getStatus() == 0) {
-            existingVoucher.setStatus(1);
+       if (existingVoucher.getStatus() == Status.Delete) {
+            existingVoucher.setStatus(Status.Active);
             voucherRepository.save(existingVoucher);
             return "Khôi phục voucher thành công.";
         } else {
-            existingVoucher.setStatus(0);
+            existingVoucher.setStatus(Status.Delete);
             voucherRepository.save(existingVoucher);
             return "Đã xóa voucher thành công.";
         }

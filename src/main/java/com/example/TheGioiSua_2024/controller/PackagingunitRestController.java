@@ -61,7 +61,7 @@ public class PackagingunitRestController {
         return ResponseEntity.ok(Map.of("status", "success", "message", packagingunitService.updatePackagingunit(id, packagingunit)));
     }
     //http://localhost:1234/api/Packagingunit/delete/{id}
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePackagingunit(@PathVariable("id") Long id){
         String message = packagingunitService.deletePackagingunit(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
