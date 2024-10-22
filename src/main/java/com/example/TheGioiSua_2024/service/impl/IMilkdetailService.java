@@ -8,8 +8,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 public interface IMilkdetailService {
+
     List<Milkdetail> getAll();
 
     String add(Milkdetail milkdetail);
@@ -19,6 +19,8 @@ public interface IMilkdetailService {
     String delete(Long id);
 
     Milkdetail getById(Long id);
-    
-    Page<MilkDetailDto> getPageMilkDetail(Pageable pageable);
+
+    Page<MilkDetailDto> getPageMilkDetail(Pageable pageable, MilkDetailDto milkDetailDto);
+
+    MilkDetailDto getMilkDetail(MilkDetailDto milkDetailDto);
 }
