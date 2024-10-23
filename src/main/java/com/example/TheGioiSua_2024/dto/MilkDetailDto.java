@@ -22,20 +22,26 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MilkDetailDto {
+    Long productID;
+    Long milkBrandID;
     Long milktypeID;
-    Long milkbrandID;
-    String packagingunitname;
-    String milkTypename;
-    String milkbrandname;
-    String milktastename;
-    int capacity;
-    String unit;
-    String targetName;
+    Long targetuserID;
+    Long usagecapacityID;
+    Long packagingunitID;
+    Long milktasteID;
+    Long milkDetailID;
     float price;
     int stockquantity;
-    String description;
+    String imgURL;
     int status;
 
+    public MilkDetailDto(Long milkDetailID, float price, int stockquantity, String imgURL, int status) {
+        this.milkDetailID = milkDetailID;
+        this.price = price;
+        this.stockquantity = stockquantity;
+        this.imgURL = imgURL;
+        this.status = status;
+    }
     
     
 }
