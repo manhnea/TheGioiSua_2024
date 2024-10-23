@@ -34,21 +34,18 @@ public class MilkdetailService implements IMilkdetailService {
 
     @Override
     public String add(Milkdetail milkdetail) {
-        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
-//        Integer maxId = milkdetailRepository.findMaxId();
-//
-//        if (maxId == null) {
-//            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
-//        } else {
-//            maxId++;
-//        }
-//
-//        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
-//        String milkdetailcode = String.format("MD%03d", maxId);
-        milkdetail.setMilkdetailcode(milkdetailcode);
-        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
-            return "Mã sản phẩm đã tồn tại.";
+//        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
+        Integer maxId = milkdetailRepository.findMaxId();
+
+        if (maxId == null) {
+            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
+        } else {
+            maxId++;
         }
+
+        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
+        String milkdetailcode = String.format("MD%03d", maxId);
+        milkdetail.setMilkdetailcode(milkdetailcode);
         milkdetail.setStatus(Status.Active);
         milkdetailRepository.save(milkdetail);
         return "Thêm thành công";
@@ -56,41 +53,39 @@ public class MilkdetailService implements IMilkdetailService {
 
     @Override
     public String update(Long id, Milkdetail milkdetail) {
-        Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        Product product = productRepository.findById(milkdetail1.getProduct().getId()).get();
-        Milktaste milktaste = milktasteRepository.findById(milkdetail1.getMilkTaste().getId()).get();
-        Packagingunit packagingunit = packagingunitRepository.findById(milkdetail1.getPackagingunit().getId()).get();
-        Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail1.getUsageCapacity().getId()).get();
-        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
-        milkdetail.setMilkdetailcode(milkdetailcode);
-        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
-            return "Mã sản phẩm đã tồn tại.";
+        try {
+            Milkdetail milkdetailnew = milkdetailRepository.findById(id).orElseThrow(() -> new RuntimeException("MilkDetail Không Tồn Tại"));
+            Product product = productRepository.findById(milkdetail.getProduct().getId()).orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
+            Milktaste milktaste = milktasteRepository.findById(milkdetail.getMilkTaste().getId()).orElseThrow(() -> new RuntimeException("Vị Sữa Không Tồn Tại"));
+            Packagingunit packagingunit = packagingunitRepository.findById(milkdetail.getPackagingunit().getId()).orElseThrow(() -> new RuntimeException("Đơn Vị Đóng Gói Không Tồn Tại"));
+            Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail.getUsageCapacity().getId()).orElseThrow(() -> new RuntimeException("Dung Tích Sử Dụng Không Tồn Tại"));
+            milkdetailnew.setProduct(product);
+            milkdetailnew.setMilkTaste(milktaste);
+            milkdetailnew.setPackagingunit(packagingunit);
+            milkdetailnew.setUsageCapacity(usagecapacity);
+            milkdetailnew.setPrice(milkdetail.getPrice());
+            milkdetailnew.setExpirationdate(milkdetail.getExpirationdate());
+            milkdetailnew.setDescription(milkdetail.getDescription());
+            milkdetailnew.setStockquantity(milkdetail.getStockquantity());
+            milkdetailnew.setImgUrl(milkdetail.getImgUrl());
+            milkdetailnew.setStatus(Status.Active);
+            milkdetailRepository.save(milkdetailnew);
+            return "Sửa thành công";
+        } catch (RuntimeException e) {
+            return e.getMessage();
         }
-        milkdetail1.setProduct(product);
-        milkdetail1.setMilkTaste(milktaste);
-        milkdetail1.setPackagingunit(packagingunit);
-        milkdetail1.setUsageCapacity(usagecapacity);
-        milkdetail1.setMilkdetailcode(milkdetail.getMilkdetailcode());
-        milkdetail1.setPrice(milkdetail.getPrice());
-        milkdetail1.setExpirationdate(milkdetail.getExpirationdate());
-        milkdetail1.setDescription(milkdetail.getDescription());
-        milkdetail1.setStockquantity(milkdetail.getStockquantity());
-        milkdetail1.setImgUrl(milkdetail.getImgUrl());
-        milkdetail1.setStatus(Status.Active);
-        milkdetailRepository.save(milkdetail1);
-        return "Sửa thành công";
     }
 
     @Override
     public String delete(Long id) {
-        Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        if (milkdetail1.getStatus() == Status.Delete) {
-            milkdetail1.setStatus(Status.Active);
-            milkdetailRepository.save(milkdetail1);
+        Milkdetail milkdetailnew = milkdetailRepository.findById(id).get();
+        if (milkdetailnew.getStatus() == Status.Delete) {
+            milkdetailnew.setStatus(Status.Active);
+            milkdetailRepository.save(milkdetailnew);
             return "Khôi phục thành công";
         } else {
-            milkdetail1.setStatus(Status.Delete);
-            milkdetailRepository.save(milkdetail1);
+            milkdetailnew.setStatus(Status.Delete);
+            milkdetailRepository.save(milkdetailnew);
             return "Xóa thành công";
         }
 
