@@ -48,7 +48,7 @@ public class Milkdetail {
     @NotNull(message = "Giá là bắt buộc")
     @DecimalMin(value = "0.0", inclusive = true, message = "Giá không được âm")
     private float price;
-
+    private String imgUrl;
     @NotBlank(message = "Mô tả là bắt buộc")
     @Size(max = 500, message = "Mô tả không được vượt quá 500 ký tự")
     private String description;

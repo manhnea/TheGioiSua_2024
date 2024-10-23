@@ -17,8 +17,8 @@
                   class="fas fa-folder-plus"></i> Thêm thương hiệu</a>
             </div>
             <div class="col-sm-2">
-              <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#adddanhmuc"><i
-                  class="fas fa-folder-plus"></i> Thêm danh mục</a>
+              <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addViSua"><i
+                  class="fas fa-folder-plus"></i> Thêm vị sữa</a>
             </div>
             <div class="col-sm-2">
               <a class="btn btn-add btn-sm" data-toggle="modal" data-target="#addtinhtrang"><i
@@ -183,9 +183,9 @@ MODAL
 
 
 <!--
-MODAL DANH MỤC
+MODAL Vị Sữa
 -->
-<div class="modal fade" id="adddanhmuc" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+<div class="modal fade" id="addViSua" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
   data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -198,26 +198,38 @@ MODAL DANH MỤC
             </span>
           </div>
           <div class="form-group col-md-12">
-            <label class="control-label">Nhập tên danh mục mới</label>
-            <input class="form-control" type="text" required>
-          </div>
-          <div class="form-group col-md-12">
-            <label class="control-label">Danh mục sản phẩm hiện đang có</label>
-            <ul style="padding-left: 20px;">
-              <li>Bàn ăn</li>
-            <li>Bàn thông minh</li>
-            <li>Tủ</li>
-            <li>Ghế gỗ</li>
-            <li>Ghế sắt</li>
-            <li>Giường người lớn</li>
-            <li>Giường trẻ em</li>
-            <li>Bàn trang điểm</li>
-            <li>Giá đỡ</li>
-            </ul>
+            <label class="control-label">Nhập tên vị sữa mới</label>
+            <input class="form-control" type="text" ng-model="formDataTaste.milktastename" required>
           </div>
         </div>
+        <h2>Danh sách vị sữa</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên Vị Sữa</th>
+                            <th>Chức Năng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="taste in Milktaste">
+                            <td>{{ taste.id }}</td>
+                            <td>{{ taste.milktastename }}</td>
+                            <td>
+                                <a ng-click="deleteMilktaste(taste.id)" class="btn btn-danger" role="button"
+                                    aria-pressed="true">
+                                    Xóa
+                                </a>
+                                <a ng-click=" " class="btn btn-primary" role="button"
+                                    aria-pressed="true">
+                                    Chỉnh sửa
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
         <BR>
-        <button class="btn btn-save" type="button">Lưu lại</button>
+        <button class="btn btn-save" type="button" ng-click="saveTaste()">Lưu lại</button>
         <a class="btn btn-cancel" data-dismiss="modal" href="#">Hủy bỏ</a>
         <BR>
       </div>

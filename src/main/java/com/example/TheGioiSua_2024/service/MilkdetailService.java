@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
+
     @Autowired
     private MilkdetailRepository milkdetailRepository;
     @Autowired
@@ -25,7 +26,6 @@ public class MilkdetailService implements IMilkdetailService {
     private PackagingunitRepository packagingunitRepository;
     @Autowired
     private UsagecapacityRepository usagecapacityRepository;
-
 
     @Override
     public List<Milkdetail> getAll() {
@@ -75,6 +75,7 @@ public class MilkdetailService implements IMilkdetailService {
         milkdetail1.setExpirationdate(milkdetail.getExpirationdate());
         milkdetail1.setDescription(milkdetail.getDescription());
         milkdetail1.setStockquantity(milkdetail.getStockquantity());
+        milkdetail1.setImgUrl(milkdetail.getImgUrl());
         milkdetail1.setStatus(Status.Active);
         milkdetailRepository.save(milkdetail1);
         return "Sửa thành công";
@@ -83,11 +84,11 @@ public class MilkdetailService implements IMilkdetailService {
     @Override
     public String delete(Long id) {
         Milkdetail milkdetail1 = milkdetailRepository.findById(id).get();
-        if(milkdetail1.getStatus() == Status.Delete) {
+        if (milkdetail1.getStatus() == Status.Delete) {
             milkdetail1.setStatus(Status.Active);
             milkdetailRepository.save(milkdetail1);
             return "Khôi phục thành công";
-        }else {
+        } else {
             milkdetail1.setStatus(Status.Delete);
             milkdetailRepository.save(milkdetail1);
             return "Xóa thành công";
@@ -101,8 +102,31 @@ public class MilkdetailService implements IMilkdetailService {
     }
 
     @Override
-    public Page<MilkDetailDto> getPageMilkDetail(Pageable pageable) {
-        return milkdetailRepository.getPageMilkDetail(pageable);
+    public Page<MilkDetailDto> getPageMilkDetail(Pageable pageable, MilkDetailDto milkDetailDto) {
+        return milkdetailRepository.getPageMilkDetail(
+                pageable,
+                milkDetailDto.getMilktypeID(),
+                milkDetailDto.getMilkBrandID(),
+                milkDetailDto.getPackagingunitID(),
+                milkDetailDto.getMilktasteID(),
+                milkDetailDto.getProductID(),
+                milkDetailDto.getTargetuserID(),
+                milkDetailDto.getUsagecapacityID());
+    }
+
+    @Override
+//    public MilkDetailDto getMilkDetail(MilkDetailDto milkDetailDto) {
+//        return milkdetailRepository.getMilkDetail(
+//                milkDetailDto.getMilktypeID(),
+//                milkDetailDto.getMilkBrandID(),
+//                milkDetailDto.getPackagingunitID(),
+//                milkDetailDto.getMilktasteID(),
+//                milkDetailDto.getProductID(),
+//                milkDetailDto.getTargetuserID(),
+//                milkDetailDto.getUsagecapacityID());
+//    }
+    public MilkDetailDto getMilkDetail(Long packagingunitID, Long milktasteID, Long productID, Long usagecapacityID) {
+        return milkdetailRepository.getMilkDetail(packagingunitID, milktasteID, productID, usagecapacityID);
     }
 
 }
