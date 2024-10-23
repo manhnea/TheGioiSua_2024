@@ -16,6 +16,7 @@ import java.sql.Date;
 @Getter
 @Setter
 public class Milkdetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
