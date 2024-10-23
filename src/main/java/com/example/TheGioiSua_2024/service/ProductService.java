@@ -41,6 +41,16 @@ public class ProductService implements IProductService {
     @Override
     public String addProduct(Product product) {
         try {
+            Integer maxId = productRepository.findMaxId();
+
+            if (maxId == null) {
+                maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
+            } else {
+                maxId++;
+            }
+
+            // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
+            String productCode = String.format("SP%03d", maxId);
             if (product.getMilkBrand().getId() == null) {
                 return "Thương Hiệu Không Được Để Trống.";
             }
@@ -51,7 +61,6 @@ public class ProductService implements IProductService {
                 return "Đối Tượng Sử Dụng Không Được Để Trống.";
             }
             String productname = product.getProductname().trim();
-            String productCode = product.getProductCode().trim();
             product.setProductCode(productCode);
             product.setProductname(productname);
             MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
@@ -108,16 +117,10 @@ public class ProductService implements IProductService {
                 return "Sản phẩm với tên này đã tồn tại.";
             }
 
-            if (!existingProduct.getProductCode().equals(product.getProductCode())
-                    && productRepository.findByProductCode(product.getProductCode()).isPresent()) {
-                return "Sản phẩm với mã này đã tồn tại.";
-            }
-
             // Cập nhật thông tin sản phẩm
             existingProduct.setMilkType(milkType);
             existingProduct.setMilkBrand(milkbrand);
             existingProduct.setTargetUser(targetuser);
-            existingProduct.setProductCode(product.getProductCode());
             existingProduct.setStatus(Status.Active);  // Assuming Status.Active is 1
 
             productRepository.save(existingProduct);
@@ -156,16 +159,16 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id) {
-        return productRepository.getPageProductByTypeMilk(pageable,id);
+        return productRepository.getPageProductByTypeMilk(pageable, id);
     }
 
     @Override
     public Page<ProductDto> getPageProductByBrandMilk(Pageable pageable, Long id) {
-        return productRepository.getPageProductByBrandMilk(pageable,id);
+        return productRepository.getPageProductByBrandMilk(pageable, id);
     }
 
     @Override
     public Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id) {
-        return productRepository.getPageProductByTargetUser(pageable,id);
+        return productRepository.getPageProductByTargetUser(pageable, id);
     }
 }
