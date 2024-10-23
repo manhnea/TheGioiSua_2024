@@ -46,9 +46,6 @@ public class MilkdetailService implements IMilkdetailService {
         // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
         String milkdetailcode = String.format("MD%03d", maxId);
         milkdetail.setMilkdetailcode(milkdetailcode);
-        if (milkdetailRepository.existsBymilkdetailcode(milkdetailcode).isPresent()) {
-            return "Mã sản phẩm đã tồn tại.";
-        }
         milkdetail.setStatus(Status.Active);
         milkdetailRepository.save(milkdetail);
         return "Thêm thành công";
@@ -62,13 +59,10 @@ public class MilkdetailService implements IMilkdetailService {
             Milktaste milktaste = milktasteRepository.findById(milkdetail.getMilkTaste().getId()).orElseThrow(() -> new RuntimeException("Vị Sữa Không Tồn Tại"));
             Packagingunit packagingunit = packagingunitRepository.findById(milkdetail.getPackagingunit().getId()).orElseThrow(() -> new RuntimeException("Đơn Vị Đóng Gói Không Tồn Tại"));
             Usagecapacity usagecapacity = usagecapacityRepository.findById(milkdetail.getUsageCapacity().getId()).orElseThrow(() -> new RuntimeException("Dung Tích Sử Dụng Không Tồn Tại"));
-            String milkdetailcode = milkdetail.getMilkdetailcode().trim();
-            milkdetailnew.setMilkdetailcode(milkdetailcode);
             milkdetailnew.setProduct(product);
             milkdetailnew.setMilkTaste(milktaste);
             milkdetailnew.setPackagingunit(packagingunit);
             milkdetailnew.setUsageCapacity(usagecapacity);
-            milkdetailnew.setMilkdetailcode(milkdetail.getMilkdetailcode());
             milkdetailnew.setPrice(milkdetail.getPrice());
             milkdetailnew.setExpirationdate(milkdetail.getExpirationdate());
             milkdetailnew.setDescription(milkdetail.getDescription());
