@@ -43,7 +43,7 @@ public class SpringSecurityConfig {
                     "/Packagingunit/lst",
                     "/Usagecapacity/lst",
                     "/Milkdetail/page",
-                    "/Milkdetail/page/**",
+                    "/Milkdetail/getMilkDetail",
                     "/Milktype/lst",
                     "/Milkbrand/lst",
                     "/Targetuser/lst",
