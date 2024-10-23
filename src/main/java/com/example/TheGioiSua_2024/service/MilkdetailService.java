@@ -75,6 +75,7 @@ public class MilkdetailService implements IMilkdetailService {
         milkdetail1.setExpirationdate(milkdetail.getExpirationdate());
         milkdetail1.setDescription(milkdetail.getDescription());
         milkdetail1.setStockquantity(milkdetail.getStockquantity());
+        milkdetail1.setImgUrl(milkdetail.getImgUrl());
         milkdetail1.setStatus(Status.Active);
         milkdetailRepository.save(milkdetail1);
         return "Sửa thành công";
@@ -124,8 +125,8 @@ public class MilkdetailService implements IMilkdetailService {
 //                milkDetailDto.getTargetuserID(),
 //                milkDetailDto.getUsagecapacityID());
 //    }
-    public MilkDetailDto getMilkDetail(Long milktypeID, Long milkBrandID, Long packagingunitID, Long milktasteID, Long productID, Long targetuserID, Long usagecapacityID) {
-        return milkdetailRepository.getMilkDetail(milktypeID, milkBrandID, packagingunitID, milktasteID, productID, targetuserID, usagecapacityID);
+    public MilkDetailDto getMilkDetail(Long packagingunitID, Long milktasteID, Long productID, Long usagecapacityID) {
+        return milkdetailRepository.getMilkDetail(packagingunitID, milktasteID, productID, usagecapacityID);
     }
 
 }

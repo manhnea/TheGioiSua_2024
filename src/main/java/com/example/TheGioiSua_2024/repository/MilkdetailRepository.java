@@ -55,28 +55,20 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
             + " md.status) \n"
             + "FROM Milkdetail md\n"
             + "JOIN md.product p \n" // Tham chiếu đến quan hệ trong entity Milkdetail
-            + "JOIN p.milkBrand mb \n" // Tham chiếu đến quan hệ trong entity Product
-            + "JOIN p.milkType mt \n"
-            + "JOIN p.targetUser tt \n"
             + "JOIN md.usageCapacity uc \n" // Tham chiếu đến quan hệ trong entity Milkdetail
             + "JOIN md.packagingunit pu \n"
             + "JOIN md.milkTaste mtt \n"
-            + "WHERE mt.id = :milktypeID \n"
-            + "AND mb.id = :milkBrandID \n"
-            + "AND pu.id = :packagingunitID \n"
+            + "WHERE pu.id = :packagingunitID \n"
             + "AND mtt.id = :milktasteID \n"
             + "AND p.id = :productID \n"
-            + "AND tt.id = :targetuserID \n"
             + "AND uc.id = :usagecapacityID \n"
             + "AND md.status = 1")
     MilkDetailDto getMilkDetail(
-            Long milktypeID,
-            Long milkBrandID,
             Long packagingunitID,
             Long milktasteID,
             Long productID,
-            Long targetuserID,
-            Long usagecapacityID);
+            Long usagecapacityID
+    );
 
     @Query("SELECT COALESCE(MAX(m.id), 0) FROM Milkdetail m")
     Integer findMaxId();

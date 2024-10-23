@@ -116,12 +116,9 @@ public class MilkdetailRestController {
     @GetMapping("/getMilkDetail")
 //    private ResponseEntity<?> getMilkDetail(@RequestBody MilkDetailDto milkDetailDto) {
         public ResponseEntity<?> getMilkDetail(
-            @RequestParam Long milktypeID,
-            @RequestParam Long milkBrandID,
             @RequestParam Long packagingunitID,
             @RequestParam Long milktasteID,
             @RequestParam Long productID,
-            @RequestParam Long targetuserID,
             @RequestParam Long usagecapacityID) {
 //        if (milkDetailDto == null) {
 //            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", "RequestBody NULL"));
@@ -149,7 +146,7 @@ public class MilkdetailRestController {
 //        }
         
 //        MilkDetailDto milkDetail = milkdetailService.getMilkDetail(milkDetailDto);
-          MilkDetailDto milkDetail = milkdetailService.getMilkDetail(milktypeID, milkBrandID, packagingunitID, milktasteID, productID, targetuserID, usagecapacityID);
+          MilkDetailDto milkDetail = milkdetailService.getMilkDetail(packagingunitID, milktasteID, productID, usagecapacityID);
 
         if (milkDetail == null) {
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", "Danh Sách Trống"));
