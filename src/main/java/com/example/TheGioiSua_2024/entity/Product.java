@@ -29,10 +29,6 @@ public class Product {
     @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Tên sản phẩm chỉ được chứa các ký tự chữ, số và khoảng trắng")
     private String productname;
 
-    @NotBlank(message = "Mã sản phẩm là bắt buộc")
-    @JsonProperty("productcode")
-    @Size(min = 5, max = 20, message = "Mã sản phẩm phải có độ dài từ 5 đến 20 ký tự")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Mã sản phẩm chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String productCode;
 
     @ManyToOne

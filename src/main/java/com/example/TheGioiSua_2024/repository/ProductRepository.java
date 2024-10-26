@@ -95,6 +95,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "WHERE p.status = 1 AND tt.id =:id")
     Page<ProductDto> getPageProductByTargetUser(Pageable pageable,Long id);
     
-    @Query("SELECT COALESCE(MAX(m.id), 0) FROM Product p")
+    @Query("SELECT COALESCE(MAX(p.id), 0) FROM Product p")
     Integer findMaxId();
 }

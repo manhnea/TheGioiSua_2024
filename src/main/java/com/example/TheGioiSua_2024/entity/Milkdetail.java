@@ -21,9 +21,6 @@ public class Milkdetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Mã Chi tiết sản phẩm là bắt buộc")
-    @Size(min = 5, max = 20, message = "Mã Chi tiết sản phẩm phải có độ dài từ 5 đến 20 ký tự")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Mã Chi tiết sản phẩm chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String milkdetailcode;
 
     @ManyToOne

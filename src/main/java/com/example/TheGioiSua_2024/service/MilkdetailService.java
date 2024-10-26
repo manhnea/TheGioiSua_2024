@@ -34,6 +34,26 @@ public class MilkdetailService implements IMilkdetailService {
 
     @Override
     public String add(Milkdetail milkdetail) {
+        boolean exists = milkdetailRepository.existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(
+                milkdetail.getProduct().getId(),
+                milkdetail.getMilkTaste().getId(),
+                milkdetail.getPackagingunit().getId(),
+                milkdetail.getUsageCapacity().getId()
+        );
+
+        if (exists) {
+            return "Chi tiết sữa với các thông tin này đã tồn tại";
+        }
+
+        // Check if all related entities exist
+        boolean allEntitiesExist = productRepository.existsById(milkdetail.getProduct().getId()) &&
+                milktasteRepository.existsById(milkdetail.getMilkTaste().getId()) &&
+                packagingunitRepository.existsById(milkdetail.getPackagingunit().getId()) &&
+                usagecapacityRepository.existsById(milkdetail.getUsageCapacity().getId());
+
+        if (!allEntitiesExist) {
+            return "Một trong các thực thể liên quan (Sản Phẩm, Vị Sữa, Đơn Vị Đóng Gói, Dung Tích Sử Dụng) không tồn tại";
+        }
 //        String milkdetailcode = milkdetail.getMilkdetailcode().trim();
         Integer maxId = milkdetailRepository.findMaxId();
 
