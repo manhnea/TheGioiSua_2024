@@ -87,6 +87,9 @@ public class SpringSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://127.0.0.1:5500");
+//        configuration.addAllowedOriginPattern("http://127.0.0.1:5500");
+//        configuration.addAllowedOriginPattern("http://your-other-domain.com");
+//        configuration.addAllowedOriginPattern("http://another-domain.com");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
