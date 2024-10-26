@@ -17,7 +17,7 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.http.ResponseEntity;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/Product")
 public class ProductRestController {
