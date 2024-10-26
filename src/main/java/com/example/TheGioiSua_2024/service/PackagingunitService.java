@@ -56,9 +56,11 @@ public class PackagingunitService implements IPackagingunitService {
         Packagingunit existingPackagingunit = packagingunitRepository.findById(id).orElseThrow();
         if (existingPackagingunit.getStatus() == Status.Delete) {
             existingPackagingunit.setStatus(Status.Active);
+            packagingunitRepository.save(existingPackagingunit);
             return "Khôi phục đơn vị đóng gói thành công.";
         }else {
             existingPackagingunit.setStatus(Status.Delete);
+            packagingunitRepository.save(existingPackagingunit);
             return "Xóa đơn vị đóng gói thành công.";
         }
     }

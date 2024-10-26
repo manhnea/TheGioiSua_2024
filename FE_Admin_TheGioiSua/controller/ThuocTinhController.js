@@ -106,5 +106,105 @@ app.controller("SanPhamController", [
           }
         });
     };
+
+    function FindMilktaste() {
+      axios
+        .get("http://localhost:1234/api/Milktaste/lst")
+        .then(function (response) {
+          console.log("Fetched taste list:", response.data);
+          $scope.Milktaste = response.data.filter(
+            (milktaste) => milktaste.status === 1
+          );
+          $scope.$apply();
+        })
+        .catch(function (error) {
+          console.error("Error fetching taste list:", error);
+          if (error.response && error.response.status === 401) {
+            $location.path("/login");
+          }
+        });
+    }
+
+    FindMilktaste();
+
+    $scope.saveTaste = function () {
+      const isUpdating = !!$scope.formDataTaste.id; // Check for updating
+      const apiUrl = isUpdating
+        ? `http://localhost:1234/api/Milktaste/update/${$scope.formDataTaste.id}`
+        : "http://localhost:1234/api/Milktaste/add";
+      const userCredentials = {
+        milktastename: $scope.formDataTaste.milktastename,
+      };
+
+      const requestMethod = isUpdating ? axios.put : axios.post;
+
+      requestMethod(apiUrl, userCredentials)
+        .then(function (response) {
+          console.log(
+            isUpdating
+              ? "Updated Taste successfully:"
+              : "Added Taste successfully:",
+            response.data
+          );
+          FindMilktaste(); // Refresh Taste list
+          $scope.formDataTaste = {}; // Clear form data
+          $scope.$apply(); // Update the scope
+        })
+        .catch(function (error) {
+          console.error(
+            isUpdating
+              ? "Error updating milk Taste:"
+              : "Error adding milk Taste:",
+            error
+          );
+          if (error.response && error.response.status === 401) {
+            $location.path("/login");
+          }
+        });
+    };
+
+    $scope.deleteMilktaste = function (id) {
+      console.log("Deleting Milktaste with ID:", id);
+      if (confirm("Are you sure you want to delete this Milktaste?")) {
+        axios
+          .delete(`http://localhost:1234/api/Milktaste/delete/${id}`)
+          .then(function (response) {
+            if (response.data && response.data.message) {
+              console.log(response.data.message);
+            } else {
+              console.error("No message returned from the server.");
+            }
+            FindMilktaste(); // Refresh brand list
+          })
+          .catch(function (error) {
+            console.error("Error during deletion:", error);
+            if (error.response && error.response.status === 401) {
+              $location.path("/login");
+            }
+          });
+      }
+    };
+
+    $scope.deleteMilktaste = function (id) {
+      console.log("Id Vị cần xóa:", id);
+      if (confirm("Are you sure you want to delete this Milktaste?")) {
+        axios
+          .delete(`http://localhost:1234/api/Milktaste/delete/${id}`)
+          .then(function (response) {
+            if (response.data && response.data.message) {
+              console.log(response.data.message);
+            } else {
+              console.error("No message returned from the server.");
+            }
+            FindMilktaste(); // Refresh the list to show updated status
+          })
+          .catch(function (error) {
+            console.error("Error during deletion:", error);
+            if (error.response && error.response.status === 401) {
+              $location.path("/login");
+            }
+          });
+      }
+    };
   },
 ]);
