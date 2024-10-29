@@ -82,4 +82,6 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
     @Query("SELECT COALESCE(MAX(m.id), 0) FROM Milkdetail m")
     Integer findMaxId();
+@Query("SELECT COUNT(m) > 0 FROM Milkdetail m WHERE m.product.id = :id AND m.milkTaste.id = :id1 AND m.packagingunit.id = :id2 AND m.usageCapacity.id = :id3")
+    boolean existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(Long id, Long id1, Long id2, Long id3);
 }
