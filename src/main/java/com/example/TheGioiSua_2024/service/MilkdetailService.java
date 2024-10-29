@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
@@ -96,30 +93,6 @@ public class MilkdetailService implements IMilkdetailService {
         return milkdetailRepository.findById(id).get();
     }
 
-    @Override
-    public Page<MilkDetailDto> getPageMilkDetail(Pageable pageable, MilkDetailDto milkDetailDto) {
-        return milkdetailRepository.getPageMilkDetail(
-                pageable,
-                milkDetailDto.getMilktypeID(),
-                milkDetailDto.getMilkBrandID(),
-                milkDetailDto.getPackagingunitID(),
-                milkDetailDto.getMilktasteID(),
-                milkDetailDto.getProductID(),
-                milkDetailDto.getTargetuserID(),
-                milkDetailDto.getUsagecapacityID());
-    }
-
-    @Override
-//    public MilkDetailDto getMilkDetail(MilkDetailDto milkDetailDto) {
-//        return milkdetailRepository.getMilkDetail(
-//                milkDetailDto.getMilktypeID(),
-//                milkDetailDto.getMilkBrandID(),
-//                milkDetailDto.getPackagingunitID(),
-//                milkDetailDto.getMilktasteID(),
-//                milkDetailDto.getProductID(),
-//                milkDetailDto.getTargetuserID(),
-//                milkDetailDto.getUsagecapacityID());
-//    }
     public MilkDetailDto getMilkDetail(Long packagingunitID, Long milktasteID, Long productID, Long usagecapacityID) {
         return milkdetailRepository.getMilkDetail(packagingunitID, milktasteID, productID, usagecapacityID);
     }

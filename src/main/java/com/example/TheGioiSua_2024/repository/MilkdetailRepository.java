@@ -16,52 +16,62 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
     Optional<Milkdetail> existsBymilkdetailcode(String milkdetailcode);
 
-    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto(\n"
-            + " md.id,\n"
-            + " md.price, \n"
-            + " md.stockquantity, \n"
-            + " md.imgUrl,\n"
-            + " md.status) \n"
-            + "FROM Milkdetail md\n"
-            + "JOIN md.product p \n" // Tham chiếu đến quan hệ trong entity Milkdetail
-            + "JOIN p.milkBrand mb \n" // Tham chiếu đến quan hệ trong entity Product
-            + "JOIN p.milkType mt \n"
-            + "JOIN p.targetUser tt \n"
-            + "JOIN md.usageCapacity uc \n" // Tham chiếu đến quan hệ trong entity Milkdetail
-            + "JOIN md.packagingunit pu \n"
-            + "JOIN md.milkTaste mtt \n"
-            + "WHERE mt.id = :milktypeID \n"
-            + "AND mb.id = :milkBrandID \n"
-            + "AND pu.id = :packagingunitID \n"
-            + "AND mtt.id = :milktasteID \n"
-            + "AND p.id = :productID \n"
-            + "AND tt.id = :targetuserID \n"
-            + "AND uc.id = :usagecapacityID \n"
-            + "AND md.status = 1")
-    Page<MilkDetailDto> getPageMilkDetail(Pageable pageable,
-            @Param("milktypeID") Long milktypeID,
-            @Param("milkBrandID") Long milkBrandID,
-            @Param("packagingunitID") Long packagingunitID,
-            @Param("milktasteID") Long milktasteID,
-            @Param("productID") Long productID,
-            @Param("targetuserID") Long targetuserID,
-            @Param("usagecapacityID") Long usagecapacityID);
+//    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto(\n"
+//            + " md.id,\n"
+//            + " md.price, \n"
+//            + " md.stockquantity, \n"
+//            + " md.imgUrl,\n"
+//            + " md.status) \n"
+//            + "FROM Milkdetail md\n"
+//            + "JOIN md.product p \n" // Tham chiếu đến quan hệ trong entity Milkdetail
+//            + "JOIN p.milkBrand mb \n" // Tham chiếu đến quan hệ trong entity Product
+//            + "JOIN p.milkType mt \n"
+//            + "JOIN p.targetUser tt \n"
+//            + "JOIN md.usageCapacity uc \n" // Tham chiếu đến quan hệ trong entity Milkdetail
+//            + "JOIN md.packagingunit pu \n"
+//            + "JOIN md.milkTaste mtt \n"
+//            + "WHERE mt.id = :milktypeID \n"
+//            + "AND mb.id = :milkBrandID \n"
+//            + "AND pu.id = :packagingunitID \n"
+//            + "AND mtt.id = :milktasteID \n"
+//            + "AND p.id = :productID \n"
+//            + "AND tt.id = :targetuserID \n"
+//            + "AND uc.id = :usagecapacityID \n"
+//            + "AND md.status = 1")
+//    Page<MilkDetailDto> getPageMilkDetail(Pageable pageable,
+//            @Param("milktypeID") Long milktypeID,
+//            @Param("milkBrandID") Long milkBrandID,
+//            @Param("packagingunitID") Long packagingunitID,
+//            @Param("milktasteID") Long milktasteID,
+//            @Param("productID") Long productID,
+//            @Param("targetuserID") Long targetuserID,
+//            @Param("usagecapacityID") Long usagecapacityID);
 
-    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto(\n"
-            + " md.id,\n"
-            + " md.price, \n"
-            + " md.stockquantity, \n"
-            + " md.imgUrl,\n"
-            + " md.status) \n"
-            + "FROM Milkdetail md\n"
-            + "JOIN md.product p \n" // Tham chiếu đến quan hệ trong entity Milkdetail
-            + "JOIN md.usageCapacity uc \n" // Tham chiếu đến quan hệ trong entity Milkdetail
-            + "JOIN md.packagingunit pu \n"
-            + "JOIN md.milkTaste mtt \n"
-            + "WHERE pu.id = :packagingunitID \n"
-            + "AND mtt.id = :milktasteID \n"
-            + "AND p.id = :productID \n"
-            + "AND uc.id = :usagecapacityID \n"
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
+            + " md.id,"
+            + " pu.packagingunitname,"
+            + " mt.milkTypename," // chú ý tên chính xác của thuộc tính
+            + " mb.milkbrandname,"
+            + " mtt.milktastename,"
+            + " uc.capacity,"
+            + " uc.unit,"
+            + " tt.targetName,"
+            + " md.price,"
+            + " md.stockquantity,"
+            + " md.imgUrl,"
+            + " md.status) "
+            + "FROM Milkdetail md "
+            + "JOIN md.product p "
+            + "JOIN p.milkBrand mb "
+            + "JOIN p.milkType mt "
+            + "JOIN p.targetUser tt "
+            + "JOIN md.usageCapacity uc "
+            + "JOIN md.packagingunit pu "
+            + "JOIN md.milkTaste mtt "
+            + "WHERE pu.id = :packagingunitID "
+            + "AND mtt.id = :milktasteID "
+            + "AND p.id = :productID "
+            + "AND uc.id = :usagecapacityID " // Thêm dấu cách trước AND
             + "AND md.status = 1")
     MilkDetailDto getMilkDetail(
             Long packagingunitID,
