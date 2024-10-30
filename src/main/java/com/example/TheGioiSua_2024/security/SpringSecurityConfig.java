@@ -41,8 +41,9 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/user/**",
-                        "/Product/page",
                         "/Product/page/**",
+                        "/Product/page",
+                        "/Product/lst",
                         "/Userinvoice/lst",
                         "/Packagingunit/lst",
                         "/Usagecapacity/lst",
@@ -100,6 +101,7 @@ public class SpringSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+//        aaaa
     }
 
 }
