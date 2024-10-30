@@ -20,9 +20,6 @@ public interface IMilkdetailService {
 
     Milkdetail getById(Long id);
 
-    Page<MilkDetailDto> getPageMilkDetail(Pageable pageable, MilkDetailDto milkDetailDto);
-
-//    MilkDetailDto getMilkDetail(MilkDetailDto milkDetailDto);
     MilkDetailDto getMilkDetail(Long packagingunitID, Long milktasteID, Long productID, Long usagecapacityID);
 
 }
