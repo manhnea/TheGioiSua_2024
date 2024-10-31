@@ -7,6 +7,7 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
+import com.example.TheGioiSua_2024.service.UserService;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserRestController {
 
     private final IUserService iUserService;
+    private final UserService userService;
 
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
+        return userService.verifyAccount(token);
+    }
     //RessourceEndPoint:http://localhost:1234/api/user/register
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {

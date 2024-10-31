@@ -93,4 +93,20 @@ public class JwtUtilities {
         return null;
     }
 
+    public String generateVerificationToken(Long userId) {
+        return Jwts.builder()
+                .setSubject(userId.toString())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
+    public Long verifyVerificationToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.parseLong(claims.getSubject());
+    }
 }

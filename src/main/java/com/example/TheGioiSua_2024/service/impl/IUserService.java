@@ -19,6 +19,7 @@ public interface IUserService {
    //  ResponseEntity<BearerToken> authenticate(LoginDto loginDto);
 
    ResponseEntity<?> authenticate(LoginDto loginDto);
+   ResponseEntity<?> verifyAccount(String token);
    ResponseEntity<?> register (RegisterDto registerDto);
    Role saveRole(Role role);
 
