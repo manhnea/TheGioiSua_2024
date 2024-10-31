@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -73,7 +74,8 @@ public class User implements UserDetails{
     private String email;
 
  private boolean Verified;
-
+    private String verificationToken;
+    private Timestamp tokenCreationTime;
     private int status;
     
     @ManyToOne

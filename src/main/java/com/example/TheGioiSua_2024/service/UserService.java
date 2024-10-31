@@ -27,7 +27,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,7 +46,6 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtilities jwtUtilities;
     private final JavaMailSender mailSender;
-
     @Override
     public Role saveRole(Role role) {
         return iRoleRepository.save(role);
@@ -114,14 +117,18 @@ public class UserService implements IUserService {
 
         // Tạo token xác minh và gửi email
         String verificationToken = jwtUtilities.generateVerificationToken(user.getId());
+        user.setVerificationToken(verificationToken);
+        user.setTokenCreationTime(new Timestamp(System.currentTimeMillis()));
+        iUserRepository.save(user);
+
         sendVerificationEmail(user.getEmail(), verificationToken);
 
-        return ResponseEntity.ok(Collections.singletonMap("message", "Tạo Tài Khoản Thành Công. Vui lòng kiểm tra email để xác minh tài khoản.")); // Mã trạng thái 200
+        return ResponseEntity.ok(Collections.singletonMap("message", "Tạo Tài Khoản Thành Công. Vui lòng kiểm tra email để xác minh tài khoản."));
     }
 
     private void sendVerificationEmail(String email, String token) {
         String subject = "Xác minh tài khoản của bạn";
-        String verificationUrl = "http://localhost:1234/api/user/verify?token=" + token;
+        String verificationUrl = "http://160.30.21.47:1234/api/user/verify?token=" + token;
         String message = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -343,13 +350,27 @@ public class UserService implements IUserService {
     @Override
     public ResponseEntity<?> verifyAccount(String token) {
         try {
-            // Xác minh token
+            // Kiểm tra token
             Long userId = jwtUtilities.verifyVerificationToken(token);
             User user = iUserRepository.findById(userId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
 
+            // Kiểm tra xem token có còn tồn tại và khớp với token lưu trong database không
+            if (user.getVerificationToken() == null || !user.getVerificationToken().equals(token)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Collections.singletonMap("error", "Token không hợp lệ hoặc đã hết hạn."));
+            }
+
+            // Kiểm tra xem token có còn hiệu lực 20 phút không
+            long elapsedTime = System.currentTimeMillis() - user.getTokenCreationTime().getTime();
+            if (elapsedTime > 20 * 60 * 1000) { // 20 phút
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Collections.singletonMap("error", "Token xác minh đã hết hạn."));
+            }
+
             // Xác minh tài khoản
             user.setVerified(true);
+            user.setVerificationToken(null); // Xóa token sau khi xác minh để không dùng lại được
             iUserRepository.save(user);
 
             return ResponseEntity.ok(Collections.singletonMap("message", "Tài khoản đã được xác minh thành công."));
@@ -362,13 +383,14 @@ public class UserService implements IUserService {
         }
     }
 
-    @Scheduled(fixedDelay = 86400000) // 1 ngày = 86400000 ms
+    @Scheduled(fixedDelay = 60000) // Kiểm tra mỗi 1 phút
     public void deleteUnverifiedUsers() {
-        Date currentDate = new Date(System.currentTimeMillis());
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         iUserRepository.findAll().stream()
-                .filter(user -> !user.isVerified() && currentDate.getTime() - user.getRegistrationdate().getTime() >= 86400000)
+                .filter(user -> !user.isVerified() && currentTimestamp.getTime() - user.getTokenCreationTime().getTime() >= 20 * 60 * 1000)
                 .forEach(user -> iUserRepository.delete(user));
     }
+
 
     @Override
     public UserDto findUserById(Long id) {

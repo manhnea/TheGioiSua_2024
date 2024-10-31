@@ -93,14 +93,16 @@ public class JwtUtilities {
         return null;
     }
 
+    // JwtUtilities.java
     public String generateVerificationToken(Long userId) {
+        long expirationTime = 15 * 60 * 1000; // 15 phút tính bằng milliseconds
         return Jwts.builder()
-                .setSubject(userId.toString())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setSubject(String.valueOf(userId))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
+
 
     public Long verifyVerificationToken(String token) {
         Claims claims = Jwts.parser()
