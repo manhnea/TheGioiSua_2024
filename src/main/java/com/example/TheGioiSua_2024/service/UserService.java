@@ -128,7 +128,7 @@ public class UserService implements IUserService {
 
     private void sendVerificationEmail(String email, String token) {
         String subject = "Xác minh tài khoản của bạn";
-        String verificationUrl = "http://160.30.21.47:1234/api/user/verify?token=" + token;
+        String verificationUrl = "http://160.30.21.47:3000/login/" + token;
         String message = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
