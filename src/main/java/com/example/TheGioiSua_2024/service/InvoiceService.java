@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 public class InvoiceService implements IInvoiceService {
+
     @Autowired
     private InvoiceRepository invoiceRepository;
 
@@ -58,7 +60,7 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public String deleteInvoice(Long id) {
         Invoice invoice1 = invoiceRepository.findById(id).orElseThrow();
-        if(invoice1.getStatus() == Status.Delete) {
+        if (invoice1.getStatus() == Status.Delete) {
             invoice1.setStatus(Status.Active);
             invoiceRepository.save(invoice1);
             return "Hóa đơn đã được khôi phục!";
@@ -72,5 +74,10 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public Invoice getInvoiceById(Long id) {
         return invoiceRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<InvoiceDto> getInvoices(Long id) {
+        return invoiceRepository.findInvoices(id);
     }
 }

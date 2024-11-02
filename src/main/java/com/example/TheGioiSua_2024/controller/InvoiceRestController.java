@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.controller;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.service.InvoiceService;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/Invoice")
 public class InvoiceRestController {
+
     @Autowired
     private InvoiceService invoiceService;
 
@@ -26,6 +28,7 @@ public class InvoiceRestController {
     public List<Invoice> listInvoice() {
         return invoiceService.getInvoiceList();
     }
+
     @GetMapping("/lst/{id}")
     public Invoice getInvoiceById(@PathVariable Long id) {
         return invoiceService.getInvoiceById(id);
@@ -50,7 +53,7 @@ public class InvoiceRestController {
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/update
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateInvoice(@PathVariable Long id,@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
+    public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -61,13 +64,22 @@ public class InvoiceRestController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-       return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
     }
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/delete
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteInvoice(@PathVariable Long id) {
-       String message =  invoiceService.deleteInvoice(id);
+        String message = invoiceService.deleteInvoice(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
+    }
+    //RessourceEndPoint:http://localhost:1234/api/getInvoices/{userid}
+    @GetMapping("/getInvoices/{userid}")
+    public ResponseEntity<?> getInvoices(@PathVariable Long userid){
+        List<InvoiceDto> invoiceDtos = invoiceService.getInvoices(userid);
+        if(invoiceDtos.isEmpty()){
+            return ResponseEntity.badRequest().body(Map.of("status", "error"));
+        }
+        return ResponseEntity.ok(Map.of("message", invoiceDtos));
     }
 }

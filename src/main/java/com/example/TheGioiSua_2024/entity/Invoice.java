@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Invoice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,6 +38,9 @@ public class Invoice {
     private int totalamount;
 
     private int status;
+    
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    private Set<Userinvoice> userInvoices;
 
     @ManyToOne
     @JoinColumn(name = "voucherid")
