@@ -56,6 +56,7 @@ public class SpringSecurityConfig {
                         "/api-docs/**",
                         "/swagger-ui/**",
                         "/Checkout/**",
+                        "/bank/**",
                         "/Invoice/lst").permitAll()
                 .requestMatchers(
                         "/admin/**",
