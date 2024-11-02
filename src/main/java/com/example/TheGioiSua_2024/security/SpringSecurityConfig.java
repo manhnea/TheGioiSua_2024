@@ -55,6 +55,7 @@ public class SpringSecurityConfig {
                         "/Milktaste/lst",
                         "/api-docs/**",
                         "/swagger-ui/**",
+                        "/Checkout/**",
                         "/Invoice/lst").permitAll()
                 .requestMatchers(
                         "/admin/**",

@@ -73,7 +73,6 @@ public class User implements UserDetails{
     @Size(max = 100, message = "Email không được vượt quá 100 ký tự")
     private String email;
 
- private boolean Verified;
     private String verificationToken;
     private Timestamp tokenCreationTime;
     private int status;

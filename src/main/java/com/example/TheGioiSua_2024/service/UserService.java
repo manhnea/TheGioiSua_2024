@@ -9,6 +9,7 @@ import com.example.TheGioiSua_2024.repository.RoleRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
+import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.UserValidator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -110,7 +111,7 @@ public class UserService implements IUserService {
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         user.setRegistrationdate(new Date(System.currentTimeMillis()));
-        user.setVerified(false); // Đặt trạng thái chưa xác minh
+        user.setStatus(Status.Inactive); // Đặt trạng thái chưa xác minh
         Role role = iRoleRepository.findById(2L).orElseThrow(); // 2L user role
         user.setRole(role);
         iUserRepository.save(user);
@@ -128,7 +129,7 @@ public class UserService implements IUserService {
 
     private void sendVerificationEmail(String email, String token) {
         String subject = "Xác minh tài khoản của bạn";
-        String verificationUrl = "http://160.30.21.47:1234/api/user/verify?token=" + token;
+        String verificationUrl = "http://localhost:3000/login/" + token; 
         String message = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -325,7 +326,7 @@ public class UserService implements IUserService {
             User user = iUserRepository.findByUsername(authentication.getName())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
 
-            if (!user.isVerified()) {
+            if (user.getStatus() != Status.Active) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Collections.singletonMap("error", "Tài khoản chưa được xác minh."));
             }
@@ -369,7 +370,7 @@ public class UserService implements IUserService {
             }
 
             // Xác minh tài khoản
-            user.setVerified(true);
+            user.setStatus(Status.Active);
             user.setVerificationToken(null); // Xóa token sau khi xác minh để không dùng lại được
             iUserRepository.save(user);
 
@@ -382,14 +383,15 @@ public class UserService implements IUserService {
                     .body(Collections.singletonMap("error", "Token xác minh không hợp lệ hoặc đã hết hạn."));
         }
     }
-
     @Scheduled(fixedDelay = 60000) // Kiểm tra mỗi 1 phút
     public void deleteUnverifiedUsers() {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         iUserRepository.findAll().stream()
-                .filter(user -> !user.isVerified() && currentTimestamp.getTime() - user.getTokenCreationTime().getTime() >= 20 * 60 * 1000)
+                .filter(user -> user.getStatus() == Status.Inactive
+                        && currentTimestamp.getTime() - user.getTokenCreationTime().getTime() >= 20 * 60 * 1000)
                 .forEach(user -> iUserRepository.delete(user));
     }
+
 
 
     @Override
