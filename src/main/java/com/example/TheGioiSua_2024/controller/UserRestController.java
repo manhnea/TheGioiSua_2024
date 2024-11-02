@@ -10,8 +10,11 @@ import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.service.UserService;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -24,8 +27,11 @@ public class UserRestController {
 
     @GetMapping("/verify")
     public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
-        return userService.verifyAccount(token);
+        ResponseEntity<?> response = userService.verifyAccount(token);
+        return response;
     }
+
+
     //RessourceEndPoint:http://localhost:1234/api/user/register
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {

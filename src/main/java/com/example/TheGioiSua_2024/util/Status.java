@@ -12,6 +12,8 @@ public class Status {
 
     public static int Delete = 0;
     public static int Active = 1;
+    public static int Inactive  = 2;
+
     public static int Oder = 333; // giỏ hàng
     public static int Pending = 334; // Chờ Xử Lí
     public static int AwaitingPayment = 335; // Chờ Thanh Toán
