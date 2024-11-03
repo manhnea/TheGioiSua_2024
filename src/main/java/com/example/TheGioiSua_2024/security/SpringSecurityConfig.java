@@ -53,6 +53,7 @@ public class SpringSecurityConfig {
             "/Milkbrand/lst",
             "/Targetuser/lst",
             "/Milktaste/lst",
+            "/api-docs/**",
             "/swagger-ui/**",
             "/Invoice/lst"
         ).permitAll()
@@ -70,7 +71,6 @@ public class SpringSecurityConfig {
             "/Invoicedetail/**",
             "/Invoice/**",
             "/Userinvoice/**",
-            "/api-docs/**",
 
             "/Usagecapacity/**"
         ).hasAuthority("Admin")
