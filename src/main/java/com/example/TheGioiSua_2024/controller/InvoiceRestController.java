@@ -73,7 +73,7 @@ public class InvoiceRestController {
         String message = invoiceService.deleteInvoice(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
-    //RessourceEndPoint:http://localhost:1234/api/getInvoices/{userid}
+    //RessourceEndPoint:http://localhost:1234/api/Invoice/getInvoices/{userid}
     @GetMapping("/getInvoices/{userid}")
     public ResponseEntity<?> getInvoices(@PathVariable Long userid){
         List<InvoiceDto> invoiceDtos = invoiceService.getInvoices(userid);
