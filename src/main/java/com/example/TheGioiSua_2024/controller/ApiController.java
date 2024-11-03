@@ -15,7 +15,7 @@ public class ApiController {
     @Autowired
     private ApiService apiService;
 
-    @GetMapping("/callMbBankApi")
+    @GetMapping("/historyBank")
     public ResponseEntity<JsonNode> callMbBankApi() {
         try {
             JsonNode response = apiService.callMbBankApi();
