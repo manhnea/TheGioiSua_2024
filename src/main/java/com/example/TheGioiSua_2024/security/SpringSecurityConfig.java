@@ -54,6 +54,8 @@ public class SpringSecurityConfig {
             "/Targetuser/lst",
             "/Milktaste/lst",
             "/api-docs/**",
+            "/Checkout/**",
+            "/payment/transactionHistory",
             "/swagger-ui/**",
             "/Invoice/lst"
         ).permitAll()
@@ -71,13 +73,8 @@ public class SpringSecurityConfig {
             "/Invoicedetail/**",
             "/Invoice/**",
             "/Userinvoice/**",
-
             "/Usagecapacity/**"
-        ).hasAuthority("Admin")
-        .requestMatchers(
-            "/Checkout/**",
-            "/payment/transactionHistory"
-        ).hasAuthority("Customer");
+        ).hasAuthority("Admin");
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
