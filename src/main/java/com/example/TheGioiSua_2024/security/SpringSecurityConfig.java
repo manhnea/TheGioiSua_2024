@@ -27,8 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class SpringSecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomerUserDetailsService customerUserDetailsService;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final CustomerUserDetailsService customerUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -77,35 +77,40 @@ public class SpringSecurityConfig {
                 .requestMatchers("/Invoice/add").hasAuthority("User");
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-        // Allows all domains to access the API
-        configuration.addAllowedOriginPattern("*");  // Use this to allow all domains instead of addAllowedOrigin("*")
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
-        configuration.addAllowedHeader("*");  // Allows all headers
-        configuration.setAllowCredentials(true);  // Allows credentials such as cookies or HTTP authentication
+    // Allows all domains to access the API
+    configuration.addAllowedOriginPattern(
+        "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+    configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    configuration.addAllowedHeader("*");  // Allows all headers
+    configuration.setAllowCredentials(
+        true);  // Allows credentials such as cookies or HTTP authentication
 
-        return source;
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
 //        aaaa
-    }
+  }
 
 }
