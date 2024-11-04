@@ -28,8 +28,7 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public Long saveInvoice(@RequestBody Invoice invoice, String paymentOption) {
-        System.out.println(invoice.getTotalamount());
+    public Long saveInvoice(@RequestBody Invoice invoice) {
         Integer maxId = invoiceRepository.findMaxId();
         if (maxId == null) {
             maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1

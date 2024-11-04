@@ -81,7 +81,7 @@ public class MilkdetailService implements IMilkdetailService {
             milkdetailnew.setPackagingunit(packagingunit);
             milkdetailnew.setUsageCapacity(usagecapacity);
             milkdetailnew.setPrice(milkdetail.getPrice());
-            milkdetailnew.setExpirationdate(milkdetail.getExpirationdate());
+            milkdetailnew.setShelflifeofmilk(milkdetail.getShelflifeofmilk());
             milkdetailnew.setDescription(milkdetail.getDescription());
             milkdetailnew.setStockquantity(milkdetail.getStockquantity());
             milkdetailnew.setImgUrl(milkdetail.getImgUrl());

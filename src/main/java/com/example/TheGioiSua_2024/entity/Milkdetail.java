@@ -39,9 +39,7 @@ public class Milkdetail {
     @JoinColumn(name = "usagecapacityid", nullable = false)
     private Usagecapacity usageCapacity;
 
-    @NotNull(message = "Ngày hết hạn là bắt buộc")
-    @FutureOrPresent(message = "Ngày hết hạn phải là ngày hiện tại hoặc trong tương lai")
-    private Date expirationdate;
+    private String shelflifeofmilk;
 
     @NotNull(message = "Giá là bắt buộc")
     @DecimalMin(value = "0.0", inclusive = true, message = "Giá không được âm")

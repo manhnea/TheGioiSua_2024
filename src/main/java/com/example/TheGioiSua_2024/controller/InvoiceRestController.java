@@ -36,7 +36,7 @@ public class InvoiceRestController {
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/add
     @PostMapping("/add")
-    public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice, BindingResult bindingResult, String paymentOption) {
+    public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -47,7 +47,7 @@ public class InvoiceRestController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        Long idInvoice = invoiceService.saveInvoice(invoice, paymentOption);
+        Long idInvoice = invoiceService.saveInvoice(invoice);
         if (idInvoice < 1) {
             return ResponseEntity.badRequest().body(Map.of("error", "Thêm Hoá Đơn Thất Bại"));
         }

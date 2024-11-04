@@ -26,7 +26,8 @@ public class Invoice {
     private Long id;
 
     private String invoicecode;
-
+    private String deliveryaddress;
+    private String paymentmethod;
     @CreationTimestamp
     private LocalDateTime creationdate;
 
@@ -37,7 +38,6 @@ public class Invoice {
     private int totalamount;
 
     private int status;
-    
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Set<Userinvoice> userInvoices;
 
