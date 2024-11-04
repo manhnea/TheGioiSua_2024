@@ -97,32 +97,21 @@ public class ProductService implements IProductService {
   @Override
   public String updateProduct(Long id, Product product) {
     try {
-      if (product.getMilkBrand().getId() == null) {
-        return "Thương Hiệu Không Được Để Trống.";
-      }
-      if (product.getMilkType().getId() == null) {
-        return "Loại Sữa Không Được Để Trống.";
-      }
-      if (product.getTargetUser().getId() == null) {
-        return "Đối Tượng Sử Dụng Không Được Để Trống.";
-      }
-
-      // Kiểm tra xem sản phẩm hiện tại có tồn tại hay không
       Product existingProduct = productRepository.findById(id)
           .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
 
       // Kiểm tra các thuộc tính liên quan
-      MilkType milkType = milktypeRepository.findById(product.getMilkType().getId())
-          .orElseThrow(() -> new RuntimeException("Loại sữa không tồn tại"));
+      MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow();
       Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId())
-          .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
+          .orElseThrow();
       Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId())
-          .orElseThrow(() -> new RuntimeException("Người dùng mục tiêu không tồn tại"));
+          .orElseThrow();
       String currentproductName = existingProduct.getProductname();
       if (currentproductName.equals(product.getProductname())) {
         existingProduct.setMilkType(milkType);
         existingProduct.setMilkBrand(milkbrand);
         existingProduct.setTargetUser(targetuser);
+        productRepository.save(existingProduct);
         return "Cập nhật Sản Phẩm thành công.";
       } else if (productRepository.findByProductname(product.getProductname()).isPresent()) {
         return "Sản phẩm này đã tồn tại.";
@@ -132,7 +121,6 @@ public class ProductService implements IProductService {
       existingProduct.setMilkBrand(milkbrand);
       existingProduct.setTargetUser(targetuser);
       productRepository.save(existingProduct);
-
       return "Cập nhật sản phẩm thành công.";
 
     } catch (RuntimeException e) {
