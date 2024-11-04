@@ -25,7 +25,6 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Mã hóa đơn không được để trống")
     private String invoicecode;
 
     @CreationTimestamp

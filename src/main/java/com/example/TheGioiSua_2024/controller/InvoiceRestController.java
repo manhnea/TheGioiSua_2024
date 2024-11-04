@@ -36,7 +36,7 @@ public class InvoiceRestController {
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/add
     @PostMapping("/add")
-    public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice, BindingResult bindingResult) {
+    public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice, BindingResult bindingResult, String paymentOption) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -47,8 +47,11 @@ public class InvoiceRestController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-
-        return ResponseEntity.ok(Map.of("status", "success", "message", invoiceService.saveInvoice(invoice)));
+        Long idInvoice = invoiceService.saveInvoice(invoice, paymentOption);
+        if (idInvoice < 1) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Thêm Hoá Đơn Thất Bại"));
+        }
+        return ResponseEntity.ok(Map.of("message", idInvoice));
     }
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/update
@@ -73,11 +76,12 @@ public class InvoiceRestController {
         String message = invoiceService.deleteInvoice(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
+
     //RessourceEndPoint:http://localhost:1234/api/Invoice/getInvoices/{userid}
     @GetMapping("/getInvoices/{userid}")
-    public ResponseEntity<?> getInvoices(@PathVariable Long userid){
+    public ResponseEntity<?> getInvoices(@PathVariable Long userid) {
         List<InvoiceDto> invoiceDtos = invoiceService.getInvoices(userid);
-        if(invoiceDtos.isEmpty()){
+        if (invoiceDtos.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("status", "error"));
         }
         return ResponseEntity.ok(Map.of("message", invoiceDtos));

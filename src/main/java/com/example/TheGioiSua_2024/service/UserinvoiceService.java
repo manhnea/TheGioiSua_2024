@@ -29,9 +29,16 @@ public class UserinvoiceService implements IUserinvoiceService {
     }
 
     @Override
-    public String saveUserinvoice(Userinvoice userinvoice) {
-        userinvoice.setStatus(Status.Active);
-        userinvoiceRepository.save(userinvoice);
+    public String saveUserinvoice(Userinvoice byller) {
+        byller.setStatus(Status.Pending);
+        userinvoiceRepository.save(byller);
+        Userinvoice seller = new Userinvoice();
+        seller.setStatus(Status.Pending);
+        seller.setInvoice(byller.getInvoice());
+        User user = new User();
+        user.setId(1l);
+        seller.setUser(user);
+        userinvoiceRepository.save(seller);
         return "Đã thêm hoá đơn người dùng thành công.";
     }
 

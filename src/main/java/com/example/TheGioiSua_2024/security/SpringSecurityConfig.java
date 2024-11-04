@@ -57,6 +57,8 @@ public class SpringSecurityConfig {
                         "/swagger-ui/**",
                         "/Checkout/**",
                         "/bank/**",
+                        "/Invoice/add",
+                        "/Userinvoice/add",
                         "/Invoice/lst").permitAll()
                 .requestMatchers(
                         "/admin/**",
@@ -71,8 +73,8 @@ public class SpringSecurityConfig {
                         "/Invoicedetail/**",
                         "/Invoice/**",
                         "/Userinvoice/**",
-                        "/Usagecapacity/**").hasAuthority("Admin");
-//            .requestMatchers("/user/**").hasAuthority("Customer") ;
+                        "/Usagecapacity/**").hasAuthority("Admin")
+                .requestMatchers("/Invoice/add").hasAuthority("User");
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

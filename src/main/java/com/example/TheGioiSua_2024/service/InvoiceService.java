@@ -28,15 +28,20 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public String saveInvoice(@RequestBody Invoice invoice) {
-        String invoicecode = invoice.getInvoicecode().trim();
-        invoice.setInvoicecode(invoicecode);
-        if (invoiceRepository.existsByInvoicecode(invoicecode).isPresent()) {
-            return "Mã hóa đơn đã tồn tại.";
+    public Long saveInvoice(@RequestBody Invoice invoice, String paymentOption) {
+        System.out.println(invoice.getTotalamount());
+        Integer maxId = invoiceRepository.findMaxId();
+        if (maxId == null) {
+            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
+        } else {
+            maxId++;
         }
-        invoice.setStatus(Status.Active);
+        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
+        String invoiceCode = String.format("HD%03d", maxId);
+        invoice.setInvoicecode(invoiceCode);
+        invoice.setStatus(Status.AwaitingPayment);
         invoiceRepository.save(invoice);
-        return "Thêm hóa đơn thành công!";
+        return invoice.getId();
     }
 
     @Override
