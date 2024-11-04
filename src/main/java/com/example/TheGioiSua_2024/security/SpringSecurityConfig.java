@@ -30,51 +30,52 @@ public class SpringSecurityConfig {
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final CustomerUserDetailsService customerUserDetailsService;
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors() // Kết hợp cấu hình CORS với Spring Security
-        .and()
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeHttpRequests()
-        .requestMatchers(
-            "/user/**",
-            "/Product/page/**",
-            "/Product/page",
-            "/Product/lst",
-            "/Userinvoice/lst",
-            "/Packagingunit/lst",
-            "/Usagecapacity/lst",
-            "/Milkdetail/page",
-            "/Milkdetail/getMilkDetail",
-            "/Milktype/lst",
-            "/Milkbrand/lst",
-            "/Targetuser/lst",
-            "/Milktaste/lst",
-            "/api-docs/**",
-            "/Checkout/**",
-            "/payment/transactionHistory",
-            "/swagger-ui/**",
-            "/Invoice/lst"
-        ).permitAll()
-        .requestMatchers(
-            "/admin/**",
-            "/payment/**",
-            "/Voucher/**",
-            "/Milktype/**",
-            "/Milktaste/**",
-            "/Packagingunit/**",
-            "/Targetuser/**",
-            "/Product/**",
-            "/Milkdetail/**",
-            "/Milkbrand/**",
-            "/Invoicedetail/**",
-            "/Invoice/**",
-            "/Userinvoice/**",
-            "/Usagecapacity/**"
-        ).hasAuthority("Admin");
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors() // Kết hợp cấu hình CORS với Spring Security
+                .and()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(
+                        "/user/**",
+                        "/Product/page/**",
+                        "/Product/page",
+                        "/Product/lst",
+                        "/Userinvoice/lst",
+                        "/Packagingunit/lst",
+                        "/Usagecapacity/lst",
+                        "/Milkdetail/page",
+                        "/Milkdetail/getMilkDetail",
+                        "/Milktype/lst",
+                        "/Milkbrand/lst",
+                        "/Targetuser/lst",
+                        "/Milktaste/lst",
+                        "/api-docs/**",
+                        "/swagger-ui/**",
+                        "/Checkout/**",
+                        "/bank/**",
+                        "/Invoice/add",
+                        "/Userinvoice/add",
+                        "/Invoice/lst").permitAll()
+                .requestMatchers(
+                        "/admin/**",
+                        "/Voucher/**",
+                        "/Milktype/**",
+                        "/Milktaste/**",
+                        "/Packagingunit/**",
+                        "/Targetuser/**",
+                        "/Product/**",
+                        "/Milkdetail/**",
+                        "/Milkbrand/**",
+                        "/Invoicedetail/**",
+                        "/Invoice/**",
+                        "/Userinvoice/**",
+                        "/Usagecapacity/**").hasAuthority("Admin")
+                .requestMatchers("/Invoice/add").hasAuthority("User");
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

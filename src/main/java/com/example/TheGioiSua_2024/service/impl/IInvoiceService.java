@@ -9,7 +9,7 @@ public interface IInvoiceService {
 
     List<Invoice> getInvoiceList();
 
-    String saveInvoice(Invoice invoice);
+    Long saveInvoice(Invoice invoice,String paymentOption);
 
     String updateInvoice(Long id, Invoice invoice);
 

@@ -35,4 +35,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<InvoiceDto> findInvoices(Long buyerId);
 
+    @Query("SELECT COALESCE(MAX(i.id), 0) FROM Invoice i")
+    Integer findMaxId();
 }
