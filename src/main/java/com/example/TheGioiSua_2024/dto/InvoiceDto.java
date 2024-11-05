@@ -28,6 +28,7 @@ public class InvoiceDto {
     String nguoiBan;
     LocalDateTime ngayTao;
     String deliveryaddress;
+    String phonenumber;
     String paymentmethod;
     String voucherCode;
     int sotienGiamGia;

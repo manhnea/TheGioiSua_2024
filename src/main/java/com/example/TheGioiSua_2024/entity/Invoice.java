@@ -28,19 +28,16 @@ public class Invoice {
     private String invoicecode;
     private String deliveryaddress;
     private String paymentmethod;
+    private String phonenumber;
     @CreationTimestamp
     private LocalDateTime creationdate;
-
     @Min(value = 0, message = "Số tiền giảm giá phải là số không âm")
     private int discountamount;
-
     @Min(value = 0, message = "Tổng số tiền phải là số không âm")
     private int totalamount;
-
     private int status;
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Set<Userinvoice> userInvoices;
-
     @ManyToOne
     @JoinColumn(name = "voucherid")
     private Voucher voucher;

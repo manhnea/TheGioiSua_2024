@@ -17,7 +17,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
             + "i.id, i.invoicecode, buyer.username, seller.username, "
-            + "i.creationdate, i.deliveryaddress,i.paymentmethod,v.vouchercode, i.discountamount, i.totalamount, i.status) "
+            + "i.creationdate, i.deliveryaddress,i.phonenumber,i.paymentmethod,v.vouchercode, i.discountamount, i.totalamount, i.status) "
             + "FROM Invoice i "
             + "JOIN i.userInvoices uvBuyer "
             + "LEFT JOIN i.voucher v "
