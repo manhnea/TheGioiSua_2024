@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
@@ -9,18 +10,15 @@ import com.example.TheGioiSua_2024.repository.RoleRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
-import com.example.TheGioiSua_2024.util.SendMail;
+import com.example.TheGioiSua_2024.util.EmailSend;
 import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.UserValidator;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,6 +44,7 @@ public class UserService implements IUserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtUtilities jwtUtilities;
   private final JavaMailSender mailSender;
+  private final EmailSend emailSend;
 
   @Override
   public Role saveRole(Role role) {
@@ -58,6 +55,7 @@ public class UserService implements IUserService {
   public User saverUser(User user) {
     return iUserRepository.save(user);
   }
+
 
   @Override
   public ResponseEntity<?> register(RegisterDto registerDto) {
@@ -71,8 +69,7 @@ public class UserService implements IUserService {
               Collections.singletonMap("error", "Tên người dùng không hợp lệ hoặc chứa dấu cách!"));
     } else if (iUserRepository.existsByUsername(registerDto.getUsername())) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(
-              Collections.singletonMap("error", "Tên Người Dùng Đã Tồn Tại!")); // Mã trạng thái 409
+          .body(Collections.singletonMap("error", "Tên Người Dùng Đã Tồn Tại!"));
     }
 
     // Validate password
@@ -102,11 +99,11 @@ public class UserService implements IUserService {
           .body(Collections.singletonMap("error", "Email không được để trống!"));
     } else if (!UserValidator.isValidEmail(registerDto.getEmail())) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(Collections.singletonMap("error",
-              "Email không đúng định dạng hoặc chứa dấu cách!")); // Mã trạng thái 409
+          .body(
+              Collections.singletonMap("error", "Email không đúng định dạng hoặc chứa dấu cách!"));
     } else if (iUserRepository.existsByEmail(registerDto.getEmail())) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(Collections.singletonMap("error", "Email đã được sử dụng!")); // Mã trạng thái 409
+          .body(Collections.singletonMap("error", "Email đã được sử dụng!"));
     }
 
     // Save new user if all validations pass
@@ -127,25 +124,11 @@ public class UserService implements IUserService {
     user.setTokenCreationTime(new Timestamp(System.currentTimeMillis()));
     iUserRepository.save(user);
 
-    sendVerificationEmail(user.getEmail(), verificationToken);
+    // Sử dụng  để gửi email xác minh
+    emailSend.sendVerificationEmail(user.getEmail(), verificationToken);
 
     return ResponseEntity.ok(Collections.singletonMap("message",
         "Tạo Tài Khoản Thành Công. Vui lòng kiểm tra email để xác minh tài khoản."));
-  }
-
-  private void sendVerificationEmail(String email, String token) {
-    SendMail sendMail = new SendMail(token);
-
-    try {
-      MimeMessage mimeMessage = mailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-      helper.setTo(email);
-      helper.setSubject(sendMail.subject);
-      helper.setText(sendMail.message, true);
-      mailSender.send(mimeMessage);
-    } catch (MessagingException e) {
-      throw new IllegalStateException("Không thể gửi email xác minh", e);
-    }
   }
 
   @Override
@@ -250,4 +233,53 @@ public class UserService implements IUserService {
     return userDto;
   }
 
+  @Override
+  public ResponseEntity<?> forgotPassword(ForgotPasswordDto forgotPasswordDto) {
+    String email = forgotPasswordDto.getEmail();
+
+    // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
+    User user = iUserRepository.findByEmail(email)
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email không tồn tại"));
+
+    // Tạo token khôi phục mật khẩu
+    String recoveryToken = jwtUtilities.generateRecoveryToken(user.getId());
+    user.setVerificationToken(recoveryToken);
+    user.setTokenCreationTime(new Timestamp(System.currentTimeMillis()));
+    iUserRepository.save(user);
+
+    // Gửi email khôi phục mật khẩu
+    emailSend.sendRecoveryEmail(user.getEmail(), recoveryToken);
+
+    return ResponseEntity.ok(Collections.singletonMap("message",
+        "Vui lòng kiểm tra email của bạn để khôi phục mật khẩu."));
+  }
+
+
+  @Override
+  public ResponseEntity<?> resetPassword(String token, String newPassword) {
+    // Validate the recovery token and retrieve userId
+    Long userId = jwtUtilities.verifyRecoveryToken(token);
+
+    // Find the user by ID
+    User user = iUserRepository.findById(userId)
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
+
+    // Check if the verification token matches the provided token
+    if (user.getVerificationToken() == null || !user.getVerificationToken().equals(token)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(Collections.singletonMap("error", "Token không hợp lệ hoặc đã hết hạn."));
+    }
+
+    // Update the password
+    user.setPassword(passwordEncoder.encode(newPassword));
+
+    // Clear the verification token to mark it as used
+    user.setVerificationToken(null); // Xóa token khôi phục mật khẩu
+    iUserRepository.save(user); // Save user changes
+
+    return ResponseEntity.ok(
+        Collections.singletonMap("message", "Mật khẩu đã được đặt lại thành công."));
+  }
 }

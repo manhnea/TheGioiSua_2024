@@ -4,6 +4,7 @@
  */
 package com.example.TheGioiSua_2024.controller;
 
+import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
@@ -22,33 +23,44 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private final IUserService iUserService;
-    private final UserService userService;
+  private final IUserService iUserService;
+  private final UserService userService;
 
-    @GetMapping("/verify")
-    public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
-        ResponseEntity<?> response = userService.verifyAccount(token);
-        return response;
-    }
+  @GetMapping("/verify")
+  public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
+    ResponseEntity<?> response = userService.verifyAccount(token);
+    return response;
+  }
 
 
-    //RessourceEndPoint:http://localhost:1234/api/user/register
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
-        return iUserService.register(registerDto);
-    }
+  //RessourceEndPoint:http://localhost:1234/api/user/register
+  @PostMapping("/register")
+  public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+    return iUserService.register(registerDto);
+  }
 
-    //RessourceEndPoint:http://localhost:1234/api/user/authenticate
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody LoginDto loginDto) {
-        return iUserService.authenticate(loginDto);
-    }
+  //RessourceEndPoint:http://localhost:1234/api/user/authenticate
+  @PostMapping("/authenticate")
+  public ResponseEntity<?> authenticate(@RequestBody LoginDto loginDto) {
+    return iUserService.authenticate(loginDto);
+  }
 
-    //http://localhost:1234/api/user/id
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        UserDto userDto = iUserService.findUserById(id);
-        return ResponseEntity.ok(userDto);
-    }
+  //http://localhost:1234/api/user/id
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    UserDto userDto = iUserService.findUserById(id);
+    return ResponseEntity.ok(userDto);
+  }
+
+  @PostMapping("/forgot-password")
+  public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
+    return iUserService.forgotPassword(forgotPasswordDto);
+  }
+
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(@RequestParam("token") String token,
+      @RequestParam("newPassword") String newPassword) {
+    return iUserService.resetPassword(token, newPassword);
+  }
 
 }

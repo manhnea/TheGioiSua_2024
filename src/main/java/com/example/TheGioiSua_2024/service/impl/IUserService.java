@@ -5,6 +5,7 @@
 package com.example.TheGioiSua_2024.service.impl;
 
 
+import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
@@ -15,14 +16,22 @@ import org.springframework.http.ResponseEntity;
 
 
 public interface IUserService {
-   //ResponseEntity<?> register (RegisterDto registerDto);
-   //  ResponseEntity<BearerToken> authenticate(LoginDto loginDto);
+  //ResponseEntity<?> register (RegisterDto registerDto);
+  //  ResponseEntity<BearerToken> authenticate(LoginDto loginDto);
 
-   ResponseEntity<?> authenticate(LoginDto loginDto);
-   ResponseEntity<?> verifyAccount(String token);
-   ResponseEntity<?> register (RegisterDto registerDto);
-   Role saveRole(Role role);
+  ResponseEntity<?> authenticate(LoginDto loginDto);
 
-   User saverUser (User user) ;
-   UserDto findUserById(Long id);
+  ResponseEntity<?> verifyAccount(String token);
+
+  ResponseEntity<?> register(RegisterDto registerDto);
+
+  Role saveRole(Role role);
+
+  User saverUser(User user);
+
+  UserDto findUserById(Long id);
+
+  ResponseEntity<?> forgotPassword(ForgotPasswordDto forgotPasswordDto);
+
+  ResponseEntity<?> resetPassword(String token, String newPassword);
 }
