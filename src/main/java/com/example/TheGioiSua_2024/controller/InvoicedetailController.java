@@ -31,7 +31,7 @@ public class InvoicedetailController {
     public Invoicedetail getInvoicedetailById(@PathVariable Long id) {
         return invoicedetailService.getInvoicedetailById(id);
     }
-//    http://localhost:1234/Invoicedetail/add
+//    http://localhost:1234/api/Invoicedetail/add
     @PostMapping("/add")
     public ResponseEntity<?> saveInvoicedetail(@RequestBody @Valid Invoicedetail invoicedetail, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -44,7 +44,7 @@ public class InvoicedetailController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", invoicedetailService.saveInvoicedetail(invoicedetail)));
+        return invoicedetailService.saveInvoicedetail(invoicedetail);
     }
 
 

@@ -12,9 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Service
 public class InvoicedetailService implements IInvoicedetailService {
+
     @Autowired
     private InvoicedetailRepository invoicedetailRepository;
 
@@ -30,10 +34,33 @@ public class InvoicedetailService implements IInvoicedetailService {
     }
 
     @Override
-    public String saveInvoicedetail(Invoicedetail invoicedetail) {
-        invoicedetail.setStatus(Status.Active);
-        invoicedetailRepository.save(invoicedetail);
-        return "Thêm chi tiết hóa đơn thành công";
+    public ResponseEntity<?> saveInvoicedetail(Invoicedetail invoicedetail) {
+        try {
+            // Tìm Milkdetail theo ID
+            Milkdetail milkdetail = milkdetailRepository
+                    .findById(invoicedetail.getMilkDetail().getId())
+                    .orElseThrow(() -> new RuntimeException("Không Tồn Tại"));
+            // Kiểm tra số lượng tồn kho
+            if (invoicedetail.getQuantity() > milkdetail.getStockquantity()) {
+                Invoice invoice = invoiceRepository.findById(invoicedetail.getInvoice().getId())
+                        .orElseThrow(() -> new RuntimeException("Hoá Đơn Không Tồn Tại"));
+                invoiceRepository.delete(invoice);
+                return ResponseEntity.badRequest().body(Map.of("error", "Số Lượng Không Phù Hợp\n Số Lượng Còn Lại:" + milkdetail.getStockquantity()));
+            }
+            // Cập nhật số lượng tồn kho
+            milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
+            // Lưu lại Milkdetail
+            milkdetailRepository.save(milkdetail);
+            // Đặt trạng thái cho Invoicedetail
+            invoicedetail.setStatus(Status.Active);
+            // Lưu lại Invoicedetail
+            invoicedetailRepository.save(invoicedetail);
+            // Trả về phản hồi thành công
+            return ResponseEntity.ok(Map.of("message", "Thêm Thành Công"));
+        } catch (RuntimeException e) {
+            // Trả về phản hồi lỗi
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
     @Override
@@ -53,11 +80,11 @@ public class InvoicedetailService implements IInvoicedetailService {
     @Override
     public String deleteInvoicedetail(Long id) {
         Invoicedetail existingInvoicedetail = invoicedetailRepository.findById(id).orElseThrow();
-        if(existingInvoicedetail.getStatus() == Status.Delete) {
+        if (existingInvoicedetail.getStatus() == Status.Delete) {
             existingInvoicedetail.setStatus(Status.Active);
             invoicedetailRepository.save(existingInvoicedetail);
             return "Chi tiết hóa đơn đã bị xóa!";
-        }else {
+        } else {
             existingInvoicedetail.setStatus(Status.Delete);
             invoicedetailRepository.save(existingInvoicedetail);
             return "Xóa chi tiết hóa đơn thành công!";
