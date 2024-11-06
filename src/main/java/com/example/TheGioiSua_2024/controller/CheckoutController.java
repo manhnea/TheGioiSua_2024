@@ -1,6 +1,8 @@
 package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.dto.CreatePaymentLinkRequestBody;
+import com.example.TheGioiSua_2024.util.TelegramNotifier;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.HttpStatus;
@@ -123,26 +125,17 @@ public class CheckoutController {
     return url.toString();
   }
 
+  TelegramNotifier telegramNotifier = new TelegramNotifier();
+
   @PostMapping(path = "/confirm-webhook")
-  public ObjectNode confirmWebhook(@RequestBody Map<String, String> requestBody) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    ObjectNode response = objectMapper.createObjectNode();
-    try {
-      String webhookUrl = requestBody.get("webhookUrl");
-      if (webhookUrl == null) {
-        throw new IllegalArgumentException("Webhook URL is required");
-      }
-      String confirmationMessage = payOS.confirmWebhook(webhookUrl);
-      response.set("data", objectMapper.valueToTree(confirmationMessage));
-      response.put("error", 0);
-      response.put("message", "ok");
-      return response;
-    } catch (Exception e) {
-      e.printStackTrace();
-      response.put("error", -1);
-      response.put("message", e.getMessage());
-      response.set("data", null);
-      return response;
-    }
+  public ResponseEntity<String> confirmWebhook(@RequestBody String requestBody) {
+    // Process the request body as needed
+    String response = "Webhook received: " + requestBody; // Example response, modify as needed
+    telegramNotifier.sendUserDeletionNotification(requestBody);
+    telegramNotifier.sendMessageZalo(requestBody);
+    System.out.printf(requestBody);
+    return ResponseEntity.ok(response);
   }
+
+
 }
