@@ -12,10 +12,12 @@ import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
 import com.example.TheGioiSua_2024.util.EmailSend;
 import com.example.TheGioiSua_2024.util.Status;
+import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import com.example.TheGioiSua_2024.util.UserValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -45,6 +47,7 @@ public class UserService implements IUserService {
   private final JwtUtilities jwtUtilities;
   private final JavaMailSender mailSender;
   private final EmailSend emailSend;
+  private final MessageSource messageSource;
 
   @Override
   public Role saveRole(Role role) {
@@ -211,13 +214,23 @@ public class UserService implements IUserService {
     }
   }
 
-  @Scheduled(fixedDelay = 60000) // Kiểm tra mỗi 1 phút
+  @Scheduled(fixedDelay = 600000) // Kiểm tra mỗi 10 phút (600000 ms)
   public void deleteUnverifiedUsers() {
     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+    TelegramNotifier telegramNotifier = new TelegramNotifier(); // Khởi tạo TelegramNotifier
+
     iUserRepository.findAll().stream()
         .filter(user -> user.getStatus() == Status.Inactive
-            && currentTimestamp.getTime() - user.getTokenCreationTime().getTime() >= 20 * 60 * 1000)
-        .forEach(user -> iUserRepository.delete(user));
+            && currentTimestamp.getTime() - user.getRegistrationdate().getTime()
+            >= 60 * 60 * 1000) // 60 phút
+        .forEach(user -> {
+          // Xóa người dùng
+          iUserRepository.delete(user);
+          String message = "đã xóa user :" + user.getUsername();
+          // Gửi thông báo tới Telegram
+          telegramNotifier.sendUserDeletionNotification(message);
+          telegramNotifier.sendMessageZalo(message);
+        });
   }
 
 
