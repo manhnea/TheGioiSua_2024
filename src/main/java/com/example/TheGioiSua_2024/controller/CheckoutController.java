@@ -1,10 +1,12 @@
 package com.example.TheGioiSua_2024.controller;
 
+import aj.org.objectweb.asm.TypeReference;
 import com.example.TheGioiSua_2024.dto.CreatePaymentLinkRequestBody;
 import com.example.TheGioiSua_2024.util.TelegramNotifier;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import vn.payos.type.ItemData;
 import vn.payos.type.PaymentData;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -129,13 +131,25 @@ public class CheckoutController {
 
   @PostMapping(path = "/confirm-webhook")
   public ResponseEntity<String> confirmWebhook(@RequestBody String requestBody) {
-    // Process the request body as needed
-    String response = "Webhook received: " + requestBody; // Example response, modify as needed
-    telegramNotifier.sendUserDeletionNotification(requestBody);
-    telegramNotifier.sendMessageZalo(requestBody);
-    System.out.printf(requestBody);
-    return ResponseEntity.ok(response);
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      // Chuyển đổi requestBody thành JsonNode
+      JsonNode jsonNode = objectMapper.readTree(requestBody);
+
+      // Xử lý dữ liệu JSON như cần thiết
+      String response =
+          "Webhook received: " + jsonNode.toString(); // Ví dụ phản hồi, chỉnh sửa theo nhu cầu
+      telegramNotifier.sendUserDeletionNotification(jsonNode.toString());
+      telegramNotifier.sendMessageZalo(jsonNode.toString());
+
+      // In ra dữ liệu JSON để kiểm tra
+      System.out.println(jsonNode);
+
+      // Trả về phản hồi đã được đóng gói trong ResponseEntity
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body("Invalid JSON format: " + e.getMessage());
+    }
+
   }
-
-
 }
