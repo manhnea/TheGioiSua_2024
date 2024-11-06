@@ -3,11 +3,12 @@ package com.example.TheGioiSua_2024.service.impl;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface IInvoicedetailService {
     List<Invoicedetail> getInvoicedetailList();
 
-    String saveInvoicedetail(Invoicedetail invoicedetail);
+    ResponseEntity<?> saveInvoicedetail(Invoicedetail invoicedetail);
 
     String updateInvoicedetail(Long id, Invoicedetail invoicedetail);
 

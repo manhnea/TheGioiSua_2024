@@ -27,90 +27,92 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class SpringSecurityConfig {
 
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
-  private final CustomerUserDetailsService customerUserDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomerUserDetailsService customerUserDetailsService;
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors() // Kết hợp cấu hình CORS với Spring Security
-        .and()
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeHttpRequests()
-        .requestMatchers(
-            "/user/**",
-            "/Product/page/**",
-            "/Product/page",
-            "/Product/lst",
-            "/Userinvoice/lst",
-            "/Packagingunit/lst",
-            "/Usagecapacity/lst",
-            "/Milkdetail/page",
-            "/Milkdetail/getMilkDetail",
-            "/Milktype/lst",
-            "/Milkbrand/lst",
-            "/Targetuser/lst",
-            "/Milktaste/lst",
-            "/api-docs/**",
-            "/swagger-ui/**",
-            "/Checkout/**",
-            "/payment/**",
-            "/Invoice/add",
-            "/Userinvoice/add",
-            "/Invoice/lst").permitAll()
-        .requestMatchers(
-            "/admin/**",
-            "/Voucher/**",
-            "/Milktype/**",
-            "/Milktaste/**",
-            "/Packagingunit/**",
-            "/Targetuser/**",
-            "/Product/**",
-            "/Milkdetail/**",
-            "/Milkbrand/**",
-            "/Invoicedetail/**",
-            "/Invoice/**",
-            "/Userinvoice/**",
-            "/Usagecapacity/**").hasAuthority("Admin");
-//                .requestMatchers("/Invoice/add").hasAuthority("User");
-    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors() // Kết hợp cấu hình CORS với Spring Security
+                .and()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(
+                        "/Invoice/add",
+                        "/Invoicedetail/add",
+                        "/Userinvoice/add"
+                ).hasAuthority("Customer")
+                
+                .requestMatchers(
+                        "/admin/**",
+                        "/Voucher/**",
+                        "/Milktype/**",
+                        "/Milktaste/**",
+                        "/Packagingunit/**",
+                        "/Targetuser/**",
+                        "/Product/**",
+                        "/Milkdetail/**",
+                        "/Milkbrand/**",
+                        "/Invoicedetail/**",
+                        "/Invoice/**",
+                        "/Userinvoice/**",
+                        "/Usagecapacity/**"
+                ).hasAuthority("Admin")
+                .requestMatchers(
+                        "/user/**",
+                        "/Product/page/**",
+                        "/Product/page",
+                        "/Product/lst",
+                        "/Userinvoice/lst",
+                        "/Packagingunit/lst",
+                        "/Usagecapacity/lst",
+                        "/Milkdetail/page",
+                        "/Milkdetail/getMilkDetail",
+                        "/Milktype/lst",
+                        "/Milkbrand/lst",
+                        "/Targetuser/lst",
+                        "/Milktaste/lst",
+                        "/api-docs/**",
+                        "/swagger-ui/**",
+                        "/Checkout/**",
+                        "/bank/**",
+                        "/Invoice/lst"
+                ).permitAll();
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
-    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-    return http.build();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+        // Allows all domains to access the API
+        configuration.addAllowedOriginPattern(
+                "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+        configuration.addAllowedHeader("*");  // Allows all headers
+        configuration.setAllowCredentials(
+                true);  // Allows credentials such as cookies or HTTP authentication
 
-    // Allows all domains to access the API
-    configuration.addAllowedOriginPattern(
-        "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
 
-    configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
-    configuration.addAllowedHeader("*");  // Allows all headers
-    configuration.setAllowCredentials(
-        true);  // Allows credentials such as cookies or HTTP authentication
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-
-    return source;
+        return source;
 //        aaaa
-  }
+    }
 
 }

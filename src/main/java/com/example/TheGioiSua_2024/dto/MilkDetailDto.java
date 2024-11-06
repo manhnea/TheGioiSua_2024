@@ -28,5 +28,6 @@ public class MilkDetailDto {
     float price;
     int stockquantity;
     String imgURL;
+    String shelflifeofmilk;
     int status;
 }

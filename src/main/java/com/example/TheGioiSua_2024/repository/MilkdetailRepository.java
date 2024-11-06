@@ -58,6 +58,7 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
             + " md.price,"
             + " md.stockquantity,"
             + " md.imgUrl,"
+            + " md.shelflifeofmilk,"
             + " md.status) "
             + "FROM Milkdetail md "
             + "JOIN md.product p "
