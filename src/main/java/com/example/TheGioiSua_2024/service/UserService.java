@@ -176,6 +176,7 @@ public class UserService implements IUserService {
     }
   }
 
+
   @Override
   public ResponseEntity<?> verifyAccount(String token) {
     try {
@@ -202,6 +203,12 @@ public class UserService implements IUserService {
       user.setStatus(Status.Active);
       user.setVerificationToken(null); // Xóa token sau khi xác minh để không dùng lại được
       iUserRepository.save(user);
+
+      // Gửi thông báo đến Telegram và Zalo sau khi xác minh thành công
+      String message = "Tài khoản của " + user.getUsername() + " đã được xác minh thành công.";
+      TelegramNotifier telegramNotifier = new TelegramNotifier();
+      telegramNotifier.sendUserDeletionNotification(message);
+      telegramNotifier.sendMessageZalo(message);
 
       return ResponseEntity.ok(
           Collections.singletonMap("message", "Tài khoản đã được xác minh thành công."));
