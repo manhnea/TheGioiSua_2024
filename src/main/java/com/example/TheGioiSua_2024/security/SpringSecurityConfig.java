@@ -30,60 +30,67 @@ public class SpringSecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomerUserDetailsService customerUserDetailsService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors() // Kết hợp cấu hình CORS với Spring Security
-                .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers(
-                        "/Invoice/add",
-                        "/Invoicedetail/add",
-                        "/Userinvoice/add"
-                ).hasAuthority("Customer")
-                
-                .requestMatchers(
-                        "/admin/**",
-                        "/Voucher/**",
-                        "/Milktype/**",
-                        "/Milktaste/**",
-                        "/Packagingunit/**",
-                        "/Targetuser/**",
-                        "/Product/**",
-                        "/Milkdetail/**",
-                        "/Milkbrand/**",
-                        "/Invoicedetail/**",
-                        "/Invoice/**",
-                        "/Userinvoice/**",
-                        "/Usagecapacity/**"
-                ).hasAuthority("Admin")
-                .requestMatchers(
-                        "/user/**",
-                        "/Product/page/**",
-                        "/Product/page",
-                        "/Product/lst",
-                        "/Userinvoice/lst",
-                        "/Packagingunit/lst",
-                        "/Usagecapacity/lst",
-                        "/Milkdetail/page",
-                        "/Milkdetail/getMilkDetail",
-                        "/Milktype/lst",
-                        "/Milkbrand/lst",
-                        "/Targetuser/lst",
-                        "/Milktaste/lst",
-                        "/api-docs/**",
-                        "/swagger-ui/**",
-                        "/Checkout/**",
-                        "/bank/**",
-                        "/Invoice/lst"
-                ).permitAll();
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+ @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .cors() // Cấu hình CORS
+        .and()
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeHttpRequests()
 
+        // Các endpoint không yêu cầu xác thực
+        .requestMatchers(
+            "/user/**",
+            "/Product/page/**",
+            "/Product/page",
+            "/Product/lst",
+            "/Userinvoice/lst",
+            "/Packagingunit/lst",
+            "/Usagecapacity/lst",
+            "/Milkdetail/page",
+            "/Milkdetail/getMilkDetail",
+            "/Milktype/lst",
+            "/Milkbrand/lst",
+            "/Targetuser/lst",
+            "/Milktaste/lst",
+            "/api-docs/**",
+            "/swagger-ui/**",
+            "/Checkout/**",
+            "/bank/**",
+            "/Invoice/lst"
+        ).permitAll()
+
+        // Quyền của Customer
+        .requestMatchers(
+            "/Invoice/add",
+            "/Invoicedetail/add",
+            "/Userinvoice/add"
+        ).hasAuthority("Customer")
+
+        // Quyền của Admin
+        .requestMatchers(
+            "/admin/**",
+            "/Voucher/**",
+            "/Milktype/**",
+            "/Milktaste/**",
+            "/Packagingunit/**",
+            "/Targetuser/**",
+            "/Product/**",
+            "/Milkdetail/**",
+            "/Milkbrand/**",
+            "/Invoicedetail/**",
+            "/Invoice/**",
+            "/Userinvoice/**",
+            "/Usagecapacity/**"
+        ).hasAuthority("Admin")
+
+        .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
+
+    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
