@@ -221,25 +221,6 @@ public class UserService implements IUserService {
     }
   }
 
-  @Scheduled(fixedDelay = 600000) // Kiểm tra mỗi 10 phút (600000 ms)
-  public void deleteUnverifiedUsers() {
-    Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-    TelegramNotifier telegramNotifier = new TelegramNotifier(); // Khởi tạo TelegramNotifier
-
-    iUserRepository.findAll().stream()
-        .filter(user -> user.getStatus() == Status.Inactive
-            && currentTimestamp.getTime() - user.getRegistrationdate().getTime()
-            >= 60 * 60 * 1000) // 60 phút
-        .forEach(user -> {
-          // Xóa người dùng
-          iUserRepository.delete(user);
-          String message = "đã xóa user :" + user.getUsername();
-          // Gửi thông báo tới Telegram
-          telegramNotifier.sendUserDeletionNotification(message);
-          telegramNotifier.sendMessageZalo(message);
-        });
-  }
-
 
   @Override
   public UserDto findUserById(Long id) {
