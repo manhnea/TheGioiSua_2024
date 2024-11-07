@@ -104,7 +104,7 @@ public class ApiService {
         Invoice doist = invoiceRepository.findbycode(description);
         doist.setStatus(Status.Pending);
         invoiceRepository.save(doist);
-        String mess = "Bạn có đơn hàng mới má là : " + doist;
+        String mess = "Bạn có đơn hàng mới mã là : " + description;
         telegramNotifier.sendMessageZalo(mess);
         return "Thành công";
       }
