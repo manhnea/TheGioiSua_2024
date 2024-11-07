@@ -29,15 +29,15 @@ public class InvoiceService implements IInvoiceService {
 
     @Override
     public Long saveInvoice(@RequestBody Invoice invoice) {
-        Integer maxId = invoiceRepository.findMaxId();
-        if (maxId == null) {
-            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
-        } else {
-            maxId++;
-        }
-        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
-        String invoiceCode = String.format("HD%03d", maxId);
-        invoice.setInvoicecode(invoiceCode);
+//        Integer maxId = invoiceRepository.findMaxId();
+//        if (maxId == null) {
+//            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
+//        } else {
+//            maxId++;
+//        }
+//        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
+//        String invoiceCode = String.format("HD%03d", maxId);
+//        invoice.setInvoicecode(invoiceCode);
         invoice.setStatus(Status.AwaitingPayment);
         invoiceRepository.save(invoice);
         return invoice.getId();

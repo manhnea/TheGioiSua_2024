@@ -65,7 +65,7 @@ public class ApiService {
 
                 // Tìm và lấy phần mô tả từ chữ "demo" và 6 ký tự tiếp theo
                 String modifiedDescription = description;
-                Pattern pattern = Pattern.compile("demo(\\w{6})");
+                Pattern pattern = Pattern.compile("HD(\\w{8})");
                 Matcher matcher = pattern.matcher(description);
                 if (matcher.find()) {
                     modifiedDescription = matcher.group(0); // lấy "demo" và 6 ký tự tiếp theo
