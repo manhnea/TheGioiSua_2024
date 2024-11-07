@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.dto.TransactionHistory;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.util.Status;
+import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -92,6 +93,7 @@ public class ApiService {
 
   public String checkTransactionData(TransactionHistory request) {
     JsonNode transactionData = fetchTransactionData();
+    TelegramNotifier telegramNotifier = new TelegramNotifier();
 
     for (JsonNode transaction : transactionData.path("transactionHistoryList")) {
       double creditAmount = transaction.path("creditAmount").asDouble();
@@ -102,6 +104,8 @@ public class ApiService {
         Invoice doist = invoiceRepository.findbycode(description);
         doist.setStatus(Status.Pending);
         invoiceRepository.save(doist);
+        String mess = "Bạn có đơn hàng mới má là : " + doist;
+        telegramNotifier.sendMessageZalo(mess);
         return "Thành công";
       }
     }
