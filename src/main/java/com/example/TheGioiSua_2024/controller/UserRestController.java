@@ -63,4 +63,12 @@ public class UserRestController {
     return iUserService.resetPassword(token, newPassword);
   }
 
+  @PostMapping("/change-password")
+  public ResponseEntity<?> changePassword(
+      @RequestParam("userId") Long userId,
+      @RequestParam("oldPassword") String oldPassword,
+      @RequestParam("newPassword") String newPassword) {
+    return iUserService.changePassword(userId, oldPassword, newPassword);
+  }
+
 }

@@ -283,4 +283,38 @@ public class UserService implements IUserService {
     return ResponseEntity.ok(
         Collections.singletonMap("message", "Mật khẩu đã được đặt lại thành công."));
   }
+
+  @Override
+  public ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword) {
+    // Retrieve user by ID
+    User user = iUserRepository.findById(userId)
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
+
+    // Check if old password matches the stored password
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(Collections.singletonMap("error", "Mật khẩu cũ không chính xác."));
+    }
+
+    // Validate the new password
+    if (newPassword == null || newPassword.trim().isEmpty()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(Collections.singletonMap("error", "Mật khẩu mới không được để trống!"));
+    } else if (newPassword.length() < 6) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(Collections.singletonMap("error", "Mật khẩu mới phải có ít nhất 6 ký tự!"));
+    } else if (newPassword.contains(" ")) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(Collections.singletonMap("error", "Mật khẩu mới không được chứa dấu cách!"));
+    }
+
+    // Update the password
+    user.setPassword(passwordEncoder.encode(newPassword));
+    iUserRepository.save(user);
+
+    return ResponseEntity.ok(
+        Collections.singletonMap("message", "Mật khẩu đã được thay đổi thành công."));
+  }
+
 }

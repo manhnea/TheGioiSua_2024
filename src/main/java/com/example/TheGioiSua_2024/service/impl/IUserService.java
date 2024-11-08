@@ -34,4 +34,6 @@ public interface IUserService {
   ResponseEntity<?> forgotPassword(ForgotPasswordDto forgotPasswordDto);
 
   ResponseEntity<?> resetPassword(String token, String newPassword);
+
+  ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword);
 }
