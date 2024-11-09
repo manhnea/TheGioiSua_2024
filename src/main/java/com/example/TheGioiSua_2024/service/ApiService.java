@@ -91,7 +91,9 @@ public class ApiService {
     return callMbBankApi();
   }
 
-  public String checkTransactionData(TransactionHistory request) {
+  public JsonNode checkTransactionData(TransactionHistory request) {
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode response = mapper.createObjectNode();
     JsonNode transactionData = fetchTransactionData();
     TelegramNotifier telegramNotifier = new TelegramNotifier();
 
@@ -104,13 +106,19 @@ public class ApiService {
         Invoice doist = invoiceRepository.findbycode(description);
         doist.setStatus(Status.Pending);
         invoiceRepository.save(doist);
+
         String mess = "Bạn có đơn hàng mới mã là : " + description;
         telegramNotifier.sendMessageZalo(mess);
-        return "Thành công";
+
+        response.put("status", 200);
+        response.put("mess", "Thành công");
+        return response;
       }
     }
 
-    return "Không tìm thấy giao dịch khớp";
+    response.put("status", 404);
+    response.put("error", "Không tìm thấy giao dịch khớp");
+    return response;
   }
 
 

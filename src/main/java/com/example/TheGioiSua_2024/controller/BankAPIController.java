@@ -27,14 +27,9 @@ public class BankAPIController {
   }
 
   @PostMapping("/transactionHistory")
-  public ResponseEntity<String> checkTransactionData(@RequestBody TransactionHistory request) {
-    String result = apiService.checkTransactionData(request);
-
-    if ("Thành công".equals(result)) {
-      return ResponseEntity.ok(result);
-    } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-    }
+  public ResponseEntity<JsonNode> checkTransactionData(@RequestBody TransactionHistory request) {
+    JsonNode result = apiService.checkTransactionData(request);
+    return ResponseEntity.status(result.get("status").asInt()).body(result);
   }
 
 
