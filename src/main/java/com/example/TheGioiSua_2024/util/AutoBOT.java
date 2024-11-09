@@ -26,8 +26,13 @@ public class AutoBOT {
             >= 60 * 60 * 1000) // 60 phút
         .forEach(user -> {
           // Xóa người dùng
+          // Xóa người dùng
           iUserRepository.delete(user);
-          String message = "Tài khoản :" + user.getUsername() + "chưa xác minh leen xoa";
+          String message = "Thông báo: Người dùng đã bị xóa khỏi hệ thống do không xác minh." +
+              "\n- Tên đăng nhập: " + user.getUsername() +
+              "\n- Email: " + user.getEmail() +
+              "\n- Họ và tên: " + user.getFullname();
+
           // Gửi thông báo tới Telegram và Zalo
           telegramNotifier.sendUserDeletionNotification(message);
           telegramNotifier.sendMessageZalo(message);

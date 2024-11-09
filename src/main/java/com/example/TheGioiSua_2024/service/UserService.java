@@ -205,9 +205,13 @@ public class UserService implements IUserService {
       iUserRepository.save(user);
 
       // Gửi thông báo đến Telegram và Zalo sau khi xác minh thành công
-      String message = "Tài khoản của " + user.getUsername() + " đã được xác minh thành công.";
+      String message = "Tài khoản của người dùng:" +
+          "\n- Tên đăng nhập: " + user.getUsername() +
+          "\n- Email: " + user.getEmail() +
+          "\n- Họ và tên: " + user.getFullname() +
+          "\nĐã được xác minh thành công.";
+
       TelegramNotifier telegramNotifier = new TelegramNotifier();
-      telegramNotifier.sendUserDeletionNotification(message);
       telegramNotifier.sendMessageZalo(message);
 
       return ResponseEntity.ok(

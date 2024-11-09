@@ -104,14 +104,28 @@ public class ApiService {
       if (creditAmount == request.getCreditAmount() && description.equals(
           request.getDescription())) {
         Invoice doist = invoiceRepository.findbycode(description);
-        doist.setStatus(Status.Pending);
-        invoiceRepository.save(doist);
 
-        String mess = "Bạn có đơn hàng mới mã là : " + description;
-        telegramNotifier.sendMessageZalo(mess);
+        // Kiểm tra trạng thái đơn hàng
+        if (doist.getStatus() == Status.AwaitingPayment) {
+          // Cập nhật trạng thái đơn hàng và gửi thông báo nếu là AwaitingPayment
+          doist.setStatus(Status.Pending);
+          invoiceRepository.save(doist);
 
-        response.put("status", 200);
-        response.put("mess", "Thành công");
+          String mess = "Thông báo: Bạn có một đơn hàng mới!" +
+              "\nMã đơn hàng: " + description +
+              "\nSố điện thoại: " + doist.getPhonenumber() +
+              "\nĐịa chỉ giao hàng: " + doist.getDeliveryaddress();
+          telegramNotifier.sendMessageZalo(mess);
+
+          response.put("status", 200);
+          response.put("mess", "Thành công");
+        } else if (doist.getStatus() == Status.Pending) {
+          response.put("status", 334);
+          response.put("error", "Đơn hàng này đã được thanh toán.");
+        } else if (doist.getStatus() == Status.Canceled) {
+          response.put("status", 336);
+          response.put("error", "Đơn hàng này đã bị hủy.");
+        }
         return response;
       }
     }
