@@ -27,11 +27,11 @@ public class Voucher {
 
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai")
+  //  @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai")
     private Date startdate;
 
     @NotNull(message = "Ngày kết thúc không được để trống")
-    @Future(message = "Ngày kết thúc phải là một ngày trong tương lai")
+//    @Future(message = "Ngày kết thúc phải là một ngày trong tương lai")
     private Date enddate;
 
     @Min(value = 1, message = "Phần trăm giảm giá phải lớn hơn hoặc bằng 1")
