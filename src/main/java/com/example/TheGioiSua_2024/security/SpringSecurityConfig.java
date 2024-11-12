@@ -66,7 +66,8 @@ public class SpringSecurityConfig {
         .requestMatchers(
             "/Invoice/add",
             "/Invoicedetail/add",
-            "/Userinvoice/add"
+            "/Userinvoice/add",
+            "/Voucher/voucercode"
         ).hasAuthority("Customer")
 
         // Quyền của Admin

@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.controller;
 
+import com.example.TheGioiSua_2024.dto.VoucherDto;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.service.VoucherService;
 import jakarta.validation.Valid;
@@ -18,20 +19,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/Voucher")
 public class VoucherRestController {
+
     @Autowired
     private VoucherService voucherService;
+
     //http://localhost:1234/api/Voucher/lst
     @GetMapping("/lst")
-    public List<Voucher> lst(){
+    public List<Voucher> lst() {
         return voucherService.getVoucherList();
     }
+
     //http://localhost:1234/api/Voucher/add
     @GetMapping("/lst/{id}")
-    public Voucher get(@PathVariable("id") Long id){
+    public Voucher get(@PathVariable("id") Long id) {
         return voucherService.getVoucherById(id);
     }
+
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult){
+    public ResponseEntity<?> add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -45,9 +50,10 @@ public class VoucherRestController {
 
         return ResponseEntity.ok(Map.of("status", "success", "message", voucherService.saveVoucher(voucher)));
     }
+
     //http://localhost:1234/api/Voucher/update/{id}
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody @Valid Voucher voucher ,BindingResult bindingResult){
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody @Valid Voucher voucher, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -58,13 +64,28 @@ public class VoucherRestController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-       return ResponseEntity.ok(Map.of("status", "success", "message", voucherService.updateVoucher(id, voucher)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", voucherService.updateVoucher(id, voucher)));
 
     }
+
     //http://localhost:1234/api/Voucher/delete/{id}
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         String message = voucherService.deleteVoucher(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
+
+    @GetMapping("/voucercode")
+    public ResponseEntity<?> discountmoney(
+            @RequestParam("vouchercode") String vouchercode,
+            @RequestParam("total") int total
+    ) {
+        VoucherDto voucherDto = new VoucherDto();
+        voucherDto.setVouchercode(vouchercode);
+        voucherDto.setTotal(total);
+
+        System.out.println("CODE VOUCHER:" + voucherDto.getVouchercode());
+        return voucherService.discountmoney(voucherDto);
+    }
+
 }

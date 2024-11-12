@@ -49,7 +49,7 @@ public class InvoicedetailService implements IInvoicedetailService {
             }
             // Cập nhật số lượng tồn kho
             milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
-            // Lưu lại Milkdetail
+            // Lưu lại Milkdetail   
             milkdetailRepository.save(milkdetail);
             // Đặt trạng thái cho Invoicedetail
             invoicedetail.setStatus(Status.Active);

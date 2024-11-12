@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     @Query("select a from Voucher a WHERE a.vouchercode = ?1")
     Optional<Voucher> findByVoucher(String voucherName);
+    
+    Voucher vouchercode (String vouchercode);
 }
