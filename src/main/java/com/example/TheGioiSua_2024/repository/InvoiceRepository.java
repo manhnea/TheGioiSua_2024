@@ -38,4 +38,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
   @Query("SELECT a FROM Invoice a where a.invoicecode = ?1")
   Invoice findbycode(String description);
+
+  @Query(value = "SELECT * FROM invoice WHERE status = 334", nativeQuery = true)
+  List<String> findInvoicesByStatus334();
+
 }

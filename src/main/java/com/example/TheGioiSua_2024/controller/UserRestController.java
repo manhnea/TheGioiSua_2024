@@ -8,8 +8,10 @@ import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
+import com.example.TheGioiSua_2024.entity.User;
 import com.example.TheGioiSua_2024.service.UserService;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,4 +73,8 @@ public class UserRestController {
     return iUserService.changePassword(userId, oldPassword, newPassword);
   }
 
+  @GetMapping("/findTop5")
+  public List<String> findTop5() {
+    return iUserService.findTop5();
+  }
 }

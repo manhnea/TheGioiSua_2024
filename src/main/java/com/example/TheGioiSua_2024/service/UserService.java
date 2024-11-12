@@ -16,6 +16,7 @@ import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import com.example.TheGioiSua_2024.util.UserValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -320,5 +321,11 @@ public class UserService implements IUserService {
     return ResponseEntity.ok(
         Collections.singletonMap("message", "Mật khẩu đã được thay đổi thành công."));
   }
+
+  @Override
+  public List<String> findTop5() {
+    return iUserRepository.findAllUsernames();
+  }
+
 
 }

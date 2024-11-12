@@ -11,6 +11,7 @@ import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 
@@ -36,4 +37,6 @@ public interface IUserService {
   ResponseEntity<?> resetPassword(String token, String newPassword);
 
   ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword);
+
+  List<String> findTop5();
 }
