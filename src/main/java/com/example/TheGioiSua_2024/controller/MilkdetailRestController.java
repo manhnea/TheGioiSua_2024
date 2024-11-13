@@ -23,72 +23,109 @@ import org.springframework.data.domain.Pageable;
 @RequestMapping("/Milkdetail")
 public class MilkdetailRestController {
 
-    @Autowired
-    private MilkdetailService milkdetailService;
+  @Autowired
+  private MilkdetailService milkdetailService;
 
-    //http://localhost:1234/api/Milkdetail/lst
-    @GetMapping("/lst")
-    private List<Milkdetail> lst() {
-        return milkdetailService.getAll();
+  //http://localhost:1234/api/Milkdetail/lst
+  @GetMapping("/lst")
+  private List<Milkdetail> lst() {
+    return milkdetailService.getAll();
+  }
+
+  @GetMapping("/lst/{id}")
+  private Milkdetail getMilkdetailById(@PathVariable Long id) {
+    return milkdetailService.getById(id);
+  }
+
+  //http://localhost:1234/api/Milkdetail/add
+  @PostMapping("/add")
+  private ResponseEntity<?> add(@RequestBody @Valid Milkdetail milkdetail,
+      BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
 
-    @GetMapping("/lst/{id}")
-    private Milkdetail getMilkdetailById(@PathVariable Long id) {
-        return milkdetailService.getById(id);
+    return ResponseEntity.ok(
+        Map.of("status", "success", "message", milkdetailService.add(milkdetail)));
+  }
+
+  //http://localhost:1234/api/Milkdetail/update/{id}
+  @PutMapping("/update/{id}")
+  private ResponseEntity<?> update(@PathVariable("id") Long id,
+      @Valid @RequestBody Milkdetail milkdetail, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    return ResponseEntity.ok(
+        Map.of("status", "success", "message", milkdetailService.update(id, milkdetail)));
+  }
 
-    //http://localhost:1234/api/Milkdetail/add
-    @PostMapping("/add")
-    private ResponseEntity<?> add(@RequestBody @Valid Milkdetail milkdetail, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<Map<String, String>> errors = new ArrayList<>();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("field", fieldError.getField());
-                error.put("message", fieldError.getDefaultMessage());
-                errors.add(error);
-            }
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-        }
+  //http://localhost:1234/api/Milkdetail/delete/{id}
+  @DeleteMapping("/delete/{id}")
+  private ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    String message = milkdetailService.delete(id);
+    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+  }
+  //http://localhost:1234/api/Milkdetail/getMilkDetail
 
-        return ResponseEntity.ok(Map.of("status", "success", "message", milkdetailService.add(milkdetail)));
+  @GetMapping("/getMilkDetail")
+  public ResponseEntity<?> getMilkDetail(
+      @RequestParam Long packagingunitID,
+      @RequestParam Long milktasteID,
+      @RequestParam Long productID,
+      @RequestParam Long usagecapacityID) {
+    MilkDetailDto milkDetail = milkdetailService.getMilkDetail(packagingunitID, milktasteID,
+        productID, usagecapacityID);
+
+    if (milkDetail == null) {
+      return ResponseEntity.badRequest()
+          .body(Map.of("status", "error", "errors", "Danh Sách Trống"));
     }
+    return ResponseEntity.ok(Map.of("status", "success", "message", milkDetail));
+  }
 
-    //http://localhost:1234/api/Milkdetail/update/{id}
-    @PutMapping("/update/{id}")
-    private ResponseEntity<?> update(@PathVariable("id") Long id, @Valid @RequestBody Milkdetail milkdetail, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<Map<String, String>> errors = new ArrayList<>();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("field", fieldError.getField());
-                error.put("message", fieldError.getDefaultMessage());
-                errors.add(error);
-            }
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-        }
-        return ResponseEntity.ok(Map.of("status", "success", "message", milkdetailService.update(id, milkdetail)));
+  @GetMapping("/getMilkDetailPage")
+  public ResponseEntity<?> getMilkDetailPage(
+      @RequestParam int page,
+      @RequestParam int size) {
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Milkdetail> milkDetailPage = milkdetailService.getMilkDetailPage(pageable);
+
+    if (milkDetailPage.isEmpty()) {
+      return ResponseEntity.badRequest()
+          .body(Map.of("status", "error", "errors", "Danh Sách Trống"));
     }
+    return ResponseEntity.ok(Map.of("status", "success", "message", milkDetailPage));
+  }
 
-    //http://localhost:1234/api/Milkdetail/delete/{id}
-    @DeleteMapping("/delete/{id}")
-    private ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        String message = milkdetailService.delete(id);
-        return ResponseEntity.ok(Map.of("status", "success", "message", message));
-    }
-    //http://localhost:1234/api/Milkdetail/getMilkDetail
+  @GetMapping("/search")
+  public Page<Milkdetail> search(
+      @RequestParam(required = false) String productname,
+      @RequestParam int page,
+      @RequestParam int size) {
 
-    @GetMapping("/getMilkDetail")
-        public ResponseEntity<?> getMilkDetail(
-            @RequestParam Long packagingunitID,
-            @RequestParam Long milktasteID,
-            @RequestParam Long productID,
-            @RequestParam Long usagecapacityID) {
-          MilkDetailDto milkDetail = milkdetailService.getMilkDetail(packagingunitID, milktasteID, productID, usagecapacityID);
+    Pageable pageable = PageRequest.of(page, size);
 
-        if (milkDetail == null) {
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", "Danh Sách Trống"));
-        }
-        return ResponseEntity.ok(Map.of("status", "success", "message", milkDetail));
-    }
+    return milkdetailService.getMilkDetailsearch(
+        productname != null ? productname : "",
+        pageable
+    );
+  }
+
+
 }

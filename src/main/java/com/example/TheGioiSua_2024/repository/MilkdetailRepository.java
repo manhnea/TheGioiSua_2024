@@ -14,9 +14,9 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
-    Optional<Milkdetail> existsBymilkdetailcode(String milkdetailcode);
+  Optional<Milkdetail> existsBymilkdetailcode(String milkdetailcode);
 
-//    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto(\n"
+  //    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto(\n"
 //            + " md.id,\n"
 //            + " md.price, \n"
 //            + " md.stockquantity, \n"
@@ -46,43 +46,52 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 //            @Param("productID") Long productID,
 //            @Param("targetuserID") Long targetuserID,
 //            @Param("usagecapacityID") Long usagecapacityID);
-    @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
-            + " md.id,"
-            + " pu.packagingunitname,"
-            + " mt.milkTypename," // chú ý tên chính xác của thuộc tính
-            + " mb.milkbrandname,"
-            + " mtt.milktastename,"
-            + " uc.capacity,"
-            + " uc.unit,"
-            + " tt.targetName,"
-            + " md.price,"
-            + " md.stockquantity,"
-            + " md.imgUrl,"
-            + " md.shelflifeofmilk,"
-            + " md.status) "
-            + "FROM Milkdetail md "
-            + "JOIN md.product p "
-            + "JOIN p.milkBrand mb "
-            + "JOIN p.milkType mt "
-            + "JOIN p.targetUser tt "
-            + "JOIN md.usageCapacity uc "
-            + "JOIN md.packagingunit pu "
-            + "JOIN md.milkTaste mtt "
-            + "WHERE pu.id = :packagingunitID "
-            + "AND mtt.id = :milktasteID "
-            + "AND p.id = :productID "
-            + "AND uc.id = :usagecapacityID " // Thêm dấu cách trước AND
-            + "AND md.status = 1")
-    MilkDetailDto getMilkDetail(
-            Long packagingunitID,
-            Long milktasteID,
-            Long productID,
-            Long usagecapacityID
-    );
+  @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
+      + " md.id,"
+      + " pu.packagingunitname,"
+      + " mt.milkTypename," // chú ý tên chính xác của thuộc tính
+      + " mb.milkbrandname,"
+      + " mtt.milktastename,"
+      + " uc.capacity,"
+      + " uc.unit,"
+      + " tt.targetName,"
+      + " md.price,"
+      + " md.stockquantity,"
+      + " md.imgUrl,"
+      + " md.shelflifeofmilk,"
+      + " md.status) "
+      + "FROM Milkdetail md "
+      + "JOIN md.product p "
+      + "JOIN p.milkBrand mb "
+      + "JOIN p.milkType mt "
+      + "JOIN p.targetUser tt "
+      + "JOIN md.usageCapacity uc "
+      + "JOIN md.packagingunit pu "
+      + "JOIN md.milkTaste mtt "
+      + "WHERE pu.id = :packagingunitID "
+      + "AND mtt.id = :milktasteID "
+      + "AND p.id = :productID "
+      + "AND uc.id = :usagecapacityID " // Thêm dấu cách trước AND
+      + "AND md.status = 1")
+  MilkDetailDto getMilkDetail(
+      Long packagingunitID,
+      Long milktasteID,
+      Long productID,
+      Long usagecapacityID
+  );
 
-    @Query("SELECT COALESCE(MAX(m.id), 0) FROM Milkdetail m")
-    Integer findMaxId();
+  @Query("SELECT COALESCE(MAX(m.id), 0) FROM Milkdetail m")
+  Integer findMaxId();
 
-    @Query("SELECT COUNT(m) > 0 FROM Milkdetail m WHERE m.product.id = :id AND m.milkTaste.id = :id1 AND m.packagingunit.id = :id2 AND m.usageCapacity.id = :id3")
-    boolean existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(Long id, Long id1, Long id2, Long id3);
+  @Query("SELECT COUNT(m) > 0 FROM Milkdetail m WHERE m.product.id = :id AND m.milkTaste.id = :id1 AND m.packagingunit.id = :id2 AND m.usageCapacity.id = :id3")
+  boolean existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(Long id, Long id1, Long id2,
+      Long id3);
+
+  @Query("SELECT a FROM Milkdetail a")
+  Page<Milkdetail> getMilkDetailPage(Pageable pageable);
+
+  @Query("SELECT md FROM Milkdetail md JOIN md.product p WHERE p.productname LIKE %:productname%")
+  Page<Milkdetail> getMilkDetailsearchByProductname(@Param("productname") String productname,
+      Pageable pageable);
+
 }
