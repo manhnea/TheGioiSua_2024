@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service.impl;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 
@@ -22,4 +23,5 @@ public interface IInvoiceService {
   long countInvoices();  // Default to current month and year
 
   long countInvoices(int month, int year);  // Specific month and year
+
 }

@@ -7,6 +7,7 @@ import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,11 @@ public class InvoiceService implements IInvoiceService {
   @Autowired
   private VoucherRepository voucherRepository;
 
-  @Override
+  @Transactional
   public List<Invoice> getInvoiceList() {
     return invoiceRepository.findAll();
   }
+
 
   @Override
   public Long saveInvoice(@RequestBody Invoice invoice) {
