@@ -32,18 +32,14 @@ public class UsagecapacityService implements IUsagecapacityService {
         String currentUnit = existingUsagecapacity.getUnit();
 
         if (currentUnit.equals(usagecapacity.getUnit())) {
-            // Nếu đơn vị không thay đổi, chỉ cập nhật dung lượng
             existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
             existingUsagecapacity.setStatus(Status.Active);
             usagecapacityRepository.save(existingUsagecapacity);
             return "Đã cập nhật đơn vị sử dụng thành công.";
         }
-        // Kiểm tra xem đơn vị mới có bị trùng không
         else if (usagecapacityRepository.findByUnit(usagecapacity.getUnit()).isPresent()) {
             return "Đơn vị này đã tồn tại.";
         }
-
-        // Cập nhật đơn vị và dung lượng mới
         existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
         existingUsagecapacity.setUnit(usagecapacity.getUnit());
         existingUsagecapacity.setStatus(Status.Active);
