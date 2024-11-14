@@ -323,6 +323,12 @@ public class UserService implements IUserService {
   }
 
   @Override
+  public long countUsersByRoleAndStatus() {
+    long a = 2;
+    return iUserRepository.countUsersByStatusAndRole();
+  }
+
+  @Override
   public List<String> findTop5() {
     return iUserRepository.findAllUsernames();
   }

@@ -11,67 +11,63 @@ import java.util.List;
 
 @Service
 public class MilkbrandService implements IMilkbrandService {
-    @Autowired
-    private MilkbrandRepository milkbrandRepository;
 
-    @Override
-    public List<Milkbrand> getAllMilkbrands() {
-        return milkbrandRepository.findAll();
+  @Autowired
+  private MilkbrandRepository milkbrandRepository;
+
+  @Override
+  public List<Milkbrand> getAllMilkbrands() {
+    return milkbrandRepository.findAll();
+  }
+
+  @Override
+  public String addMilkbrand(Milkbrand milkbrand) {
+
+    milkbrandRepository.save(milkbrand);
+    return "Thêm thương hiệu sữa thành công.";
+  }
+
+  @Override
+  public String updateMilkbrand(Long id, Milkbrand milkbrand) {
+    Milkbrand existingMilkbrand = milkbrandRepository.findById(id).orElseThrow();
+    String currentMilkbrandName = existingMilkbrand.getMilkbrandname();
+    if (currentMilkbrandName.equals(milkbrand.getMilkbrandname())) {
+      existingMilkbrand.setDescription(milkbrand.getDescription());
+      existingMilkbrand.setStatus(Status.Active);
+      milkbrandRepository.save(existingMilkbrand);
+      return "Cập nhật mô tả thương hiệu sữa thành công.";
+    } else if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
+      return "Thương hiệu sữa này đã tồn tại.";
     }
+    existingMilkbrand.setMilkbrandname(milkbrand.getMilkbrandname());
+    existingMilkbrand.setStatus(Status.Active);
+    existingMilkbrand.setDescription(milkbrand.getDescription());
+    milkbrandRepository.save(existingMilkbrand);
+    return "Cập nhật thương hiệu sữa thành công.";
+  }
 
-    @Override
-    public String addMilkbrand(Milkbrand milkbrand) {
-        String milkbrandName = milkbrand.getMilkbrandname().trim();
-        milkbrand.setMilkbrandname(milkbrandName);
-        if (milkbrandRepository.findByMilkbrandname(milkbrandName).isPresent()) {
-            return "Thương hiệu sữa này đã tồn tại.";
-        }
-        milkbrand.setStatus(Status.Active);
-        milkbrandRepository.save(milkbrand);
-        return "Thêm thương hiệu sữa thành công.";
+
+  @Override
+  public String deleteMilkbrand(Long id) {
+    Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
+
+    if (existingMilkbrand.getStatus() == Status.Delete) {
+      existingMilkbrand.setStatus(Status.Active);
+      milkbrandRepository.save(existingMilkbrand);
+      return "Khôi phục thương hiệu sữa thành công.";
+    } else {
+      existingMilkbrand.setStatus(Status.Delete);
+      milkbrandRepository.save(existingMilkbrand);
+      return "Khóa thương hiệu sữa thành công.";
     }
+  }
 
-    @Override
-    public String updateMilkbrand(Long id, Milkbrand milkbrand) {
-        Milkbrand existingMilkbrand = milkbrandRepository.findById(id).orElseThrow();
-        String currentMilkbrandName = existingMilkbrand.getMilkbrandname();
-        if (currentMilkbrandName.equals(milkbrand.getMilkbrandname())) {
-            existingMilkbrand.setDescription(milkbrand.getDescription());
-            existingMilkbrand.setStatus(Status.Active);
-            milkbrandRepository.save(existingMilkbrand);
-            return "Cập nhật mô tả thương hiệu sữa thành công.";
-        } else if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
-            return "Thương hiệu sữa này đã tồn tại.";
-        }
-        existingMilkbrand.setMilkbrandname(milkbrand.getMilkbrandname());
-        existingMilkbrand.setStatus(Status.Active);
-        existingMilkbrand.setDescription(milkbrand.getDescription());
-        milkbrandRepository.save(existingMilkbrand);
-        return "Cập nhật thương hiệu sữa thành công.";
-    }
+  @Override
+  public Milkbrand getMilkbrandById(Long id) {
 
-
-    @Override
-    public String deleteMilkbrand(Long id) {
-        Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
-
-        if (existingMilkbrand.getStatus() == Status.Delete) {
-            existingMilkbrand.setStatus(Status.Active);
-            milkbrandRepository.save(existingMilkbrand);
-            return "Khôi phục thương hiệu sữa thành công.";
-        } else {
-            existingMilkbrand.setStatus(Status.Delete);
-            milkbrandRepository.save(existingMilkbrand);
-            return "Khóa thương hiệu sữa thành công.";
-        }
-    }
-
-    @Override
-    public Milkbrand getMilkbrandById(Long id) {
-
-        return milkbrandRepository.findBydadata(id);
-    }
+    return milkbrandRepository.findBydadata(id);
+  }
 
 
 }

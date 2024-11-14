@@ -7,15 +7,19 @@ import java.util.List;
 
 public interface IInvoiceService {
 
-    List<Invoice> getInvoiceList();
+  List<Invoice> getInvoiceList();
 
-    Long saveInvoice(Invoice invoice);
+  Long saveInvoice(Invoice invoice);
 
-    String updateInvoice(Long id, Invoice invoice);
+  String updateInvoice(Long id, Invoice invoice);
 
-    String deleteInvoice(Long id);
+  String deleteInvoice(Long id);
 
-    Invoice getInvoiceById(Long id);
-    
-    List<InvoiceDto> getInvoices(Long id);
+  Invoice getInvoiceById(Long id);
+
+  List<InvoiceDto> getInvoices(Long id);
+
+  long countInvoices();  // Default to current month and year
+
+  long countInvoices(int month, int year);  // Specific month and year
 }

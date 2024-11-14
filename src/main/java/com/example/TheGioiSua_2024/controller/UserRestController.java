@@ -77,4 +77,9 @@ public class UserRestController {
   public List<String> findTop5() {
     return iUserService.findTop5();
   }
+
+  @GetMapping("/count")
+  public long countUsersByRoleAndStatus() {
+    return iUserService.countUsersByRoleAndStatus();
+  }
 }

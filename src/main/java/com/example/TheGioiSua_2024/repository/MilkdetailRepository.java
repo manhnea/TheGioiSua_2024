@@ -87,11 +87,18 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
   boolean existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(Long id, Long id1, Long id2,
       Long id3);
 
-  @Query("SELECT a FROM Milkdetail a")
+  @Query("SELECT a.stockquantity FROM Milkdetail a")
   Page<Milkdetail> getMilkDetailPage(Pageable pageable);
 
   @Query("SELECT md FROM Milkdetail md JOIN md.product p WHERE p.productname LIKE %:productname%")
   Page<Milkdetail> getMilkDetailsearchByProductname(@Param("productname") String productname,
       Pageable pageable);
+
+  @Query("SELECT COUNT(a) FROM Milkdetail a WHERE a.stockquantity < 10")
+  long countLowStockMilkDetails();
+
+  @Query("SELECT COUNT(a) FROM Milkdetail a")
+  long countMilkDetails();
+
 
 }

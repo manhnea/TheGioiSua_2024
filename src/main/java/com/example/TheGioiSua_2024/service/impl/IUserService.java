@@ -38,5 +38,7 @@ public interface IUserService {
 
   ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword);
 
+  long countUsersByRoleAndStatus();
+
   List<String> findTop5();
 }

@@ -138,4 +138,14 @@ public class MilkdetailService implements IMilkdetailService {
     return milkdetailRepository.getMilkDetailsearchByProductname(productname, pageable);
   }
 
+  @Override
+  public long countLowStockMilkDetails() {
+    return milkdetailRepository.countLowStockMilkDetails();
+  }
+
+  @Override
+  public long countMilkDetails() {
+    return milkdetailRepository.countMilkDetails();
+  }
+
 }

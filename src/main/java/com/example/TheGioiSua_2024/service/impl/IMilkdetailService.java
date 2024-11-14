@@ -26,4 +26,8 @@ public interface IMilkdetailService {
   Page<Milkdetail> getMilkDetailPage(Pageable pageable);
 
   Page<Milkdetail> getMilkDetailsearch(String productname, Pageable pageable);
+
+  long countLowStockMilkDetails();
+
+  long countMilkDetails();
 }

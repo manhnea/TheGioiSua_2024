@@ -127,5 +127,14 @@ public class MilkdetailRestController {
     );
   }
 
+  @GetMapping("/low-stock-count")
+  public long getLowStockCount() {
+    return milkdetailService.countLowStockMilkDetails();
+  }
 
+  @GetMapping("/count-milkdetail")
+  public long getcountmilkdetail() {
+    return milkdetailService.countMilkDetails();
+  }
+ 
 }

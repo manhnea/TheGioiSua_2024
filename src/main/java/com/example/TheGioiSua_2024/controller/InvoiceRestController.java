@@ -92,4 +92,16 @@ public class InvoiceRestController {
     return ResponseEntity.ok(Map.of("message", invoiceDtos));
   }
 
+  @GetMapping("/count/current")
+  public long getCurrentMonthInvoiceCount() {
+    return invoiceService.countInvoices();
+  }
+
+  // Endpoint to count invoices for a specific month and year
+  @GetMapping("/count")
+  public long getCountInvoices(
+      @RequestParam int month,
+      @RequestParam int year) {
+    return invoiceService.countInvoices(month, year);
+  }
 }
