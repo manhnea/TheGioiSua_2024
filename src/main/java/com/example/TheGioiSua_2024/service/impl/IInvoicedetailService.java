@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service.impl;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface IInvoicedetailService {
     String  deleteInvoicedetail(Long id);
 
     Invoicedetail getInvoicedetailById(Long id);
+    
+    List<InvoiceDetailDto> findInvoiceDetailsByInvoiceId( Long invoiceId);
 }

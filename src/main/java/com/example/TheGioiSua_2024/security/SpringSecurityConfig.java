@@ -46,7 +46,6 @@ public class SpringSecurityConfig {
             "/Product/page/**",
             "/Product/page",
             "/Product/lst",
-            "/Userinvoice/lst",
             "/Packagingunit/lst",
             "/Usagecapacity/lst",
             "/Milkdetail/page",
@@ -58,8 +57,7 @@ public class SpringSecurityConfig {
             "/api-docs/**",
             "/swagger-ui/**",
             "/Checkout/**",
-            "/payment/**",
-            "/Invoice/lst"
+            "/payment/**"
         ).permitAll()
 
         // Quyền của Customer
@@ -67,7 +65,9 @@ public class SpringSecurityConfig {
             "/Invoice/add",
             "/Invoicedetail/add",
             "/Userinvoice/add",
-            "/Voucher/voucercode"
+            "/Voucher/voucercode",
+            "/Invoice/getInvoices/**",
+            "/Invoicedetail/getInvoiceDetailByUser/**"
         ).hasAuthority("Customer")
 
         // Quyền của Admin

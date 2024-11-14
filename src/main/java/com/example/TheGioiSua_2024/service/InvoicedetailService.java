@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
@@ -93,5 +94,10 @@ public class InvoicedetailService implements IInvoicedetailService {
 
     public Invoicedetail getInvoicedetailById(Long id) {
         return invoicedetailRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<InvoiceDetailDto> findInvoiceDetailsByInvoiceId(Long invoiceId) {
+        return invoicedetailRepository.findInvoiceDetailsByInvoiceId(invoiceId);
     }
 }

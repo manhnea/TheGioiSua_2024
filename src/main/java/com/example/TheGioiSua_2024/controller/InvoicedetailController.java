@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.controller;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import com.example.TheGioiSua_2024.service.InvoicedetailService;
 import jakarta.validation.Valid;
@@ -13,10 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/Invoicedetail")
 public class InvoicedetailController {
+
     @Autowired
     private InvoicedetailService invoicedetailService;
 
@@ -32,6 +35,7 @@ public class InvoicedetailController {
         return invoicedetailService.getInvoicedetailById(id);
     }
 //    http://localhost:1234/api/Invoicedetail/add
+
     @PostMapping("/add")
     public ResponseEntity<?> saveInvoicedetail(@RequestBody @Valid Invoicedetail invoicedetail, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -47,7 +51,6 @@ public class InvoicedetailController {
         return invoicedetailService.saveInvoicedetail(invoicedetail);
     }
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateInvoicedetail(@PathVariable Long id, @RequestBody @Valid Invoicedetail invoicedetail, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -60,15 +63,23 @@ public class InvoicedetailController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return  ResponseEntity.ok(Map.of("status", "success", "message", invoicedetailService.updateInvoicedetail(id, invoicedetail)));
+        return ResponseEntity.ok(Map.of("status", "success", "message", invoicedetailService.updateInvoicedetail(id, invoicedetail)));
     }
-
 
 //    http://localhost:1234/Invoicedetail/delete/1
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteInvoicedetail(@PathVariable Long id) {
         String message = invoicedetailService.deleteInvoicedetail(id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
+    }
+//    http://localhost:1234/Invoicedetail/getInvoiceDetailByUser/{id}
+    @GetMapping("/getInvoiceDetailByUser/{id}")
+    public ResponseEntity<?> findInvoiceDetailsByInvoiceId(@PathVariable Long id) {
+        List<InvoiceDetailDto> invoiceDetailDtos = invoicedetailService.findInvoiceDetailsByInvoiceId(id);
+        if (invoiceDetailDtos.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Danh Sách Trống"));
+        }
+        return ResponseEntity.ok(Map.of("message", invoiceDetailDtos));
     }
 
 }

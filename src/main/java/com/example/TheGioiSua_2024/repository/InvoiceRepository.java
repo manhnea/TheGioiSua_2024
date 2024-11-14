@@ -16,7 +16,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
   Optional<Invoice> existsByInvoicecode(String milkbrandname);
 
   @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
-      + "i.id, i.invoicecode, buyer.username, seller.username, "
+      + "i.id, i.invoicecode, buyer.fullname, seller.fullname, "
       + "i.creationdate, i.deliveryaddress,i.phonenumber,i.paymentmethod,v.vouchercode, i.discountamount, i.totalamount, i.status) "
       + "FROM Invoice i "
       + "JOIN i.userInvoices uvBuyer "
@@ -38,4 +38,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
   @Query("SELECT a FROM Invoice a where a.invoicecode = ?1")
   Invoice findbycode(String description);
+  
+  
 }

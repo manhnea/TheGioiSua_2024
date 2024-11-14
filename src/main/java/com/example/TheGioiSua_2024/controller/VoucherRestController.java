@@ -83,8 +83,6 @@ public class VoucherRestController {
         VoucherDto voucherDto = new VoucherDto();
         voucherDto.setVouchercode(vouchercode);
         voucherDto.setTotal(total);
-
-        System.out.println("CODE VOUCHER:" + voucherDto.getVouchercode());
         return voucherService.discountmoney(voucherDto);
     }
 
