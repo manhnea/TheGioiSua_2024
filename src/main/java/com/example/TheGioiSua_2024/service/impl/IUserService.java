@@ -29,7 +29,9 @@ public interface IUserService {
   Role saveRole(Role role);
 
   User saverUser(User user);
-
+  
+  ResponseEntity<?> updatePhoneNumber(User user);
+  ResponseEntity<?> updateAddress(User user);
   UserDto findUserById(Long id);
 
   ResponseEntity<?> forgotPassword(ForgotPasswordDto forgotPasswordDto);

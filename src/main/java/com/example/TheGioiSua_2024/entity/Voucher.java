@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "voucher")
@@ -26,13 +27,12 @@ public class Voucher {
     private String vouchercode;
 
 
-    @NotNull(message = "Ngày bắt đầu không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai")
-    private Date startdate;
+    
+//    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai")
+    private LocalDate startdate;
 
-    @NotNull(message = "Ngày kết thúc không được để trống")
     @Future(message = "Ngày kết thúc phải là một ngày trong tương lai")
-    private Date enddate;
+    private LocalDate enddate;
 
     @Min(value = 1, message = "Phần trăm giảm giá phải lớn hơn hoặc bằng 1")
     @Max(value = 100, message = "Phần trăm giảm giá không được vượt quá 100")
