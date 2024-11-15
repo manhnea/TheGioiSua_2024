@@ -53,4 +53,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
       "AND YEAR(creationdate) = :year")
   long countInvoices(@Param("month") int month, @Param("year") int year);
 
+  @Query("SELECT i FROM Invoice i WHERE i.status != 338")
+  List<Invoice> findAll();
 }
