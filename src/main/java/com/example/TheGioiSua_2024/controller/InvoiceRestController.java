@@ -56,7 +56,7 @@ public class InvoiceRestController {
   }
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/update
-  @PostMapping("/update/{id}")
+  @PutMapping("/update/{id}")
   public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
@@ -72,6 +72,7 @@ public class InvoiceRestController {
     return ResponseEntity.ok(
         Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
   }
+
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/delete
   @DeleteMapping("/delete/{id}")

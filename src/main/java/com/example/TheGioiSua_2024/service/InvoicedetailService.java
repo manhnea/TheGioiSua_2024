@@ -134,14 +134,17 @@ public class InvoicedetailService implements IInvoicedetailService {
     Map<String, Map<String, Object>> groupedInvoices = new HashMap<>();
 
     for (Object[] record : results) {
-      String invoiceCode = (String) record[0];
-      String deliveryAddress = (String) record[1];
-      String phoneNumber = (String) record[2];
+      // Extract the fields from the record
+      Long id = (Long) record[0];  // invoiceId
+      String invoiceCode = (String) record[1];
+      String deliveryAddress = (String) record[2];
+      String phoneNumber = (String) record[3];
 
       String groupKey = invoiceCode + "-" + deliveryAddress + "-" + phoneNumber;
 
       // If the invoice group doesn't exist, create it
       groupedInvoices.putIfAbsent(groupKey, new HashMap<>() {{
+        put("id", id);  // Add the invoiceId
         put("invoiceCode", invoiceCode);
         put("deliveryAddress", deliveryAddress);
         put("phoneNumber", phoneNumber);
@@ -152,13 +155,13 @@ public class InvoicedetailService implements IInvoicedetailService {
       List<Map<String, Object>> items = (List<Map<String, Object>>) groupedInvoices.get(groupKey)
           .get("items");
       Map<String, Object> itemDetails = new HashMap<>();
-      itemDetails.put("milkDetailDescription", record[3]);
-      itemDetails.put("totalAmount", record[4]);
-      itemDetails.put("quantity", record[5]);
-      itemDetails.put("milkTasteName", record[6]);
-      itemDetails.put("milkTypeName", record[7]);
-      itemDetails.put("capacity", record[8]);
-      itemDetails.put("unit", record[9]);
+      itemDetails.put("milkDetailDescription", record[4]);
+      itemDetails.put("totalAmount", record[5]);
+      itemDetails.put("quantity", record[6]);
+      itemDetails.put("milkTasteName", record[7]);
+      itemDetails.put("milkTypeName", record[8]);
+      itemDetails.put("capacity", record[9]);
+      itemDetails.put("unit", record[10]);
 
       items.add(itemDetails);
     }

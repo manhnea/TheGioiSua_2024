@@ -48,22 +48,24 @@ public class InvoiceService implements IInvoiceService {
 
   @Override
   public String updateInvoice(Long id, Invoice invoice) {
+    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
     Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
-    Voucher voucher = voucherRepository.findById(existingInvoice.getVoucher().getId())
-        .orElseThrow();
-    String invoicecode = invoice.getInvoicecode().trim();
-    invoice.setInvoicecode(invoicecode);
-    if (invoiceRepository.existsByInvoicecode(invoicecode).isPresent()) {
-      return "Mã hóa đơn đã tồn tại.";
-    }
-    existingInvoice.setVoucher(voucher);
-    existingInvoice.setInvoicecode(invoice.getInvoicecode());
-    existingInvoice.setDiscountamount(invoice.getDiscountamount());
-    existingInvoice.setTotalamount(invoice.getTotalamount());
-    existingInvoice.setStatus(Status.Active);
+
+    // Kiểm tra và cập nhật từng trường nếu không phải null
+    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
+        : existingInvoice.getPhonenumber());
+    existingInvoice.setDeliveryaddress(
+        invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
+            : existingInvoice.getDeliveryaddress());
+    existingInvoice.setStatus(
+        invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
+
+    // Lưu lại hóa đơn đã cập nhật
     invoiceRepository.save(existingInvoice);
+
     return "Cập nhật hóa đơn thành công!";
   }
+
 
   @Override
   public String deleteInvoice(Long id) {

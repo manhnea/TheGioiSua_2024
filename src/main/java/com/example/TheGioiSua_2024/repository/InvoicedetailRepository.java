@@ -53,8 +53,9 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       "    month DESC", nativeQuery = true)
   List<Object[]> findMonthlySalesGrowthNative();
 
-  // Truy vấn thứ hai trả về InvoiceDetailAdminDTO
+
   @Query("SELECT\n"
+      + "    i.id ,\n" // Add invoice ID to the result
       + "    i.invoicecode,\n"
       + "    i.deliveryaddress,\n"
       + "    i.phonenumber,\n"
@@ -81,8 +82,10 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       + "    i.id = :invoiceId")
   List<Object[]> findInvoiceAdminDetails(@Param("invoiceId") Long invoiceId);
 
+
   @Query(value = "SELECT " +
       "m.id, " +
+      "id.price, " +
       "p.productname, " +
       "mt.milktastename, " +
       "pu.packagingunitname, " +
