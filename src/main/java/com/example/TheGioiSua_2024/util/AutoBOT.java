@@ -21,7 +21,7 @@ public class AutoBOT {
   private TelegramNotifier telegramNotifier = new TelegramNotifier();
 
   // Scheduled task to delete unverified users after 1 hour
-  @Scheduled(fixedDelay = 600000) // Kiểm tra mỗi 10 phút (600000 ms)
+  @Scheduled(cron = "0 0 8 * * *") // Runs at 08:00 AM every day
   public void deleteUnverifiedUsers() {
     // Get current time
     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
@@ -56,8 +56,7 @@ public class AutoBOT {
     }
   }
 
-
-  //  @Scheduled(fixedDelay = 600000) // Runs at 08:00 AM every day
+  // Scheduled task to check for pending orders older than 24 hours
   @Scheduled(cron = "0 0 8 * * *") // Runs at 08:00 AM every day
   public void checkPendingOrders() {
     // Get current time
@@ -81,9 +80,9 @@ public class AutoBOT {
               .append("\n");
         });
 
-    // Send the aggregated message once if there are any pending orders
+    // If there are any pending orders, send the notification
     if (messageBuilder.length() > 0) {
-      // Send the notification via Telegram
+      // Send the aggregated message via Telegram
       telegramNotifier.sendUserDeletionNotification(messageBuilder.toString());
 
       // Optionally, you can send it to other platforms like Zalo
@@ -91,4 +90,3 @@ public class AutoBOT {
     }
   }
 }
-

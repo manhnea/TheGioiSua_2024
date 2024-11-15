@@ -91,13 +91,28 @@ public class InvoicedetailController {
     return ResponseEntity.ok(Map.of("message", invoiceDetailDtos));
   }
 
+  //    http://localhost:1234/Invoicedetail/monthly-sales-growth
   @GetMapping("/monthly-sales-growth")
   public List<Map<String, Object>> getMonthlySalesGrowth() {
     return invoicedetailService.getMonthlySalesGrowth();
   }
 
+  //    http://localhost:1234/Invoicedetail/1/details
   @GetMapping("/{invoiceId}/details")
   public List<Map<String, Object>> getInvoiceAdminDetails(@PathVariable Long invoiceId) {
     return invoicedetailService.findInvoiceAdminDetails(invoiceId);
+  }
+
+  //    http://localhost:1234/Invoicedetail/milk-sales-details
+  @GetMapping("/milk-sales-details")
+  public ResponseEntity<List<Map<String, Object>>> getMilkSalesDetails() {
+    List<Map<String, Object>> details = invoicedetailService.getMilkSalesDetails();
+    return ResponseEntity.ok(details);
+  }
+
+  //    http://localhost:1234/Invoicedetail/invoice-summary
+  @GetMapping("/invoice-summary")
+  public Map<String, Object> getInvoiceSummary() {
+    return invoicedetailService.getInvoiceSummary();
   }
 }

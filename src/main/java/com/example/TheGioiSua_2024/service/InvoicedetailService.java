@@ -166,4 +166,49 @@ public class InvoicedetailService implements IInvoicedetailService {
     // Convert the grouped invoices map to a list
     return new ArrayList<>(groupedInvoices.values());
   }
+
+  @Override
+  public List<Map<String, Object>> getMilkSalesDetails() {
+    List<Object[]> rawResults = invoicedetailRepository.getMilkSalesDetails();
+
+    // Create a list to hold the map of result data
+    List<Map<String, Object>> response = new ArrayList<>();
+
+    for (Object[] row : rawResults) {
+      Map<String, Object> resultMap = new HashMap<>();
+      resultMap.put("id", row[0]);
+      resultMap.put("productName", row[1]);
+      resultMap.put("milkTasteName", row[2]);
+      resultMap.put("packagingUnitName", row[3]);
+      resultMap.put("capacity", row[4]);
+      resultMap.put("capacityUnit", row[5]);
+      resultMap.put("totalSalesValue", row[6]);
+      resultMap.put("totalQuantity", row[7]);
+
+      response.add(resultMap);
+    }
+    return response;
+  }
+
+  @Override
+  public Map<String, Object> getInvoiceSummary() {
+    List<Object[]> invoiceSummaries = invoicedetailRepository.findInvoiceSummaries();
+    Double totalAmount = invoicedetailRepository.findTotalAmount();
+
+    List<Map<String, Object>> invoices = new ArrayList<>();
+    for (Object[] row : invoiceSummaries) {
+      Map<String, Object> invoice = new HashMap<>();
+      invoice.put("invoiceId", row[0]);
+      invoice.put("invoiceCode", row[1]);
+      invoice.put("totalQuantity", row[2]);
+      invoice.put("totalAmount", row[3]);
+      invoices.add(invoice);
+    }
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("invoices", invoices);
+    result.put("totalAmount", totalAmount);
+
+    return result;
+  }
 }

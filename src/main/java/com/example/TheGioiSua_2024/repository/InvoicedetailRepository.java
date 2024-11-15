@@ -1,7 +1,6 @@
 package com.example.TheGioiSua_2024.repository;
 
 import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
-import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -81,4 +80,41 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       + "WHERE\n"
       + "    i.id = :invoiceId")
   List<Object[]> findInvoiceAdminDetails(@Param("invoiceId") Long invoiceId);
+
+  @Query(value = "SELECT " +
+      "m.id, " +
+      "p.productname, " +
+      "mt.milktastename, " +
+      "pu.packagingunitname, " +
+      "uc.capacity, " +
+      "uc.unit, " +
+      "SUM(id.totalprice), " +
+      "SUM(id.quantity) " +
+      "FROM invoicedetail id " +
+      "JOIN invoice i ON id.invoiceid = i.id " +
+      "JOIN milkdetail m ON id.milkdetailid = m.id " +
+      "JOIN product p ON m.productid = p.id " +
+      "JOIN milktaste mt ON m.milktasteid = mt.id " +
+      "JOIN packagingunit pu ON m.packagingunitid = pu.id " +
+      "JOIN usagecapacity uc ON m.usagecapacityid = uc.id " +
+      "WHERE i.status = 338 " +
+      "GROUP BY m.id, p.productname, mt.milktastename, pu.packagingunitname, uc.capacity, uc.unit "
+      +
+      "ORDER BY SUM(id.totalprice) DESC", nativeQuery = true)
+  List<Object[]> getMilkSalesDetails();
+
+
+  //  Tinh tong so luong, so tien cua tat ca hoa don
+  @Query(
+      "SELECT invoice.id AS invoiceId, invoice.invoicecode AS invoiceCode, SUM(invoicedetail.quantity) AS totalQuantity, invoice.totalamount AS totalAmount "
+          +
+          "FROM Invoicedetail invoicedetail " +
+          "JOIN invoicedetail.invoice invoice " +
+          "WHERE invoice.status = 338 " +
+          "GROUP BY invoice.id, invoice.invoicecode, invoice.totalamount")
+  List<Object[]> findInvoiceSummaries();
+
+  @Query("SELECT SUM(invoice.totalamount) FROM Invoice invoice WHERE invoice.status = 338")
+  Double findTotalAmount();
+
 }

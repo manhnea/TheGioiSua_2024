@@ -25,4 +25,8 @@ public interface IInvoicedetailService {
   List<Map<String, Object>> getMonthlySalesGrowth();
 
   List<Map<String, Object>> findInvoiceAdminDetails(Long invoiceId);
+
+  List<Map<String, Object>> getMilkSalesDetails();
+
+  Map<String, Object> getInvoiceSummary();
 }
