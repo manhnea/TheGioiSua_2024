@@ -30,4 +30,6 @@ public interface IMilkdetailService {
   long countLowStockMilkDetails();
 
   long countMilkDetails();
+
+  String updateStockQuantity(Long id, int quantity);
 }

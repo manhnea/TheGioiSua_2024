@@ -32,6 +32,20 @@ public class MilkdetailRestController {
     return milkdetailService.getAll();
   }
 
+  // http://localhost:1234/api/Milkdetail/update-stock/{id}
+  @PutMapping("/update-stock/{id}")
+  public ResponseEntity<?> updateStockQuantity(
+      @PathVariable Long id,
+      @RequestParam int quantity) {
+    try {
+      String message = milkdetailService.updateStockQuantity(id, quantity);
+      return ResponseEntity.ok(Map.of("status", "success", "message", message));
+    } catch (RuntimeException e) {
+      return ResponseEntity.badRequest()
+          .body(Map.of("status", "error", "message", e.getMessage()));
+    }
+  }
+
   @GetMapping("/lst/{id}")
   private Milkdetail getMilkdetailById(@PathVariable Long id) {
     return milkdetailService.getById(id);
@@ -136,5 +150,5 @@ public class MilkdetailRestController {
   public long getcountmilkdetail() {
     return milkdetailService.countMilkDetails();
   }
- 
+
 }

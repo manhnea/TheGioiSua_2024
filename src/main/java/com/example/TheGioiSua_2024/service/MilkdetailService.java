@@ -148,4 +148,17 @@ public class MilkdetailService implements IMilkdetailService {
     return milkdetailRepository.countMilkDetails();
   }
 
+  @Override
+  public String updateStockQuantity(Long id, int quantity) {
+    Milkdetail milkdetail = milkdetailRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("MilkDetail Không Tồn Tại"));
+    if (quantity < 0 && milkdetail.getStockquantity() + quantity < 0) {
+      throw new RuntimeException("Số lượng không hợp lệ: không đủ hàng trong kho");
+    }
+    milkdetail.setStockquantity(milkdetail.getStockquantity() + quantity);
+    milkdetailRepository.save(milkdetail);
+    return "Cập nhật số lượng thành công";
+  }
+
+
 }
