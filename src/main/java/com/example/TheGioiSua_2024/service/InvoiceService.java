@@ -49,6 +49,13 @@ public class InvoiceService implements IInvoiceService {
 //        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
 //        String invoiceCode = String.format("HD%03d", maxId);
 //        invoice.setInvoicecode(invoiceCode);
+        Voucher voucher = null;
+        if (invoice.getVoucher() != null) {
+            voucher = voucherRepository.findById(invoice.getVoucher().getId()).orElseThrow();
+            voucher.setUsagecount(voucher.getUsagecount()- 1);
+            System.out.println("voucher.getDiscountpercentage(): " + voucher.getDiscountpercentage());
+            voucherRepository.save(voucher);
+        }
         invoice.setStatus(Status.AwaitingPayment);
         invoiceRepository.save(invoice);
         return invoice.getId();
@@ -115,26 +122,18 @@ public class InvoiceService implements IInvoiceService {
         Invoice invoice = null;
         List<Invoicedetail> invoicedetails = null;
         Milkdetail milkdetail = null;
-        Voucher voucher = null;
-        try {
-            invoice = invoiceRepository.findbycode(codeinvoice);
-            if (invoice == null) {
-                return false;
-            }
-            voucher = voucherRepository.findById(invoice.getVoucher().getId()).orElseThrow();
-            if(voucher!=null){
-                voucher.setDiscountpercentage(voucher.getDiscountpercentage()-1);
-                voucherRepository.save(voucher);
-            }
-            invoicedetails = invoicedetailRepository.invoicedetails(invoice.getId());
-            for (Invoicedetail invoicedetail : invoicedetails) {
-                milkdetail = milkdetailRepository.findById(invoicedetail.getId()).orElseThrow();
-                milkdetail.setStockquantity(milkdetail.getStockquantity()-invoicedetail.getQuantity());
-                milkdetailRepository.save(milkdetail);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+//
+        invoice = invoiceRepository.findbycode(codeinvoice);
+        if (invoice == null) {
             return false;
+        }
+        invoicedetails = invoicedetailRepository.invoicedetails(invoice.getId());
+        for (Invoicedetail invoicedetail : invoicedetails) {
+            milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId()).orElseThrow();
+            System.out.println("firt:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
+            milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
+            System.out.println("last:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
+            milkdetailRepository.save(milkdetail);
         }
         return true;
     }

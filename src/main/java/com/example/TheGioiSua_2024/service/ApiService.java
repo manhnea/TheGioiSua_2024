@@ -27,114 +27,118 @@ import java.util.regex.Pattern;
 @Service
 public class ApiService {
 
-  @Autowired
-  private InvoiceRepository invoiceRepository;
-  private final String CODE = "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";
-  private final String TOKEN = "hPuqegRLwpHBTEzfZnyoWKQxvmkdVlIGJUAYaCNscjSbFMXrDitO";
-  private final String STK = "0338739954";
-  @Autowired
-  private InvoiceService invoiceService;
-  public JsonNode callMbBankApi() {
-    String url = "https://api.dichvudark.vn/api/ApiMbBank";
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+    private final String CODE = "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";
+    private final String TOKEN = "hPuqegRLwpHBTEzfZnyoWKQxvmkdVlIGJUAYaCNscjSbFMXrDitO";
+    private final String STK = "0338739954";
+    @Autowired
+    private InvoiceService invoiceService;
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    headers.set("Code", CODE);
-    headers.set("Token", TOKEN);
-    headers.set("Stk", STK);
+    public JsonNode callMbBankApi() {
+        String url = "https://api.dichvudark.vn/api/ApiMbBank";
 
-    MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-    body.add("Loai_api", "lsgdv2");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Code", CODE);
+        headers.set("Token", TOKEN);
+        headers.set("Stk", STK);
 
-    HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
-    RestTemplate restTemplate = new RestTemplate();
-    ResponseEntity<String> response = restTemplate.exchange(
-        url,
-        HttpMethod.POST,
-        requestEntity,
-        String.class
-    );
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("Loai_api", "lsgdv2");
 
-    if (response.getStatusCode() == HttpStatus.OK) {
-      return parseTransactionResponse(response.getBody());
-    } else {
-      throw new RuntimeException("Failed to call API: " + response.getStatusCode());
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return parseTransactionResponse(response.getBody());
+        } else {
+            throw new RuntimeException("Failed to call API: " + response.getStatusCode());
+        }
     }
-  }
 
-  private JsonNode parseTransactionResponse(String responseBody) {
-    try {
-      ObjectMapper mapper = new ObjectMapper();
-      JsonNode rootNode = mapper.readTree(responseBody);
+    private JsonNode parseTransactionResponse(String responseBody) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(responseBody);
 
-      JsonNode transactionHistoryList = rootNode.path("transactionHistoryList");
-      for (JsonNode transaction : transactionHistoryList) {
-        String description = transaction.path("description").asText();
+            JsonNode transactionHistoryList = rootNode.path("transactionHistoryList");
+            for (JsonNode transaction : transactionHistoryList) {
+                String description = transaction.path("description").asText();
 
-        // Tìm và lấy phần mô tả từ chữ "demo" và 6 ký tự tiếp theo
-        String modifiedDescription = description;
-        Pattern pattern = Pattern.compile("HD(\\w{8})");
-        Matcher matcher = pattern.matcher(description);
-        if (matcher.find()) {
-          modifiedDescription = matcher.group(0); // lấy "demo" và 6 ký tự tiếp theo
+                // Tìm và lấy phần mô tả từ chữ "demo" và 6 ký tự tiếp theo
+                String modifiedDescription = description;
+                Pattern pattern = Pattern.compile("HD(\\w{8})");
+                Matcher matcher = pattern.matcher(description);
+                if (matcher.find()) {
+                    modifiedDescription = matcher.group(0); // lấy "demo" và 6 ký tự tiếp theo
+                }
+
+                ((ObjectNode) transaction).put("description", modifiedDescription);
+            }
+            return rootNode;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse JSON response: " + e.getMessage());
+        }
+    }
+
+    public JsonNode fetchTransactionData() {
+        return callMbBankApi();
+    }
+
+    public JsonNode checkTransactionData(TransactionHistory request) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode response = mapper.createObjectNode();
+        JsonNode transactionData = fetchTransactionData();
+        TelegramNotifier telegramNotifier = new TelegramNotifier();
+
+        for (JsonNode transaction : transactionData.path("transactionHistoryList")) {
+            double creditAmount = transaction.path("creditAmount").asDouble();
+            String description = transaction.path("description").asText();
+
+            if (creditAmount == request.getCreditAmount() && description.equals(
+                    request.getDescription())) {
+                Invoice doist = invoiceRepository.findbycode(description);
+
+                // Kiểm tra trạng thái đơn hàng
+                if (doist.getStatus() == Status.AwaitingPayment) {
+                    // Cập nhật trạng thái đơn hàng và gửi thông báo nếu là AwaitingPayment
+                    boolean isPayMent = invoiceService.paymentOK(description);
+                    if (isPayMent) {
+                        doist.setStatus(Status.Pending);
+                        invoiceRepository.save(doist);
+                        String mess = "Thông báo: Bạn có một đơn hàng mới!"
+                                + "\nMã đơn hàng: " + description
+                                + "\nSố điện thoại: " + doist.getPhonenumber()
+                                + "\nĐịa chỉ giao hàng: " + doist.getDeliveryaddress();
+                        telegramNotifier.sendMessageZalo(mess);
+
+                        response.put("status", 200);
+                        response.put("mess", "Thành công");
+                    } else {
+                        response.put("status", 400);
+                        response.put("mess", "Error payment");
+                    }
+                } else if (doist.getStatus() == Status.Pending) {
+                    response.put("status", 334);
+                    response.put("error", "Đơn hàng này đã được thanh toán.");
+                } else if (doist.getStatus() == Status.Canceled) {
+                    response.put("status", 336);
+                    response.put("error", "Đơn hàng này đã bị hủy.");
+                }
+                return response;
+            }
         }
 
-        ((ObjectNode) transaction).put("description", modifiedDescription);
-      }
-      return rootNode;
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to parse JSON response: " + e.getMessage());
-    }
-  }
-
-
-  public JsonNode fetchTransactionData() {
-    return callMbBankApi();
-  }
-
-  public JsonNode checkTransactionData(TransactionHistory request) {
-    ObjectMapper mapper = new ObjectMapper();
-    ObjectNode response = mapper.createObjectNode();
-    JsonNode transactionData = fetchTransactionData();
-    TelegramNotifier telegramNotifier = new TelegramNotifier();
-
-    for (JsonNode transaction : transactionData.path("transactionHistoryList")) {
-      double creditAmount = transaction.path("creditAmount").asDouble();
-      String description = transaction.path("description").asText();
-
-      if (creditAmount == request.getCreditAmount() && description.equals(
-          request.getDescription())) {
-        Invoice doist = invoiceRepository.findbycode(description);
-
-        // Kiểm tra trạng thái đơn hàng
-        if (doist.getStatus() == Status.AwaitingPayment &&invoiceService.paymentOK(description)) {
-          // Cập nhật trạng thái đơn hàng và gửi thông báo nếu là AwaitingPayment
-          doist.setStatus(Status.Pending);
-          invoiceRepository.save(doist);
-
-          String mess = "Thông báo: Bạn có một đơn hàng mới!" +
-              "\nMã đơn hàng: " + description +
-              "\nSố điện thoại: " + doist.getPhonenumber() +
-              "\nĐịa chỉ giao hàng: " + doist.getDeliveryaddress();
-          telegramNotifier.sendMessageZalo(mess);
-          
-          response.put("status", 200);
-          response.put("mess", "Thành công");
-        } else if (doist.getStatus() == Status.Pending) {
-          response.put("status", 334);
-          response.put("error", "Đơn hàng này đã được thanh toán.");
-        } else if (doist.getStatus() == Status.Canceled) {
-          response.put("status", 336);
-          response.put("error", "Đơn hàng này đã bị hủy.");
-        }
+        response.put("status", 404);
+        response.put("error", "Không tìm thấy giao dịch khớp");
         return response;
-      }
     }
-
-    response.put("status", 404);
-    response.put("error", "Không tìm thấy giao dịch khớp");
-    return response;
-  }
-
 
 }
