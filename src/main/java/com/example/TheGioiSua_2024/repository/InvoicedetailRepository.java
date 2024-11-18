@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.repository;
 import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -119,5 +120,6 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
 
   @Query("SELECT SUM(invoice.totalamount) FROM Invoice invoice WHERE invoice.status = 338")
   Double findTotalAmount();
-
+  @Query("SELECT id FROM Invoicedetail id where id.invoice.id = :invoiceId")
+  List<Invoicedetail> invoicedetails(Long invoiceId);
 }

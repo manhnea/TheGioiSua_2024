@@ -23,5 +23,7 @@ public interface IInvoiceService {
   long countInvoices();  // Default to current month and year
 
   long countInvoices(int month, int year);  // Specific month and year
-
+  
+  
+  boolean paymentOK(String codeinvoice);
 }

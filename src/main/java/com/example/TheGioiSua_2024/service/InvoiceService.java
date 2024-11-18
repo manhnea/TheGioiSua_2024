@@ -1,9 +1,14 @@
 package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.dto.InvoiceDto;
+import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
+import com.example.TheGioiSua_2024.entity.Invoicedetail;
+import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
+import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
+import com.example.TheGioiSua_2024.repository.MilkdetailRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
@@ -18,20 +23,23 @@ import java.util.List;
 @Service
 public class InvoiceService implements IInvoiceService {
 
-  @Autowired
-  private InvoiceRepository invoiceRepository;
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
-  @Autowired
-  private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private InvoicedetailRepository invoicedetailRepository;
+    @Autowired
+    private MilkdetailRepository milkdetailRepository;
 
-  @Transactional
-  public List<Invoice> getInvoiceList() {
-    return invoiceRepository.findAll();
-  }
+    @Transactional
+    public List<Invoice> getInvoiceList() {
+        return invoiceRepository.findAll();
+    }
 
-
-  @Override
-  public Long saveInvoice(@RequestBody Invoice invoice) {
+    @Override
+    public Long saveInvoice(@RequestBody Invoice invoice) {
 //        Integer maxId = invoiceRepository.findMaxId();
 //        if (maxId == null) {
 //            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
@@ -41,67 +49,94 @@ public class InvoiceService implements IInvoiceService {
 //        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
 //        String invoiceCode = String.format("HD%03d", maxId);
 //        invoice.setInvoicecode(invoiceCode);
-    invoice.setStatus(Status.AwaitingPayment);
-    invoiceRepository.save(invoice);
-    return invoice.getId();
-  }
-
-  @Override
-  public String updateInvoice(Long id, Invoice invoice) {
-    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
-
-    // Kiểm tra và cập nhật từng trường nếu không phải null
-    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
-        : existingInvoice.getPhonenumber());
-    existingInvoice.setDeliveryaddress(
-        invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
-            : existingInvoice.getDeliveryaddress());
-    existingInvoice.setStatus(
-        invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
-
-    // Lưu lại hóa đơn đã cập nhật
-    invoiceRepository.save(existingInvoice);
-
-    return "Cập nhật hóa đơn thành công!";
-  }
-
-
-  @Override
-  public String deleteInvoice(Long id) {
-    Invoice invoice1 = invoiceRepository.findById(id).orElseThrow();
-    if (invoice1.getStatus() == Status.Delete) {
-      invoice1.setStatus(Status.Active);
-      invoiceRepository.save(invoice1);
-      return "Hóa đơn đã được khôi phục!";
-    } else {
-      invoice1.setStatus(Status.Delete);
-      invoiceRepository.save(invoice1);
-      return "Hóa đơn đã được xóa!";
+        invoice.setStatus(Status.AwaitingPayment);
+        invoiceRepository.save(invoice);
+        return invoice.getId();
     }
-  }
 
-  @Override
-  public Invoice getInvoiceById(Long id) {
-    return invoiceRepository.findById(id).orElseThrow();
-  }
+    @Override
+    public String updateInvoice(Long id, Invoice invoice) {
+        // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
+        Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
 
-  @Override
-  public List<InvoiceDto> getInvoices(Long id) {
-    return invoiceRepository.findInvoices(id);
-  }
+        // Kiểm tra và cập nhật từng trường nếu không phải null
+        existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
+                : existingInvoice.getPhonenumber());
+        existingInvoice.setDeliveryaddress(
+                invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
+                : existingInvoice.getDeliveryaddress());
+        existingInvoice.setStatus(
+                invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
 
-  @Override
-  public long countInvoices() {
-    int currentMonth = LocalDate.now().getMonthValue();
-    int currentYear = LocalDate.now().getYear();
-    return invoiceRepository.countInvoices(currentMonth, currentYear);
-  }
+        // Lưu lại hóa đơn đã cập nhật
+        invoiceRepository.save(existingInvoice);
 
-  @Override
-  public long countInvoices(int month, int year) {
-    return invoiceRepository.countInvoices(month, year);
-  }
+        return "Cập nhật hóa đơn thành công!";
+    }
 
+    @Override
+    public String deleteInvoice(Long id) {
+        Invoice invoice1 = invoiceRepository.findById(id).orElseThrow();
+        if (invoice1.getStatus() == Status.Delete) {
+            invoice1.setStatus(Status.Active);
+            invoiceRepository.save(invoice1);
+            return "Hóa đơn đã được khôi phục!";
+        } else {
+            invoice1.setStatus(Status.Delete);
+            invoiceRepository.save(invoice1);
+            return "Hóa đơn đã được xóa!";
+        }
+    }
+
+    @Override
+    public Invoice getInvoiceById(Long id) {
+        return invoiceRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<InvoiceDto> getInvoices(Long id) {
+        return invoiceRepository.findInvoices(id);
+    }
+
+    @Override
+    public long countInvoices() {
+        int currentMonth = LocalDate.now().getMonthValue();
+        int currentYear = LocalDate.now().getYear();
+        return invoiceRepository.countInvoices(currentMonth, currentYear);
+    }
+
+    @Override
+    public long countInvoices(int month, int year) {
+        return invoiceRepository.countInvoices(month, year);
+    }
+
+    @Override
+    public boolean paymentOK(String codeinvoice) {
+        Invoice invoice = null;
+        List<Invoicedetail> invoicedetails = null;
+        Milkdetail milkdetail = null;
+        Voucher voucher = null;
+        try {
+            invoice = invoiceRepository.findbycode(codeinvoice);
+            if (invoice == null) {
+                return false;
+            }
+            voucher = voucherRepository.findById(invoice.getVoucher().getId()).orElseThrow();
+            if(voucher!=null){
+                voucher.setDiscountpercentage(voucher.getDiscountpercentage()-1);
+                voucherRepository.save(voucher);
+            }
+            invoicedetails = invoicedetailRepository.invoicedetails(invoice.getId());
+            for (Invoicedetail invoicedetail : invoicedetails) {
+                milkdetail = milkdetailRepository.findById(invoicedetail.getId()).orElseThrow();
+                milkdetail.setStockquantity(milkdetail.getStockquantity()-invoicedetail.getQuantity());
+                milkdetailRepository.save(milkdetail);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 }
