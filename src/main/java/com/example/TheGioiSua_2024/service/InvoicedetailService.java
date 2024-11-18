@@ -180,13 +180,13 @@ public class InvoicedetailService implements IInvoicedetailService {
     for (Object[] row : rawResults) {
       Map<String, Object> resultMap = new HashMap<>();
       resultMap.put("id", row[0]);
-      resultMap.put("productName", row[1]);
-      resultMap.put("milkTasteName", row[2]);
-      resultMap.put("packagingUnitName", row[3]);
-      resultMap.put("capacity", row[4]);
-      resultMap.put("capacityUnit", row[5]);
-      resultMap.put("totalSalesValue", row[6]);
-      resultMap.put("totalQuantity", row[7]);
+      resultMap.put("productName", row[2]);
+      resultMap.put("milkTasteName", row[3]);
+      resultMap.put("packagingUnitName", row[4]);
+      resultMap.put("capacity", row[5]);
+      resultMap.put("capacityUnit", row[6]);
+      resultMap.put("totalSalesValue", row[7]);
+      resultMap.put("totalQuantity", row[8]);
 
       response.add(resultMap);
     }
