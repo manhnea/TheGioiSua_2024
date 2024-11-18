@@ -53,13 +53,13 @@ public class InvoicedetailService implements IInvoicedetailService {
         return ResponseEntity.badRequest().body(Map.of("error",
             "Số Lượng Không Phù Hợp\n Số Lượng Còn Lại:" + milkdetail.getStockquantity()));
       }
-      // Cập nhật số lượng tồn kho
-      milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
-      // Lưu lại Milkdetail
-      milkdetailRepository.save(milkdetail);
-      // Đặt trạng thái cho Invoicedetail
-      invoicedetail.setStatus(Status.Active);
-      // Lưu lại Invoicedetail
+//      // Cập nhật số lượng tồn kho
+//      milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
+//      // Lưu lại Milkdetail
+//      milkdetailRepository.save(milkdetail);
+//      // Đặt trạng thái cho Invoicedetail
+//      invoicedetail.setStatus(Status.Active);
+//      // Lưu lại Invoicedetail
       invoicedetailRepository.save(invoicedetail);
       // Trả về phản hồi thành công
       return ResponseEntity.ok(Map.of("message", "Thêm Thành Công"));
