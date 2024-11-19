@@ -26,4 +26,5 @@ public interface IInvoiceService {
   
   
   boolean paymentOK(String codeinvoice);
+  boolean cancelInvoice(Long id);
 }

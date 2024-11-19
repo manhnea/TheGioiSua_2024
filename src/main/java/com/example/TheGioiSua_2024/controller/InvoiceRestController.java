@@ -105,4 +105,13 @@ public class InvoiceRestController {
       @RequestParam int year) {
     return invoiceService.countInvoices(month, year);
   }
+  @GetMapping("cancel/{id}")
+  public ResponseEntity<?> cancelinvoice(@PathVariable Long id){
+      boolean isCancelInvoice = invoiceService.cancelInvoice(id);
+      if(isCancelInvoice){
+          return ResponseEntity.ok(Map.of("message", "OK"));
+      }else{
+          return ResponseEntity.badRequest().body(Map.of("status", "error"));
+      }
+  }
 }
