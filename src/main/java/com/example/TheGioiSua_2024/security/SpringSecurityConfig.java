@@ -74,7 +74,8 @@ public class SpringSecurityConfig {
             "/Userinvoice/add",
             "/Voucher/voucercode",
             "/Invoicedetail/getInvoiceDetailByUser/**",
-            "/Checkout/**"
+            "/Checkout/**",
+            "/Invoice/cancel/**"
         ).hasAuthority("Customer")
 
         // Quyền của Staff
