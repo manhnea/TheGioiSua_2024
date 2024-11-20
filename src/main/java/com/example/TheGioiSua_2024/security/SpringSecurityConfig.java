@@ -42,14 +42,7 @@ public class SpringSecurityConfig {
 
         // Các endpoint không yêu cầu xác thực
         .requestMatchers(
-            "/user/register",
-            "/user/authenticate",
-            "/user/reset-password",
-            "/user/forgot-password",
-            "/user/verify",
-            "/user/{id}",
-            "/user/updateAddress",
-            "/user/updatePhoneNumber",
+            "/user/**",
             "/Product/page/**",
             "/Product/page",
             "/Product/lst",
@@ -62,65 +55,49 @@ public class SpringSecurityConfig {
             "/Targetuser/lst",
             "/Milktaste/lst",
             "/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/Checkout/**"
         ).permitAll()
-
-        // Quyền của Admin
-        .requestMatchers(
-            "/admin/**",
-            "/user/**",
-            "/Voucher/**",
-            "/Milktype/**",
-            "/Milktaste/**",
-            "/Packagingunit/**",
-            "/Targetuser/**",
-            "/Product/**",
-            "/Milkdetail/**",
-            "/Milkbrand/**",
-            "/Invoicedetail/**",
-            "/Invoice/**",
-            "/Userinvoice/**",
-            "/Usagecapacity/**",
-            "/payment/**"
-        ).hasAuthority("Admin")
-
-        // Quyền của Staff
-        .requestMatchers(
-            "/user/**",
-            "/Milktype/**",
-            "/Milktaste/**",
-            "/Packagingunit/**",
-            "/Targetuser/**",
-            "/Product/**",
-            "/Milkdetail/**",
-            "/Milkbrand/**",
-            "/Invoicedetail/**",
-            "/Invoice/**",
-            "/Userinvoice/**",
-            "/Usagecapacity/**",
-            "/Voucher/lst",
-            "/payment/**"
-        ).hasAuthority("Staff")
 
         // Quyền của Customer
         .requestMatchers(
-            "/Invoice/getInvoices/**",
-            "/payment/transactionHistory",
             "/Invoice/add",
             "/Invoicedetail/add",
             "/Userinvoice/add",
             "/Voucher/voucercode",
+            "/Invoice/getInvoices/**",
             "/Invoicedetail/getInvoiceDetailByUser/**",
-            "/Checkout/**",
+            "/payment/transactionHistory",
             "/Invoice/cancel/**"
-        ).hasAuthority("Customer")
+        ).hasAnyAuthority("Customer") // Chỉ có Customer
+        // Quyền của Staff
+        .requestMatchers(
+            "/Voucher/lst",
+            "/Milktype/**",
+            "/Milktaste/**",
+            "/Packagingunit/**",
+            "/Targetuser/**",
+            "/Product/**",
+            "/Milkdetail/**",
+            "/Milkbrand/**",
+            "/Invoicedetail/**",
+            "/Invoice/**",
+            "/Userinvoice/**",
+            "/Usagecapacity/**",
+            "/payment/**"
+        ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
+
+// Quyền của Admin
+        .requestMatchers(
+            "/admin/**",
+            "/Voucher/**"
+        ).hasAuthority("Admin")
 
         .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
-
 
   @Bean
   public AuthenticationManager authenticationManager(
