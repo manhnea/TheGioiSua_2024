@@ -181,7 +181,8 @@ INSERT INTO Milkdetail (productid, containerid, sizeid, packagingid, packagingun
 (2, 2, 2, 2, 2, 2, '2025-12-31', 20000, 'Natural fresh milk', 100, 1);
 
 INSERT INTO Role (rolename, status) VALUES
-('Admin', 1),
+
+('Staff', 1),
 ('User', 1);
 
 INSERT INTO User (roleid, username, password, fullname, phonenumber, address, email, status) VALUES

@@ -27,10 +27,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class SpringSecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomerUserDetailsService customerUserDetailsService;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final CustomerUserDetailsService customerUserDetailsService;
 
- @Bean
+  @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .cors() // Cấu hình CORS
@@ -42,7 +42,14 @@ public class SpringSecurityConfig {
 
         // Các endpoint không yêu cầu xác thực
         .requestMatchers(
-            "/user/**",
+            "/user/register",
+            "/user/reset-password",
+            "/user/forgot-password",
+            "/user/authenticate",
+            "/user/verify",
+            "/user/{id}",
+            "/user/updateAddress",
+            "/user/updatePhoneNumber",
             "/Product/page/**",
             "/Product/page",
             "/Product/lst",
@@ -55,23 +62,42 @@ public class SpringSecurityConfig {
             "/Targetuser/lst",
             "/Milktaste/lst",
             "/api-docs/**",
-            "/swagger-ui/**",
-            "/Checkout/**",
-            "/payment/**"
+            "/swagger-ui/**"
         ).permitAll()
 
         // Quyền của Customer
         .requestMatchers(
+            "/Invoice/getInvoices/**",
+            "/payment/transactionHistory",
             "/Invoice/add",
             "/Invoicedetail/add",
             "/Userinvoice/add",
             "/Voucher/voucercode",
-            "/Invoice/getInvoices/**",
-            "/Invoicedetail/getInvoiceDetailByUser/**"
+            "/Invoicedetail/getInvoiceDetailByUser/**",
+            "/Checkout/**"
         ).hasAuthority("Customer")
+
+        // Quyền của Staff
+        .requestMatchers(
+            "/user/**",
+            "/Milktype/**",
+            "/Milktaste/**",
+            "/Packagingunit/**",
+            "/Targetuser/**",
+            "/Product/**",
+            "/Milkdetail/**",
+            "/Milkbrand/**",
+            "/Invoicedetail/**",
+            "/Invoice/**",
+            "/Userinvoice/**",
+            "/Usagecapacity/**",
+            "/Voucher/lst",
+            "/payment/**"
+        ).hasAuthority("Staff")
 
         // Quyền của Admin
         .requestMatchers(
+            "/user/**",
             "/admin/**",
             "/Voucher/**",
             "/Milktype/**",
@@ -84,7 +110,8 @@ public class SpringSecurityConfig {
             "/Invoicedetail/**",
             "/Invoice/**",
             "/Userinvoice/**",
-            "/Usagecapacity/**"
+            "/Usagecapacity/**",
+            "/payment/**"
         ).hasAuthority("Admin")
 
         .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
@@ -92,35 +119,36 @@ public class SpringSecurityConfig {
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-        // Allows all domains to access the API
-        configuration.addAllowedOriginPattern(
-                "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
-        configuration.addAllowedHeader("*");  // Allows all headers
-        configuration.setAllowCredentials(
-                true);  // Allows credentials such as cookies or HTTP authentication
+    // Allows all domains to access the API
+    configuration.addAllowedOriginPattern(
+        "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+    configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    configuration.addAllowedHeader("*");  // Allows all headers
+    configuration.setAllowCredentials(
+        true);  // Allows credentials such as cookies or HTTP authentication
 
-        return source;
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
 //        aaaa
-    }
+  }
 
 }
