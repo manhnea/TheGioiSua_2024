@@ -137,5 +137,15 @@ public class InvoiceService implements IInvoiceService {
         }
         return true;
     }
-
+    @Override
+    public boolean cancelInvoice(Long id) {
+        try {
+            Invoice invoice = invoiceRepository.findById(id).orElseThrow();
+            invoice.setStatus(Status.Canceled);
+            invoiceRepository.save(invoice);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }
