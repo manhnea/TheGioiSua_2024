@@ -15,7 +15,6 @@ import java.util.Optional;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
-
     Optional<Invoice> existsByInvoicecode(String milkbrandname);
 
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
@@ -27,11 +26,11 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "LEFT JOIN i.voucher v "
             + "JOIN uvBuyer.user buyer "
             + "JOIN buyer.role rBuyer "
-            + "JOIN i.userInvoices uvSeller "
-            + "JOIN uvSeller.user seller "
-            + "JOIN seller.role rSeller "
+            + "LEFT JOIN i.userInvoices uvSeller "
+            + "LEFT JOIN uvSeller.user seller "
+            + "LEFT JOIN seller.role rSeller "
             + "WHERE rBuyer.id = 2 "
-            + "AND rSeller.id = 1 "
+            + "AND (rSeller.id = 1 OR seller IS NULL) "
             + "AND uvBuyer <> uvSeller "
             + "AND uvSeller.status = uvBuyer.status "
             + "AND buyer.id = :buyerId")
@@ -52,6 +51,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "AND MONTH(creationdate) = :month "
             + "AND YEAR(creationdate) = :year")
     long countInvoices(@Param("month") int month, @Param("year") int year);
+
     @Override
     @Query("SELECT i FROM Invoice i WHERE i.status != 338 ORDER BY i.id DESC")
     List<Invoice> findAll();

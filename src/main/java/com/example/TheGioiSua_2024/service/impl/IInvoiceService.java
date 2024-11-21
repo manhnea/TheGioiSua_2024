@@ -5,12 +5,13 @@ import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface IInvoiceService {
 
   List<Invoice> getInvoiceList();
 
-  Long saveInvoice(Invoice invoice);
+  ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
 
   String updateInvoice(Long id, Invoice invoice);
 

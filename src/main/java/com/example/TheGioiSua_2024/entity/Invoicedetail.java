@@ -15,6 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Invoicedetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,4 +41,18 @@ public class Invoicedetail {
     @ManyToOne
     @JoinColumn(name = "milkdetailid")
     private Milkdetail milkDetail;
+
+    @Override
+    public String toString() {
+        return "Invoicedetail{"
+                + "id=" + id
+                + ", quantity=" + quantity
+                + ", price=" + price
+                + ", totalprice=" + totalprice
+                + ", status=" + status
+                + ", invoiceId=" + (invoice != null ? invoice.getId() : null) // Chỉ in id của Invoice
+                + ", milkDetailId=" + (milkDetail != null ? milkDetail.getId() : null) // Chỉ in id của Milkdetail
+                + '}';
+    }
+
 }
