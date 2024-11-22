@@ -25,4 +25,5 @@ public interface IProductService {
     Page<ProductDto> getPageProductByBrandMilk(Pageable pageable,Long id);
     
     Page<ProductDto> getPageProductByTargetUser(Pageable pageable,Long id);
+    Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
 }

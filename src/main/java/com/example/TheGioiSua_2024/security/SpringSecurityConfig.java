@@ -44,7 +44,6 @@ public class SpringSecurityConfig {
         .requestMatchers(
             "/user/**",
             "/Product/page/**",
-            "/Product/page",
             "/Product/lst",
             "/Packagingunit/lst",
             "/Usagecapacity/lst",
