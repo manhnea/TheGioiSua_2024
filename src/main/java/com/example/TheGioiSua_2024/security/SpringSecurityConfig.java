@@ -42,14 +42,7 @@ public class SpringSecurityConfig {
 
         // Các endpoint không yêu cầu xác thực
         .requestMatchers(
-            "/user/register",
-            "/user/reset-password",
-            "/user/forgot-password",
-            "/user/authenticate",
-            "/user/verify",
-            "/user/{id}",
-            "/user/updateAddress",
-            "/user/updatePhoneNumber",
+            "/user/**",
             "/Product/page/**",
             "/Product/page",
             "/Product/lst",
@@ -62,45 +55,24 @@ public class SpringSecurityConfig {
             "/Targetuser/lst",
             "/Milktaste/lst",
             "/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/Checkout/**"
         ).permitAll()
 
         // Quyền của Customer
         .requestMatchers(
-            "/Invoice/getInvoices/**",
-            "/payment/transactionHistory",
             "/Invoice/add",
             "/Invoicedetail/add",
             "/Userinvoice/add",
             "/Voucher/voucercode",
+            "/Invoice/getInvoices/**",
             "/Invoicedetail/getInvoiceDetailByUser/**",
-            "/Checkout/**",
+            "/payment/transactionHistory",
             "/Invoice/cancel/**"
-        ).hasAuthority("Customer")
-
+        ).hasAnyAuthority("Customer") // Chỉ có Customer
         // Quyền của Staff
         .requestMatchers(
-            "/user/**",
-            "/Milktype/**",
-            "/Milktaste/**",
-            "/Packagingunit/**",
-            "/Targetuser/**",
-            "/Product/**",
-            "/Milkdetail/**",
-            "/Milkbrand/**",
-            "/Invoicedetail/**",
-            "/Invoice/**",
-            "/Userinvoice/**",
-            "/Usagecapacity/**",
             "/Voucher/lst",
-            "/payment/**"
-        ).hasAuthority("Staff")
-
-        // Quyền của Admin
-        .requestMatchers(
-            "/user/**",
-            "/admin/**",
-            "/Voucher/**",
             "/Milktype/**",
             "/Milktaste/**",
             "/Packagingunit/**",
@@ -113,7 +85,13 @@ public class SpringSecurityConfig {
             "/Userinvoice/**",
             "/Usagecapacity/**",
             "/payment/**"
-        ).hasAuthority("Admin") // Chỉ có Admin
+        ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
+
+// Quyền của Admin
+        .requestMatchers(
+            "/admin/**",
+            "/Voucher/**"
+        ).hasAuthority("Admin")
 
         .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
 
