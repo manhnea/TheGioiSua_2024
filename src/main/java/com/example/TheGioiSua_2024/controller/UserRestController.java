@@ -51,8 +51,8 @@ public class UserRestController {
     return iUserService.authenticate(loginDto);
   }
 
-  //http://localhost:1234/api/user/id
-  @GetMapping("/{id}")
+  //RessourceEndPoint:http://localhost:1234/api/user/profile/{id}
+  @GetMapping("/profile/{id}")
   public ResponseEntity<?> getUserById(@PathVariable Long id) {
     UserDto userDto = iUserService.findUserById(id);
     return ResponseEntity.ok(userDto);

@@ -42,7 +42,12 @@ public class SpringSecurityConfig {
 
         // Các endpoint không yêu cầu xác thực
         .requestMatchers(
-            "/user/**",
+            "/user/reset-password",
+            "/user/forgot-password",
+            "/user/verify",
+            "/user/authenticate",
+            "/user/register",
+            "/user/change-password",
             "/Product/page/**",
             "/Product/page",
             "/Product/lst",
@@ -61,6 +66,9 @@ public class SpringSecurityConfig {
 
         // Quyền của Customer
         .requestMatchers(
+            "/user/updateAddress",
+            "/user/updatePhonerNumber",
+            "/user/profile/**",
             "/Invoice/add",
             "/Invoicedetail/add",
             "/Userinvoice/add",
@@ -72,6 +80,7 @@ public class SpringSecurityConfig {
         ).hasAnyAuthority("Customer") // Chỉ có Customer
         // Quyền của Staff
         .requestMatchers(
+            "/user/**",
             "/Voucher/lst",
             "/Milktype/**",
             "/Milktaste/**",
