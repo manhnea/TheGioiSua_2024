@@ -150,5 +150,9 @@ public class MilkdetailRestController {
   public long getcountmilkdetail() {
     return milkdetailService.countMilkDetails();
   }
+  @GetMapping("/more")
+  private List<MilkDetailDto> hethang() {
+    return milkdetailService.gethethang();
+  }
 
 }

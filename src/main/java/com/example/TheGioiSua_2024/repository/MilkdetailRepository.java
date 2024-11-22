@@ -5,6 +5,7 @@ import com.example.TheGioiSua_2024.entity.Milkdetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,6 +100,28 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
   @Query("SELECT COUNT(a) FROM Milkdetail a")
   long countMilkDetails();
-
-
+  @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
+          + " md.id,"
+          + " pu.packagingunitname,"
+          + " mt.milkTypename," // chú ý tên chính xác của thuộc tính
+          + " mb.milkbrandname,"
+          + " mtt.milktastename,"
+          + " uc.capacity,"
+          + " uc.unit,"
+          + " tt.targetName,"
+          + " md.price,"
+          + " md.stockquantity,"
+          + " md.imgUrl,"
+          + " md.shelflifeofmilk,"
+          + " md.status) "
+          + "FROM Milkdetail md "
+          + "JOIN md.product p "
+          + "JOIN p.milkBrand mb "
+          + "JOIN p.milkType mt "
+          + "JOIN p.targetUser tt "
+          + "JOIN md.usageCapacity uc "
+          + "JOIN md.packagingunit pu "
+          + "JOIN md.milkTaste mtt "
+          + "WHERE md.stockquantity = 0 ")
+ List<MilkDetailDto>  gethethang();
 }

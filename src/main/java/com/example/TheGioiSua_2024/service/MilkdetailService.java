@@ -160,5 +160,10 @@ public class MilkdetailService implements IMilkdetailService {
     return "Cập nhật số lượng thành công";
   }
 
+  @Override
+  public List<MilkDetailDto> gethethang() {
+    return milkdetailRepository.gethethang();
+  }
+
 
 }

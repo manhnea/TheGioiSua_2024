@@ -32,4 +32,6 @@ public interface IMilkdetailService {
   long countMilkDetails();
 
   String updateStockQuantity(Long id, int quantity);
+
+  List<MilkDetailDto> gethethang();
 }
