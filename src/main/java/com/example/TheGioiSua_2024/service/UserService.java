@@ -22,7 +22,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -322,6 +321,11 @@ public class UserService implements IUserService {
   @Override
   public List<String> findTop5() {
     return iUserRepository.findAllUsernames();
+  }
+
+  @Override
+  public List<User> getAllUsers() {
+    return iUserRepository.findAll();
   }
 
   @Override

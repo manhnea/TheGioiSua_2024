@@ -12,7 +12,6 @@ import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 
 
@@ -29,9 +28,11 @@ public interface IUserService {
   Role saveRole(Role role);
 
   User saverUser(User user);
-  
+
   ResponseEntity<?> updatePhoneNumber(User user);
+
   ResponseEntity<?> updateAddress(User user);
+
   UserDto findUserById(Long id);
 
   ResponseEntity<?> forgotPassword(ForgotPasswordDto forgotPasswordDto);
@@ -43,4 +44,6 @@ public interface IUserService {
   long countUsersByRoleAndStatus();
 
   List<String> findTop5();
+
+  List<User> getAllUsers();
 }

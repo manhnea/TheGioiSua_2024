@@ -119,4 +119,8 @@ public class UserRestController {
     return iUserService.countUsersByRoleAndStatus();
   }
 
+  @GetMapping("lst")
+  public List<User> getAllUsers() {
+    return iUserService.getAllUsers();
+  }
 }

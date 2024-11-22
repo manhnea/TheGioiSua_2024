@@ -113,7 +113,7 @@ public class SpringSecurityConfig {
             "/Userinvoice/**",
             "/Usagecapacity/**",
             "/payment/**"
-        ).hasAuthority("Admin")
+        ).hasAuthority("Admin") // Chỉ có Admin
 
         .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
 
