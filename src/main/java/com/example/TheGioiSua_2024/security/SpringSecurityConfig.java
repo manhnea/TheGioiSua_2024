@@ -49,7 +49,6 @@ public class SpringSecurityConfig {
             "/user/register",
             "/user/change-password",
             "/Product/page/**",
-            "/Product/page",
             "/Product/lst",
             "/Packagingunit/lst",
             "/Usagecapacity/lst",

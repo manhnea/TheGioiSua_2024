@@ -115,4 +115,15 @@ public class ProductRestController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(Map.of("status", "success", "message", productService.getPageProductByTargetUser(pageable,id)));
     }
+    //http://localhost:1234/api/Product/page/getPageProductWithSearch/{searchTerm}
+    @GetMapping("/page/getPageProductWithSearch/{searchTerm}")
+    public ResponseEntity<?> getPageProductByTargetUser(
+            @RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "10") int size, 
+            @PathVariable String searchTerm
+    ) {
+        System.out.println("searchTerm"+searchTerm);
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(Map.of("status", "success", "message", productService.getPageProductWithSearch(searchTerm, pageable)));
+    }
 }

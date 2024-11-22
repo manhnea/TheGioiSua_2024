@@ -5,10 +5,13 @@ import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
+import com.example.TheGioiSua_2024.entity.User;
+import com.example.TheGioiSua_2024.entity.Userinvoice;
 import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
 import com.example.TheGioiSua_2024.repository.MilkdetailRepository;
+import com.example.TheGioiSua_2024.repository.UserinvoiceRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
 
 @Service
 public class InvoiceService implements IInvoiceService {
@@ -32,6 +37,8 @@ public class InvoiceService implements IInvoiceService {
     private InvoicedetailRepository invoicedetailRepository;
     @Autowired
     private MilkdetailRepository milkdetailRepository;
+    @Autowired
+    private UserinvoiceRepository userinvoiceRepository;
 
     @Transactional
     public List<Invoice> getInvoiceList() {
@@ -39,26 +46,62 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public Long saveInvoice(@RequestBody Invoice invoice) {
-//        Integer maxId = invoiceRepository.findMaxId();
-//        if (maxId == null) {
-//            maxId = 1;  // Nếu bảng trống thì bắt đầu từ 1
-//        } else {
-//            maxId++;
-//        }
-//        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
-//        String invoiceCode = String.format("HD%03d", maxId);
-//        invoice.setInvoicecode(invoiceCode);
+    public ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto) {
         Voucher voucher = null;
-        if (invoice.getVoucher() != null) {
-            voucher = voucherRepository.findById(invoice.getVoucher().getId()).orElseThrow();
-            voucher.setUsagecount(voucher.getUsagecount()- 1);
+        List<Invoicedetail> invoicedetails = invoiceDto.getInvoiceDetails();
+        Userinvoice byller = new Userinvoice();
+        Userinvoice seller = new Userinvoice();
+        Invoice invoice = new Invoice();
+        if (invoicedetails.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Vui Lòng Thêm Sản Phẩm"));
+        }
+        invoice.setInvoicecode(invoiceDto.getInvoiceCode());
+        invoice.setPhonenumber(invoiceDto.getPhonenumber());
+        invoice.setDeliveryaddress(invoiceDto.getDeliveryaddress());
+        invoice.setPaymentmethod(invoiceDto.getPaymentmethod());
+        invoice.setDiscountamount(invoiceDto.getSotienGiamGia());
+        invoice.setTotalamount(invoiceDto.getTongTien());
+        if (invoiceDto.getVoucherCode() != null) {
+            voucher = voucherRepository.vouchercode(invoiceDto.getVoucherCode());
+            invoice.setVoucher(voucher);
+            voucher.setUsagecount(voucher.getUsagecount() - 1);
             System.out.println("voucher.getDiscountpercentage(): " + voucher.getDiscountpercentage());
             voucherRepository.save(voucher);
         }
         invoice.setStatus(Status.AwaitingPayment);
         invoiceRepository.save(invoice);
-        return invoice.getId();
+
+        for (Invoicedetail invoicedetail : invoicedetails) {
+            invoicedetail.setInvoice(invoice);
+            invoicedetailRepository.save(invoicedetail);
+        }
+
+        if (invoice.getPaymentmethod().equals("NetBanking")) {
+            User useller = new User();
+            useller.setId(1l);
+            seller.setInvoice(invoice);
+            seller.setUser(useller);
+            seller.setStatus(Status.Pending);
+            userinvoiceRepository.save(seller);
+            User ubyller = invoiceDto.getNguoiTao();
+            byller.setInvoice(invoice);
+            byller.setUser(ubyller);
+            byller.setStatus(Status.Pending);
+            userinvoiceRepository.save(byller);
+        } else if (invoice.getPaymentmethod().equals("COD")) {
+            invoice.setStatus(Status.ApproveOrders);
+            invoiceRepository.save(invoice);
+            seller.setInvoice(invoice);
+            seller.setStatus(Status.Pending);
+            userinvoiceRepository.save(seller);
+            User ubyller = invoiceDto.getNguoiTao();
+            byller.setInvoice(invoice);
+            byller.setUser(ubyller);
+            byller.setStatus(Status.Pending);
+            userinvoiceRepository.save(byller);
+        }
+        System.out.println(invoice.toString());
+        return ResponseEntity.ok("null");
     }
 
     @Override
@@ -137,6 +180,7 @@ public class InvoiceService implements IInvoiceService {
         }
         return true;
     }
+
     @Override
     public boolean cancelInvoice(Long id) {
         try {
