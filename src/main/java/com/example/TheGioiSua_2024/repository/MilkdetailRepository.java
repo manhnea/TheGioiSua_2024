@@ -100,28 +100,6 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
   @Query("SELECT COUNT(a) FROM Milkdetail a")
   long countMilkDetails();
-  @Query("SELECT new com.example.TheGioiSua_2024.dto.MilkDetailDto("
-          + " md.id,"
-          + " pu.packagingunitname,"
-          + " mt.milkTypename," // chú ý tên chính xác của thuộc tính
-          + " mb.milkbrandname,"
-          + " mtt.milktastename,"
-          + " uc.capacity,"
-          + " uc.unit,"
-          + " tt.targetName,"
-          + " md.price,"
-          + " md.stockquantity,"
-          + " md.imgUrl,"
-          + " md.shelflifeofmilk,"
-          + " md.status) "
-          + "FROM Milkdetail md "
-          + "JOIN md.product p "
-          + "JOIN p.milkBrand mb "
-          + "JOIN p.milkType mt "
-          + "JOIN p.targetUser tt "
-          + "JOIN md.usageCapacity uc "
-          + "JOIN md.packagingunit pu "
-          + "JOIN md.milkTaste mtt "
-          + "WHERE md.stockquantity = 0 ")
- List<MilkDetailDto>  gethethang();
+  @Query("SELECT md FROM Milkdetail md WHERE md.stockquantity = 0")
+ List<Milkdetail>  gethethang();
 }

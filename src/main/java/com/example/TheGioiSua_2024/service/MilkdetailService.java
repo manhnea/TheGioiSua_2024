@@ -161,7 +161,7 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public List<MilkDetailDto> gethethang() {
+  public List<Milkdetail> gethethang() {
     return milkdetailRepository.gethethang();
   }
 
