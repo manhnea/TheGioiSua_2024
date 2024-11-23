@@ -46,4 +46,10 @@ public interface IUserService {
   List<String> findTop5();
 
   List<User> getAllUsers();
+
+  User updateUser(Long id,User user );
+
+  String deleteUser(Long id);
+
+  User getbyID(Long id);
 }

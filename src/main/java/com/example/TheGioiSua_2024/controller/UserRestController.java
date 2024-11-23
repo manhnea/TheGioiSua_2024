@@ -123,4 +123,19 @@ public class UserRestController {
   public List<User> getAllUsers() {
     return iUserService.getAllUsers();
   }
+
+  @PutMapping("/update/{id}")
+  public User updateUser(@PathVariable("id") Long id, @RequestBody User user  ) {
+    return iUserService.updateUser(id,user);
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    String message = iUserService.deleteUser(id);
+    return ResponseEntity.ok(Map.of("status", "success", "message",message ));
+  }
+@GetMapping("/lst/{id}")
+  public User getUsersByRole(@PathVariable("id") Long id) {
+      return iUserService.getbyID(id);
+  }
 }

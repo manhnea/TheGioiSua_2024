@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
+import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
 import com.example.TheGioiSua_2024.repository.RoleRepository;
@@ -326,6 +327,36 @@ public class UserService implements IUserService {
   @Override
   public List<User> getAllUsers() {
     return iUserRepository.findAll();
+  }
+
+  @Override
+  public User updateUser(Long id,User user) {
+    User user1= iUserRepository.findById(id).orElseThrow();
+    Role role = iRoleRepository.findById(user.getRole().getId()).get();
+    user1.setRole(role);
+    user1.setEmail(user.getEmail());
+    user1.setFullname(user.getFullname());
+    user1.setAddress(user.getAddress());
+    user1.setPhonenumber(user.getPhonenumber());
+    return iUserRepository.save(user1) ; }
+
+  @Override
+  public String deleteUser(Long id) {
+    User user = iUserRepository.findById(id).get();
+    if (user.getStatus() == Status.Delete) {
+      user.setStatus(Status.Active);
+      iUserRepository.save(user);
+      return "Khôi phục thành công";
+    } else {
+      user.setStatus(Status.Delete);
+      iUserRepository.save(user);
+      return "Xóa thành công";
+    }
+  }
+
+  @Override
+  public User getbyID(Long id) {
+    return iUserRepository.findById(id).orElseThrow();
   }
 
   @Override

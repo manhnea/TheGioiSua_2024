@@ -76,7 +76,7 @@ public class SpringSecurityConfig {
             "/Invoicedetail/getInvoiceDetailByUser/**",
             "/payment/transactionHistory",
             "/Invoice/cancel/**"
-        ).hasAnyAuthority("Customer") // Chỉ có Customer
+        ).hasAnyAuthority("Customer","Staff", "Admin") // Chỉ có Customer
         // Quyền của Staff
         .requestMatchers(
             "/user/**",
@@ -98,6 +98,7 @@ public class SpringSecurityConfig {
 // Quyền của Admin
         .requestMatchers(
             "/admin/**",
+            "/role/**",
             "/Voucher/**"
         ).hasAuthority("Admin")
 
