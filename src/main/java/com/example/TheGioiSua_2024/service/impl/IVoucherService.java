@@ -9,12 +9,18 @@ import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 
 public interface IVoucherService {
-    List<Voucher> getVoucherList();
-    String saveVoucher(Voucher voucher);
-    String updateVoucher(Long id, Voucher voucher);
-    String deleteVoucher(Long id);
-    Optional<Voucher> getVoucherByName(String voucherName);
-    Voucher getVoucherById(Long id);
-    
-    ResponseEntity<?> discountmoney(VoucherDto voucherDto);
+
+  List<Voucher> getVoucherList();
+
+  String saveVoucher(String token, Voucher voucher);
+
+  String updateVoucher(String token, Long id, Voucher voucher);
+
+  String deleteVoucher(Long id);
+
+  Optional<Voucher> getVoucherByName(String voucherName);
+
+  Voucher getVoucherById(Long id);
+
+  ResponseEntity<?> discountmoney(VoucherDto voucherDto);
 }

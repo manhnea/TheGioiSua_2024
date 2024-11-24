@@ -35,13 +35,7 @@ public class VoucherRestController {
 
   //http://localhost:1234/api/Voucher/lst
   @GetMapping("/lst")
-  public List<Voucher> lst(@NonNull HttpServletRequest request) {
-    String token = jwtUtilities.getToken(request);
-    String username = jwtUtilities.extractUsername(token);
-    Log log = new Log();
-    log.setAction("get voucher list");
-    log.setDescription("get voucher list");
-    logRepository.saveLog(username, log);
+  public List<Voucher> lst() {
 
     return voucherService.getVoucherList();
   }
@@ -54,7 +48,8 @@ public class VoucherRestController {
   }
 
   @PostMapping("/add")
-  public ResponseEntity<?> add(@RequestBody @Valid Voucher voucher, BindingResult bindingResult) {
+  public ResponseEntity<?> add(@NonNull HttpServletRequest request,
+      @RequestBody @Valid Voucher voucher, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -65,14 +60,15 @@ public class VoucherRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-
+    String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", voucherService.saveVoucher(voucher)));
+        Map.of("status", "success", "message", voucherService.saveVoucher(token, voucher)));
   }
 
   //http://localhost:1234/api/Voucher/update/{id}
   @PutMapping("/update/{id}")
-  public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody @Valid Voucher voucher,
+  public ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable("id") Long id,
+      @RequestBody @Valid Voucher voucher,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
@@ -84,8 +80,9 @@ public class VoucherRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", voucherService.updateVoucher(id, voucher)));
+        Map.of("status", "success", "message", voucherService.updateVoucher(token, id, voucher)));
 
   }
 

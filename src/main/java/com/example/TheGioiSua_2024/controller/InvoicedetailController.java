@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.InvoiceService;
 import com.example.TheGioiSua_2024.service.InvoicedetailService;
 import jakarta.validation.Valid;
@@ -26,6 +27,8 @@ public class InvoicedetailController {
   private InvoicedetailService invoicedetailService;
   @Autowired
   private InvoiceService invoiceService;
+  @Autowired
+  private JwtUtilities jwtUtilities;
 
   //    http://localhost:1234/Invoicedetail/lst
   @GetMapping("/lst")
