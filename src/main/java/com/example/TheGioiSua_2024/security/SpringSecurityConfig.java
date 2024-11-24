@@ -60,7 +60,8 @@ public class SpringSecurityConfig {
             "/Milktaste/lst",
             "/api-docs/**",
             "/swagger-ui/**",
-            "/Checkout/**"
+            "/Checkout/**",
+            "/Log/**"
         ).permitAll()
 
         // Quyền của Customer
@@ -76,7 +77,7 @@ public class SpringSecurityConfig {
             "/Invoicedetail/getInvoiceDetailByUser/**",
             "/payment/transactionHistory",
             "/Invoice/cancel/**"
-        ).hasAnyAuthority("Customer","Staff", "Admin") // Chỉ có Customer
+        ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer
         // Quyền của Staff
         .requestMatchers(
             "/user/**",
