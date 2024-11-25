@@ -65,10 +65,10 @@ public class SpringSecurityConfig {
 
         // Quyền của Customer
         .requestMatchers(
-            "/user/updateAddress",
-            "/user/updatePhonerNumber",
+            "/user/updateAddress/**",
+            "/user/updatePhonerNumber/**",
             "/user/profile/**",
-            "/Invoice/add/**",
+            "/Invoice/add",
             "/Invoicedetail/add/**",
             "/Userinvoice/add/**",
             "/Voucher/voucercode/**",
@@ -77,7 +77,7 @@ public class SpringSecurityConfig {
             "/payment/transactionHistory/**",
             "/Invoice/cancel/**",
             "/Log/getlog/**"
-        ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer
+        ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer mới được phép
         // Quyền của Staff
         .requestMatchers(
             "/user/**",

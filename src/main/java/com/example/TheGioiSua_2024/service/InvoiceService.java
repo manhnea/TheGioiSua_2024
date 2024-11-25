@@ -4,7 +4,6 @@ import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
-import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.entity.User;
 import com.example.TheGioiSua_2024.entity.Userinvoice;
@@ -14,7 +13,6 @@ import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
 import com.example.TheGioiSua_2024.repository.MilkdetailRepository;
 import com.example.TheGioiSua_2024.repository.UserinvoiceRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
-import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
 import jakarta.transaction.Transactional;
@@ -41,10 +39,6 @@ public class InvoiceService implements IInvoiceService {
   private MilkdetailRepository milkdetailRepository;
   @Autowired
   private UserinvoiceRepository userinvoiceRepository;
-  @Autowired
-  private logService logService;
-  @Autowired
-  private JwtUtilities jwtUtilities;
 
   @Transactional
   public List<Invoice> getInvoiceList() {
@@ -52,10 +46,8 @@ public class InvoiceService implements IInvoiceService {
   }
 
   @Override
-  public ResponseEntity<?> saveInvoice(String token, InvoiceDto invoiceDto) {
+  public ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto) {
     Voucher voucher = null;
-    String username = jwtUtilities.extractUsername(token);
-    Log log = new Log();
     List<Invoicedetail> invoicedetails = invoiceDto.getInvoiceDetails();
     Userinvoice byller = new Userinvoice();
     Userinvoice seller = new Userinvoice();
@@ -74,8 +66,6 @@ public class InvoiceService implements IInvoiceService {
       invoice.setVoucher(voucher);
       voucher.setUsagecount(voucher.getUsagecount() - 1);
       System.out.println("voucher.getDiscountpercentage(): " + voucher.getDiscountpercentage());
-      log.setAction("Dung Voucher");
-      log.setDescription(String.format("Dung Voucher %s", voucher.getVouchercode()));
       voucherRepository.save(voucher);
     }
     invoice.setStatus(Status.AwaitingPayment);
@@ -97,18 +87,6 @@ public class InvoiceService implements IInvoiceService {
       byller.setInvoice(invoice);
       byller.setUser(ubyller);
       byller.setStatus(Status.Pending);
-      log.setAction("Tao Don Hang");
-      log.setDescription(String.format(
-          "Tạo Đơn Hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s, Phương thức thanh toán: %s, Giảm giá: %.2f, Tổng tiền: %.2f",
-          invoice.getInvoicecode(),
-          invoice.getPhonenumber(),
-          invoice.getDeliveryaddress(),
-          invoice.getPaymentmethod(),
-          invoice.getDiscountamount(),
-          invoice.getTotalamount()
-      ));
-      logService.saveLog(username, log);
-
       userinvoiceRepository.save(byller);
     } else if (invoice.getPaymentmethod().equals("COD")) {
       invoice.setStatus(Status.ApproveOrders);
@@ -120,17 +98,6 @@ public class InvoiceService implements IInvoiceService {
       byller.setInvoice(invoice);
       byller.setUser(ubyller);
       byller.setStatus(Status.Pending);
-      log.setAction("Tao Don Hang");
-      log.setDescription(String.format(
-          "Tạo Đơn Hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s, Phương thức thanh toán: %s, Giảm giá: %.2f, Tổng tiền: %.2f",
-          invoice.getInvoicecode(),
-          invoice.getPhonenumber(),
-          invoice.getDeliveryaddress(),
-          invoice.getPaymentmethod(),
-          invoice.getDiscountamount(),
-          invoice.getTotalamount()
-      ));
-      logService.saveLog(username, log);
       userinvoiceRepository.save(byller);
     }
     System.out.println(invoice.toString());
@@ -138,64 +105,24 @@ public class InvoiceService implements IInvoiceService {
   }
 
   @Override
-  public String updateInvoice(String token, Long id, Invoice invoice) {
+  public String updateInvoice(Long id, Invoice invoice) {
     // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-    String username = jwtUtilities.extractUsername(token);
     Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
 
-    // Lưu thông tin cũ và mới của hóa đơn
-    String oldInvoicecode = existingInvoice.getInvoicecode();
-    String newInvoicecode = invoice.getInvoicecode();
-    String oldPhonenumber = existingInvoice.getPhonenumber();
-    String newPhonenumber = invoice.getPhonenumber();
-    String oldDeliveryaddress = existingInvoice.getDeliveryaddress();
-    String newDeliveryaddress = invoice.getDeliveryaddress();
-    String oldPaymentmethod = existingInvoice.getPaymentmethod();
-    String newPaymentmethod = invoice.getPaymentmethod();
-    double oldDiscountamount = existingInvoice.getDiscountamount();
-    double newDiscountamount = invoice.getDiscountamount();
-    double oldTotalamount = existingInvoice.getTotalamount();
-    double newTotalamount = invoice.getTotalamount();
-    int oldStatus = existingInvoice.getStatus();
-    int newStatus = invoice.getStatus();
-
-    // Cập nhật hóa đơn
+    // Kiểm tra và cập nhật từng trường nếu không phải null
     existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
         : existingInvoice.getPhonenumber());
     existingInvoice.setDeliveryaddress(
         invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
             : existingInvoice.getDeliveryaddress());
-    existingInvoice.setPaymentmethod(invoice.getPaymentmethod() != null ? invoice.getPaymentmethod()
-        : existingInvoice.getPaymentmethod());
-    existingInvoice.setDiscountamount(invoice.getDiscountamount() != 0 ? invoice.getDiscountamount()
-        : existingInvoice.getDiscountamount());
-    existingInvoice.setTotalamount(invoice.getTotalamount() != 0 ? invoice.getTotalamount()
-        : existingInvoice.getTotalamount());
     existingInvoice.setStatus(
         invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
 
-    // Tạo log
-    Log log = new Log();
-    log.setAction("Cap Nhat Don Hang");
-
-    // Ghi đầy đủ các trường thay đổi vào log
-    log.setDescription(
-        String.format(
-            "Cập nhật đơn hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s, Phương thức thanh toán: %s, Giảm giá: %.2f, Tổng tiền: %.2f, Trạng thái: %d thành đơn hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s, Phương thức thanh toán: %s, Giảm giá: %.2f, Tổng tiền: %.2f, Trạng thái: %d",
-            oldInvoicecode, oldPhonenumber, oldDeliveryaddress, oldPaymentmethod, oldDiscountamount,
-            oldTotalamount, oldStatus,
-            newInvoicecode, newPhonenumber, newDeliveryaddress, newPaymentmethod, newDiscountamount,
-            newTotalamount, newStatus
-        )
-    );
-
-    // Lưu lại log và hóa đơn
-    logService.saveLog(username, log);
+    // Lưu lại hóa đơn đã cập nhật
     invoiceRepository.save(existingInvoice);
 
     return "Cập nhật hóa đơn thành công!";
   }
-
 
   @Override
   public String deleteInvoice(Long id) {

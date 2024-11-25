@@ -11,9 +11,9 @@ public interface IInvoiceService {
 
   List<Invoice> getInvoiceList();
 
-  ResponseEntity<?> saveInvoice(String token, InvoiceDto invoiceDto);
+  ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
 
-  String updateInvoice(String token, Long id, Invoice invoice);
+  String updateInvoice(Long id, Invoice invoice);
 
   String deleteInvoice(Long id);
 

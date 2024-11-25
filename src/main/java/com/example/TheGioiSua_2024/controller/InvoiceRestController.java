@@ -2,11 +2,8 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
-import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.InvoiceService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -25,8 +22,6 @@ public class InvoiceRestController {
 
   @Autowired
   private InvoiceService invoiceService;
-  @Autowired
-  private JwtUtilities jwtUtilities;
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/lst
   @GetMapping("/lst")
@@ -41,16 +36,13 @@ public class InvoiceRestController {
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/add
   @PostMapping("/add")
-  public ResponseEntity<?> addInvoice(@NonNull HttpServletRequest request,
-      @RequestBody InvoiceDto invoiceDto) {
-    String token = jwtUtilities.getToken(request);
-    return invoiceService.saveInvoice(token, invoiceDto);
+  public ResponseEntity<?> addInvoice(@RequestBody InvoiceDto invoiceDto) {
+    return invoiceService.saveInvoice(invoiceDto);
   }
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/update
   @PutMapping("/update/{id}")
-  public ResponseEntity<?> updateInvoice(@NonNull HttpServletRequest request, @PathVariable Long id,
-      @RequestBody @Valid Invoice invoice,
+  public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
@@ -62,9 +54,8 @@ public class InvoiceRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-    String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", invoiceService.updateInvoice(token, id, invoice)));
+        Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
   }
 
 
