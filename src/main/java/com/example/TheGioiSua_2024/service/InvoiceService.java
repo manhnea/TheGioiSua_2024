@@ -142,32 +142,60 @@ public class InvoiceService implements IInvoiceService {
     // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
     String username = jwtUtilities.extractUsername(token);
     Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
+
+    // Lưu thông tin cũ và mới của hóa đơn
     String oldInvoicecode = existingInvoice.getInvoicecode();
     String newInvoicecode = invoice.getInvoicecode();
     String oldPhonenumber = existingInvoice.getPhonenumber();
     String newPhonenumber = invoice.getPhonenumber();
     String oldDeliveryaddress = existingInvoice.getDeliveryaddress();
     String newDeliveryaddress = invoice.getDeliveryaddress();
+    String oldPaymentmethod = existingInvoice.getPaymentmethod();
+    String newPaymentmethod = invoice.getPaymentmethod();
+    double oldDiscountamount = existingInvoice.getDiscountamount();
+    double newDiscountamount = invoice.getDiscountamount();
+    double oldTotalamount = existingInvoice.getTotalamount();
+    double newTotalamount = invoice.getTotalamount();
+    int oldStatus = existingInvoice.getStatus();
+    int newStatus = invoice.getStatus();
+
+    // Cập nhật hóa đơn
     existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
         : existingInvoice.getPhonenumber());
     existingInvoice.setDeliveryaddress(
         invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
             : existingInvoice.getDeliveryaddress());
+    existingInvoice.setPaymentmethod(invoice.getPaymentmethod() != null ? invoice.getPaymentmethod()
+        : existingInvoice.getPaymentmethod());
+    existingInvoice.setDiscountamount(invoice.getDiscountamount() != 0 ? invoice.getDiscountamount()
+        : existingInvoice.getDiscountamount());
+    existingInvoice.setTotalamount(invoice.getTotalamount() != 0 ? invoice.getTotalamount()
+        : existingInvoice.getTotalamount());
     existingInvoice.setStatus(
         invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
+
+    // Tạo log
     Log log = new Log();
     log.setAction("Cap Nhat Don Hang");
+
+    // Ghi đầy đủ các trường thay đổi vào log
     log.setDescription(
         String.format(
-            "Cập nhật đơn hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s thành đơn hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s",
-            oldInvoicecode,
-            oldPhonenumber, oldDeliveryaddress, newInvoicecode, newPhonenumber,
-            newDeliveryaddress));
-    // Lưu lại hóa đơn đã cập nhật
+            "Cập nhật đơn hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s, Phương thức thanh toán: %s, Giảm giá: %.2f, Tổng tiền: %.2f, Trạng thái: %d thành đơn hàng: %s, Số điện thoại: %s, Địa chỉ giao hàng: %s, Phương thức thanh toán: %s, Giảm giá: %.2f, Tổng tiền: %.2f, Trạng thái: %d",
+            oldInvoicecode, oldPhonenumber, oldDeliveryaddress, oldPaymentmethod, oldDiscountamount,
+            oldTotalamount, oldStatus,
+            newInvoicecode, newPhonenumber, newDeliveryaddress, newPaymentmethod, newDiscountamount,
+            newTotalamount, newStatus
+        )
+    );
+
+    // Lưu lại log và hóa đơn
+    logService.saveLog(username, log);
     invoiceRepository.save(existingInvoice);
 
     return "Cập nhật hóa đơn thành công!";
   }
+
 
   @Override
   public String deleteInvoice(Long id) {
