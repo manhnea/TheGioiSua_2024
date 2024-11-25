@@ -9,12 +9,15 @@ import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.User;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.UserService;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,7 @@ public class UserRestController {
 
   private final IUserService iUserService;
   private final UserService userService;
+  private final JwtUtilities jwtUtilities;
 
   @GetMapping("/verify")
   public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
@@ -70,16 +74,19 @@ public class UserRestController {
   }
 
   @PostMapping("/change-password")
-  public ResponseEntity<?> changePassword(
+  public ResponseEntity<?> changePassword(@NonNull HttpServletRequest request,
       @RequestParam("userId") Long userId,
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) {
-    return iUserService.changePassword(userId, oldPassword, newPassword);
+    String token = jwtUtilities.getToken(request);
+    return iUserService.changePassword(token, userId, oldPassword, newPassword);
   }
 
   @PutMapping("/updatePhonerNumber")
-  public ResponseEntity<?> updatePhonerNumber(@RequestBody @Valid User user,
+  public ResponseEntity<?> updatePhonerNumber(@NonNull HttpServletRequest request,
+      @RequestBody @Valid User user,
       BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
     if (bindingResult.hasFieldErrors("phonenumber")) { // Kiểm tra lỗi chỉ với trường phoneNumber
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors("phonenumber")) {
@@ -88,14 +95,17 @@ public class UserRestController {
         error.put("message", fieldError.getDefaultMessage());
         errors.add(error);
       }
+
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-    return ResponseEntity.ok(userService.updatePhoneNumber(user));
+    return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
   }
 
   @PutMapping("/updateAddress")
-  public ResponseEntity<?> updateAddress(@RequestBody @Valid User user,
+  public ResponseEntity<?> updateAddress(@NonNull HttpServletRequest request,
+      @RequestBody @Valid User user,
       BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
     if (bindingResult.hasFieldErrors("address")) { // Kiểm tra lỗi chỉ với trường phoneNumber
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors("address")) {
@@ -106,7 +116,8 @@ public class UserRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-    return ResponseEntity.ok(userService.updateAddress(user));
+
+    return ResponseEntity.ok(userService.updateAddress(token, user));
   }
 
   @GetMapping("/findTop5")
@@ -125,17 +136,18 @@ public class UserRestController {
   }
 
   @PutMapping("/update/{id}")
-  public User updateUser(@PathVariable("id") Long id, @RequestBody User user  ) {
-    return iUserService.updateUser(id,user);
+  public User updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+    return iUserService.updateUser(id, user);
   }
 
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") Long id) {
     String message = iUserService.deleteUser(id);
-    return ResponseEntity.ok(Map.of("status", "success", "message",message ));
+    return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
-@GetMapping("/lst/{id}")
+
+  @GetMapping("/lst/{id}")
   public User getUsersByRole(@PathVariable("id") Long id) {
-      return iUserService.getbyID(id);
+    return iUserService.getbyID(id);
   }
 }

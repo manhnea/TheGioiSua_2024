@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
+import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
@@ -19,6 +20,7 @@ import jakarta.transaction.Transactional;
 import java.sql.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +51,8 @@ public class UserService implements IUserService {
   private final JavaMailSender mailSender;
   private final EmailSend emailSend;
   private final MessageSource messageSource;
+  @Autowired
+  private logService logService;
 
   @Override
   public Role saveRole(Role role) {
@@ -136,6 +140,7 @@ public class UserService implements IUserService {
 
   @Override
   public ResponseEntity<?> authenticate(LoginDto loginDto) {
+
     try {
       // Xác thực người dùng
       Authentication authentication = authenticationManager.authenticate(
@@ -161,11 +166,16 @@ public class UserService implements IUserService {
       // Tạo token
       String token = jwtUtilities.generateToken(user.getId(), user.getUsername(),
           user.getRole().getRoleName());
-
+      Log log = new Log(); // Tạo log
+      log.setAction("Đăng nhập");
+      log.setDescription(
+          String.format("Người dùng %s đã đăng nhập vào hệ thống", user.getUsername()));
+      logService.saveLog(loginDto.getUsername(), log);
       // Trả về token nếu xác thực thành công
       return ResponseEntity.ok(Collections.singletonMap("token", token));
 
     } catch (AuthenticationException e) {
+
       // Nếu xác thực thất bại do thông tin không hợp lệ
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(Collections.singletonMap("error", "Đăng nhập không thành công"));
@@ -282,8 +292,10 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword) {
+  public ResponseEntity<?> changePassword(String token, Long userId, String oldPassword,
+      String newPassword) {
     // Retrieve user by ID
+    String username = jwtUtilities.extractUsername(token);
     User user = iUserRepository.findById(userId)
         .orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
@@ -307,6 +319,11 @@ public class UserService implements IUserService {
     }
 
     // Update the password
+    Log log = new Log(); // Tạo log
+    log.setAction("Thay đổi mật khẩu");
+    log.setDescription(
+        String.format("Người dùng %s đã thay đổi mật khẩu", user.getUsername()));
+    logService.saveLog(username, log);
     user.setPassword(passwordEncoder.encode(newPassword));
     iUserRepository.save(user);
 
@@ -330,15 +347,16 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public User updateUser(Long id,User user) {
-    User user1= iUserRepository.findById(id).orElseThrow();
+  public User updateUser(Long id, User user) {
+    User user1 = iUserRepository.findById(id).orElseThrow();
     Role role = iRoleRepository.findById(user.getRole().getId()).get();
     user1.setRole(role);
     user1.setEmail(user.getEmail());
     user1.setFullname(user.getFullname());
     user1.setAddress(user.getAddress());
     user1.setPhonenumber(user.getPhonenumber());
-    return iUserRepository.save(user1) ; }
+    return iUserRepository.save(user1);
+  }
 
   @Override
   public String deleteUser(Long id) {
@@ -360,13 +378,23 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public ResponseEntity<?> updatePhoneNumber(User user) {
+  public ResponseEntity<?> updatePhoneNumber(String token, User user) {
+    String username = jwtUtilities.extractUsername(token);
     try {
       // Tìm người dùng theo ID
       User u = iUserRepository.findById(user.getId())
           .orElseThrow(
               () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
       u.setPhonenumber(user.getPhonenumber());
+      String oldPhoneNumber = u.getPhonenumber(); // Lấy số điện thoại cũ
+      String newPhoneNumber = user.getPhonenumber(); // Lấy số điện thoại mới
+
+      Log log = new Log(); // Tạo log
+      log.setAction("Cập nhật số điện thoại");
+      log.setDescription(
+          String.format("Người dùng %s đã thay đổi số điện thoại từ %s thành %s",
+              u.getUsername(), oldPhoneNumber, newPhoneNumber));
+      logService.saveLog(username, log);
       iUserRepository.save(u);
       return ResponseEntity.ok("User updated successfully");
     } catch (Exception e) {
@@ -376,13 +404,22 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public ResponseEntity<?> updateAddress(User user) {
+  public ResponseEntity<?> updateAddress(String token, User user) {
+    String username = jwtUtilities.extractUsername(token);
     try {
       // Tìm người dùng theo ID
       User u = iUserRepository.findById(user.getId())
           .orElseThrow(
               () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
       u.setAddress(user.getAddress());
+      String oldAddress = u.getAddress(); // Lấy địa chỉ cũ
+      String newAddress = user.getAddress(); // Lấy địa chỉ mới
+      Log log = new Log(); // Tạo log
+      log.setAction("Cập nhật địa chỉ");
+      log.setDescription(
+          String.format("Người dùng %s đã thay đổi địa chỉ từ %s thành %s",
+              u.getUsername(), oldAddress, newAddress));
+      logService.saveLog(username, log);
       iUserRepository.save(u);
       return ResponseEntity.ok("User updated successfully");
     } catch (Exception e) {

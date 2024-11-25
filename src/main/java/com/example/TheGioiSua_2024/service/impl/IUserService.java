@@ -29,9 +29,9 @@ public interface IUserService {
 
   User saverUser(User user);
 
-  ResponseEntity<?> updatePhoneNumber(User user);
+  ResponseEntity<?> updatePhoneNumber(String token, User user);
 
-  ResponseEntity<?> updateAddress(User user);
+  ResponseEntity<?> updateAddress(String token, User user);
 
   UserDto findUserById(Long id);
 
@@ -39,7 +39,8 @@ public interface IUserService {
 
   ResponseEntity<?> resetPassword(String token, String newPassword);
 
-  ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword);
+  ResponseEntity<?> changePassword(String token, Long userId, String oldPassword,
+      String newPassword);
 
   long countUsersByRoleAndStatus();
 
@@ -47,7 +48,7 @@ public interface IUserService {
 
   List<User> getAllUsers();
 
-  User updateUser(Long id,User user );
+  User updateUser(Long id, User user);
 
   String deleteUser(Long id);
 

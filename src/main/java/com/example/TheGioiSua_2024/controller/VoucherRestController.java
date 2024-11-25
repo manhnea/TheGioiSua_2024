@@ -88,20 +88,26 @@ public class VoucherRestController {
 
   //http://localhost:1234/api/Voucher/delete/{id}
   @DeleteMapping("/delete/{id}")
-  public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-    String message = voucherService.deleteVoucher(id);
+  public ResponseEntity<?> delete(@NonNull HttpServletRequest request,
+      @PathVariable("id") Long id) {
+    String token = jwtUtilities.getToken(request);
+
+    String message = voucherService.deleteVoucher(token, id);
+
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
 
   @GetMapping("/voucercode")
-  public ResponseEntity<?> discountmoney(
+  public ResponseEntity<?> discountmoney(@NonNull HttpServletRequest request,
       @RequestParam("vouchercode") String vouchercode,
       @RequestParam("total") int total
   ) {
     VoucherDto voucherDto = new VoucherDto();
+    String token = jwtUtilities.getToken(request);
+
     voucherDto.setVouchercode(vouchercode);
     voucherDto.setTotal(total);
-    return voucherService.discountmoney(voucherDto);
+    return voucherService.discountmoney(token, voucherDto);
   }
 
 }

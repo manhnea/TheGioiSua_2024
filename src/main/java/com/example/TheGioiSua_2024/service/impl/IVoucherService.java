@@ -16,11 +16,11 @@ public interface IVoucherService {
 
   String updateVoucher(String token, Long id, Voucher voucher);
 
-  String deleteVoucher(Long id);
+  String deleteVoucher(String token, Long id);
 
   Optional<Voucher> getVoucherByName(String voucherName);
 
   Voucher getVoucherById(Long id);
 
-  ResponseEntity<?> discountmoney(VoucherDto voucherDto);
+  ResponseEntity<?> discountmoney(String token, VoucherDto voucherDto);
 }

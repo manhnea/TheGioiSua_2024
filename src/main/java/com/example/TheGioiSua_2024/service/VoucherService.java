@@ -125,14 +125,23 @@ public class VoucherService implements IVoucherService {
   }
 
   @Override
-  public String deleteVoucher(Long id) {
+  public String deleteVoucher(String token, Long id) {
+    String username = jwtUtilities.extractUsername(token);
     Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
     if (existingVoucher.getStatus() == Status.Delete) {
       existingVoucher.setStatus(Status.Active);
+      Log log = new Log(); // Tạo log
+      log.setAction("Khôi phục voucher");
+      log.setDescription(String.format(existingVoucher.getVouchercode()));
+      logService.saveLog(username, log);
       voucherRepository.save(existingVoucher);
       return "Khôi phục voucher thành công.";
     } else {
       existingVoucher.setStatus(Status.Delete);
+      Log log = new Log(); // Tạo log
+      log.setAction("Xóa voucher");
+      log.setDescription(String.format(existingVoucher.getVouchercode()));
+      logService.saveLog(username, log);
       voucherRepository.save(existingVoucher);
       return "Đã xóa voucher thành công.";
     }
@@ -149,7 +158,8 @@ public class VoucherService implements IVoucherService {
   }
 
   @Override
-  public ResponseEntity<?> discountmoney(VoucherDto voucherDto) {
+  public ResponseEntity<?> discountmoney(String token, VoucherDto voucherDto) {
+    String username = jwtUtilities.extractUsername(token);
     try {
       double discountAmount = 0;
       Voucher voucher = voucherRepository.vouchercode(voucherDto.getVouchercode());
@@ -181,7 +191,11 @@ public class VoucherService implements IVoucherService {
 //            // Giảm usage count của voucher và lưu lại
 //            voucher.setUsagecount(voucher.getUsagecount() - 1);
 //            voucherRepository.save(voucher);  // Lưu voucher lại
-
+      Log log = new Log(); // Tạo log
+      log.setAction("Sử dụng voucher");
+      log.setDescription(String.format("Mã Voucher: %s, Số tiền giảm: %s", voucher.getVouchercode(),
+          discountAmount));
+      logService.saveLog(username, log);
       return ResponseEntity.ok(Map.of("discountAmount", discountAmount, "id", voucher.getId()));
     } catch (PersistenceException e) {
       return ResponseEntity.badRequest().body(Map.of("error", "Database Error: " + e.getMessage()));
