@@ -63,6 +63,9 @@ public class InvoiceService implements IInvoiceService {
     invoice.setTotalamount(invoiceDto.getTongTien());
     if (invoiceDto.getVoucherCode() != null) {
       voucher = voucherRepository.vouchercode(invoiceDto.getVoucherCode());
+      if(voucherRepository.existsUserInvoiceByUserAndVoucher(invoiceDto.getNguoiTao().getId(), voucher.getVouchercode())){
+          return ResponseEntity.badRequest().body(Map.of("error", "Tài Khoản Đã Sử Dụng Voucher Này Rồi"));
+      }
       invoice.setVoucher(voucher);
       voucher.setUsagecount(voucher.getUsagecount() - 1);
       System.out.println("voucher.getDiscountpercentage(): " + voucher.getDiscountpercentage());

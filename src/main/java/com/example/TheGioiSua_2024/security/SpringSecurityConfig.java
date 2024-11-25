@@ -27,118 +27,116 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class SpringSecurityConfig {
 
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
-  private final CustomerUserDetailsService customerUserDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomerUserDetailsService customerUserDetailsService;
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors() // Cấu hình CORS
-        .and()
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeHttpRequests()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors() // Cấu hình CORS
+                .and()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests()
+                // Các endpoint không yêu cầu xác thực
+                .requestMatchers(
+                        "/user/reset-password",
+                        "/user/forgot-password",
+                        "/user/verify",
+                        "/user/authenticate",
+                        "/user/register",
+                        "/user/change-password",
+                        "/user/online-users",
+                        "/Product/page/**",
+                        "/Product/lst",
+                        "/Packagingunit/lst",
+                        "/Usagecapacity/lst",
+                        "/Milkdetail/page",
+                        "/Milkdetail/getMilkDetail",
+                        "/Milktype/lst",
+                        "/Milkbrand/lst",
+                        "/Targetuser/lst",
+                        "/Milktaste/lst",
+                        "/api-docs/**",
+                        "/swagger-ui/**",
+                        "/Checkout/**"
+                ).permitAll()
+                // Quyền của Customer
+                .requestMatchers(
+                        "/user/updateAddress/**",
+                        "/user/updatePhonerNumber/**",
+                        "/user/profile/**",
+                        "/Invoice/add",
+                        "/Invoicedetail/add/**",
+                        "/Userinvoice/add/**",
+                        "/Voucher/voucercode/**",
+                        "/Invoice/getInvoices/**",
+                        "/Invoicedetail/getInvoiceDetailByUser/**",
+                        "/payment/transactionHistory/**",
+                        "/Invoice/cancel/**",
+                        "/Log/getlog/**"
+                ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer mới được phép
+                // Quyền của Staff
+                .requestMatchers(
+                        "/user/**",
+                        "/Voucher/lst",
+                        "/Milktype/**",
+                        "/Milktaste/**",
+                        "/Packagingunit/**",
+                        "/Targetuser/**",
+                        "/Product/**",
+                        "/Milkdetail/**",
+                        "/Milkbrand/**",
+                        "/Invoicedetail/**",
+                        "/Invoice/**",
+                        "/Userinvoice/**",
+                        "/Usagecapacity/**",
+                        "/payment/**",
+                        "/Log/**"
+                ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
 
-        // Các endpoint không yêu cầu xác thực
-        .requestMatchers(
-            "/user/reset-password",
-            "/user/forgot-password",
-            "/user/verify",
-            "/user/authenticate",
-            "/user/register",
-            "/user/change-password",
-            "/Product/page/**",
-            "/Product/lst",
-            "/Packagingunit/lst",
-            "/Usagecapacity/lst",
-            "/Milkdetail/page",
-            "/Milkdetail/getMilkDetail",
-            "/Milktype/lst",
-            "/Milkbrand/lst",
-            "/Targetuser/lst",
-            "/Milktaste/lst",
-            "/api-docs/**",
-            "/swagger-ui/**",
-            "/Checkout/**"
-        ).permitAll()
+                // Quyền của Admin
+                .requestMatchers(
+                        "/admin/**",
+                        "/role/**",
+                        "/Voucher/**"
+                ).hasAuthority("Admin")
+                .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
 
-        // Quyền của Customer
-        .requestMatchers(
-            "/user/updateAddress/**",
-            "/user/updatePhonerNumber/**",
-            "/user/profile/**",
-            "/Invoice/add",
-            "/Invoicedetail/add/**",
-            "/Userinvoice/add/**",
-            "/Voucher/voucercode/**",
-            "/Invoice/getInvoices/**",
-            "/Invoicedetail/getInvoiceDetailByUser/**",
-            "/payment/transactionHistory/**",
-            "/Invoice/cancel/**",
-            "/Log/getlog/**"
-        ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer mới được phép
-        // Quyền của Staff
-        .requestMatchers(
-            "/user/**",
-            "/Voucher/lst",
-            "/Milktype/**",
-            "/Milktaste/**",
-            "/Packagingunit/**",
-            "/Targetuser/**",
-            "/Product/**",
-            "/Milkdetail/**",
-            "/Milkbrand/**",
-            "/Invoicedetail/**",
-            "/Invoice/**",
-            "/Userinvoice/**",
-            "/Usagecapacity/**",
-            "/payment/**",
-            "/Log/**"
-        ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
-// Quyền của Admin
-        .requestMatchers(
-            "/admin/**",
-            "/role/**",
-            "/Voucher/**"
-        ).hasAuthority("Admin")
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-        .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-    http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    return http.build();
-  }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+        // Allows all domains to access the API
+        configuration.addAllowedOriginPattern(
+                "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+        configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
+        configuration.addAllowedHeader("*");  // Allows all headers
+        configuration.setAllowCredentials(
+                true);  // Allows credentials such as cookies or HTTP authentication
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
 
-    // Allows all domains to access the API
-    configuration.addAllowedOriginPattern(
-        "*");  // Use this to allow all domains instead of addAllowedOrigin("*")
-
-    configuration.addAllowedMethod("*");  // Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
-    configuration.addAllowedHeader("*");  // Allows all headers
-    configuration.setAllowCredentials(
-        true);  // Allows credentials such as cookies or HTTP authentication
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-
-    return source;
+        return source;
 //        aaaa
-  }
+    }
 
 }
