@@ -11,9 +11,9 @@ public interface IInvoiceService {
 
   List<Invoice> getInvoiceList();
 
-  ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
+  ResponseEntity<?> saveInvoice(String token, InvoiceDto invoiceDto);
 
-  String updateInvoice(Long id, Invoice invoice);
+  String updateInvoice(String token, Long id, Invoice invoice);
 
   String deleteInvoice(Long id);
 
@@ -24,8 +24,9 @@ public interface IInvoiceService {
   long countInvoices();  // Default to current month and year
 
   long countInvoices(int month, int year);  // Specific month and year
-  
-  
+
+
   boolean paymentOK(String codeinvoice);
+
   boolean cancelInvoice(Long id);
 }

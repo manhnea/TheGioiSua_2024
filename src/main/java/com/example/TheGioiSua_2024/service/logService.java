@@ -8,6 +8,8 @@ import com.example.TheGioiSua_2024.service.impl.ilogService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +21,6 @@ public class logService implements ilogService {
   @Autowired
   private UserRepository userRepository;
 
-  @Override
-  public List<Log> getAll() {
-    return logRepository.findAll();
-  }
-
-  @Override
-  public List<Log> getLogByUsername(String username) {
-    Optional<User> user = userRepository.findByUsername(username);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found");
-    }
-    return logRepository.findByUserId(user.get().getId().intValue());
-  }
 
   public void saveLog(String Username, Log log) {
     Optional<User> user = userRepository.findByUsername(Username);
@@ -40,4 +29,22 @@ public class logService implements ilogService {
   }
 
 
+  @Override
+  public Page<Log> getAll(Pageable pageable) {
+    return logRepository.findAll(pageable);
+  }
+
+  @Override
+  public Page<Log> getLogByUsername(String username, Pageable pageable) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (user.isEmpty()) {
+      throw new UsernameNotFoundException("User not found");
+    }
+    return logRepository.findByUserId(user.get().getId().intValue(), pageable);
+  }
+
+  @Override
+  public Page<Log> searchLogByUsername(String username, Pageable pageable) {
+    return logRepository.findByUsername(username, pageable);
+  }
 }

@@ -5,13 +5,14 @@ import com.example.TheGioiSua_2024.entity.Milkbrand;
 import java.util.List;
 
 public interface IMilkbrandService {
-    List<Milkbrand> getAllMilkbrands();
 
-    String addMilkbrand(String token,Milkbrand milkbrand);
+  List<Milkbrand> getAllMilkbrands();
 
-    String updateMilkbrand(Long id, Milkbrand milkbrand);
+  String addMilkbrand(String token, Milkbrand milkbrand);
 
-    String deleteMilkbrand(String token,Long id);
+  String updateMilkbrand(String token, Long id, Milkbrand milkbrand);
 
-    Milkbrand getMilkbrandById(Long id);
+  String deleteMilkbrand(String token, Long id);
+
+  Milkbrand getMilkbrandById(Long id);
 }

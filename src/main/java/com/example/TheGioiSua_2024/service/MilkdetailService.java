@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
+
   @Autowired
   private JwtUtilities jwtUtilities;
   @Autowired
@@ -36,7 +37,7 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public String add(String token,Milkdetail milkdetail) {
+  public String add(String token, Milkdetail milkdetail) {
     boolean exists = milkdetailRepository.existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(
         milkdetail.getProduct().getId(),
         milkdetail.getMilkTaste().getId(),
@@ -73,18 +74,18 @@ public class MilkdetailService implements IMilkdetailService {
     String username = jwtUtilities.extractUsername(token);
 
     String message = String.format(
-            "Tên sản phẩm: %s, Mô tả: %s, Đơn vị đóng gói: %s, Hương vị: %s, Số lượng trong kho: %d, URL hình ảnh: %s, Dung tích sử dụng: %s, Hạn sử dụng: %s, Trạng thái: %s, Mã chi tiết sữa: %s, Giá: %.2f",
-            milkdetail.getProduct(),
-            milkdetail.getDescription(),
-            milkdetail.getPackagingunit(),
-            milkdetail.getMilkTaste(),
-            milkdetail.getStockquantity(),
-            milkdetail.getImgUrl(),
-            milkdetail.getUsageCapacity(),
-            milkdetail.getShelflifeofmilk(),
-            milkdetail.getStatus(),
-            milkdetail.getMilkdetailcode(),
-            milkdetail.getPrice()
+        "Tên sản phẩm: %s, Mô tả: %s, Đơn vị đóng gói: %s, Hương vị: %s, Số lượng trong kho: %d, URL hình ảnh: %s, Dung tích sử dụng: %s, Hạn sử dụng: %s, Trạng thái: %s, Mã chi tiết sữa: %s, Giá: %.2f",
+        milkdetail.getProduct(),
+        milkdetail.getDescription(),
+        milkdetail.getPackagingunit(),
+        milkdetail.getMilkTaste(),
+        milkdetail.getStockquantity(),
+        milkdetail.getImgUrl(),
+        milkdetail.getUsageCapacity(),
+        milkdetail.getShelflifeofmilk(),
+        milkdetail.getStatus(),
+        milkdetail.getMilkdetailcode(),
+        milkdetail.getPrice()
     );
 
     Log log = new Log(); // Tạo log
@@ -96,7 +97,8 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public String update(Long id, Milkdetail milkdetail) {
+  public String update(String token, Long id, Milkdetail milkdetail) {
+    String username = jwtUtilities.extractUsername(token);
     try {
       Milkdetail milkdetailnew = milkdetailRepository.findById(id)
           .orElseThrow(() -> new RuntimeException("MilkDetail Không Tồn Tại"));
@@ -110,6 +112,7 @@ public class MilkdetailService implements IMilkdetailService {
       Usagecapacity usagecapacity = usagecapacityRepository.findById(
               milkdetail.getUsageCapacity().getId())
           .orElseThrow(() -> new RuntimeException("Dung Tích Sử Dụng Không Tồn Tại"));
+
       milkdetailnew.setProduct(product);
       milkdetailnew.setMilkTaste(milktaste);
       milkdetailnew.setPackagingunit(packagingunit);
@@ -120,6 +123,27 @@ public class MilkdetailService implements IMilkdetailService {
       milkdetailnew.setStockquantity(milkdetail.getStockquantity());
       milkdetailnew.setImgUrl(milkdetail.getImgUrl());
       milkdetailnew.setStatus(Status.Active);
+      Log log = new Log(); // Tạo log
+      log.setAction("Sửa san pham");
+      log.setDescription(String.format(
+          "Cập nhật chi tiết sữa: Mã cũ: %s, Giá cũ: %.2f, Hạn sử dụng cũ: %s, Mô tả cũ: %s, Số lượng tồn cũ: %d, Ảnh cũ: %s, Trạng thái cũ: %d."
+              + "Mã mới: %s, Giá mới: %.2f, Hạn sử dụng mới: %s, Mô tả mới: %s, Số lượng tồn mới: %d, Ảnh mới: %s, Trạng thái mới: %d. "
+          ,
+          milkdetailnew.getMilkdetailcode(),
+          milkdetailnew.getPrice(),
+          milkdetailnew.getShelflifeofmilk(),
+          milkdetailnew.getDescription(),
+          milkdetailnew.getStockquantity(),
+          milkdetailnew.getImgUrl(),
+          milkdetailnew.getStatus(),
+          milkdetail.getMilkdetailcode(),
+          milkdetail.getPrice(),
+          milkdetail.getShelflifeofmilk(),
+          milkdetail.getDescription(),
+          milkdetail.getStockquantity(),
+          milkdetail.getImgUrl(),
+          milkdetail.getStatus()
+      ));
       milkdetailRepository.save(milkdetailnew);
       return "Sửa thành công";
     } catch (RuntimeException e) {
@@ -128,7 +152,7 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public String delete(String token,Long id) {
+  public String delete(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     Milkdetail milkdetailnew = milkdetailRepository.findById(id).get();
     if (milkdetailnew.getStatus() == Status.Delete) {

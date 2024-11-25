@@ -9,21 +9,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IProductService {
-    List<Product> getAllProduct();
-    String addProduct(Product product);
 
-    String updateProduct(Long id, Product product);
+  List<Product> getAllProduct();
 
-    String deleteProduct(Long id);
+  String addProduct(String token, Product product);
 
-    Product getProductById(Long id);
-    
-    Page<ProductDto> getPageProduct(Pageable pageable);
-    
-    Page<ProductDto> getPageProductByTypeMilk(Pageable pageable,Long id);
-    
-    Page<ProductDto> getPageProductByBrandMilk(Pageable pageable,Long id);
-    
-    Page<ProductDto> getPageProductByTargetUser(Pageable pageable,Long id);
-    Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
+  String updateProduct(String token, Long id, Product product);
+
+  String deleteProduct(String token, Long id);
+
+  Product getProductById(Long id);
+
+  Page<ProductDto> getPageProduct(Pageable pageable);
+
+  Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id);
+
+  Page<ProductDto> getPageProductByBrandMilk(Pageable pageable, Long id);
+
+  Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id);
+
+  Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
 }

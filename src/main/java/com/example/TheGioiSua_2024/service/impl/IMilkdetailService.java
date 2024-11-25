@@ -12,11 +12,11 @@ public interface IMilkdetailService {
 
   List<Milkdetail> getAll();
 
-  String add(String token,Milkdetail milkdetail);
+  String add(String token, Milkdetail milkdetail);
 
-  String update(Long id, Milkdetail milkdetail);
+  String update(String token, Long id, Milkdetail milkdetail);
 
-  String delete(String token,Long id);
+  String delete(String token, Long id);
 
   Milkdetail getById(Long id);
 

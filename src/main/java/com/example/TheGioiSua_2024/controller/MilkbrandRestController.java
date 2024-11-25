@@ -26,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/Milkbrand")
 public class MilkbrandRestController {
+
   @Autowired
   private JwtUtilities jwtUtilities;
   @Autowired
@@ -46,27 +47,8 @@ public class MilkbrandRestController {
 
   //http://localhost:1234/api/Milkbrand/add
   @PostMapping("/add")
-  public ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody @Valid Milkbrand milkbrand,
-                               BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-    }
-
-    String token = jwtUtilities.getToken(request);
-    String resultMessage = milkbrandService.addMilkbrand(token,milkbrand);
-    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
-  }
-
-  //http://localhost:1234/api/Milkbrand/update/{id}
-  @PutMapping("/update/{id}")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody @Valid Milkbrand milkbrand,
+  public ResponseEntity<?> add(@NonNull HttpServletRequest request,
+      @RequestBody @Valid Milkbrand milkbrand,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
@@ -78,19 +60,43 @@ public class MilkbrandRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+
+    String token = jwtUtilities.getToken(request);
+    String resultMessage = milkbrandService.addMilkbrand(token, milkbrand);
+    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
+  }
+
+  //http://localhost:1234/api/Milkbrand/update/{id}
+  @PutMapping("/update/{id}")
+  public ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable Long id,
+      @RequestBody @Valid Milkbrand milkbrand,
+      BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkbrandService.updateMilkbrand(id, milkbrand)));
+        Map.of("status", "success", "message",
+            milkbrandService.updateMilkbrand(token, id, milkbrand)));
   }
 
   //http://localhost:1234/api/Milkbrand/delete/{id}
   @DeleteMapping("/delete/{id}") // Change to DELETE method
-  public ResponseEntity<?> delete(@NonNull HttpServletRequest request,@PathVariable("id") Long id) {
+  public ResponseEntity<?> delete(@NonNull HttpServletRequest request,
+      @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    String message = milkbrandService.deleteMilkbrand(token,id);
+    String message = milkbrandService.deleteMilkbrand(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
 
   // http://localhost:1234/api/Milkdetail/getMilkDetailPage
-  
+
 
 }

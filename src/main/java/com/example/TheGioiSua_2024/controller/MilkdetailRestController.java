@@ -30,6 +30,7 @@ public class MilkdetailRestController {
   private MilkdetailService milkdetailService;
   @Autowired
   private JwtUtilities jwtUtilities;
+
   //http://localhost:1234/api/Milkdetail/lst
   @GetMapping("/lst")
   private List<Milkdetail> lst() {
@@ -57,8 +58,9 @@ public class MilkdetailRestController {
 
   //http://localhost:1234/api/Milkdetail/add
   @PostMapping("/add")
-  private ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody @Valid Milkdetail milkdetail,
-                                BindingResult bindingResult) {
+  private ResponseEntity<?> add(@NonNull HttpServletRequest request,
+      @RequestBody @Valid Milkdetail milkdetail,
+      BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -71,13 +73,14 @@ public class MilkdetailRestController {
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.add(token,milkdetail)));
+        Map.of("status", "success", "message", milkdetailService.add(token, milkdetail)));
   }
 
   //http://localhost:1234/api/Milkdetail/update/{id}
   @PutMapping("/update/{id}")
-  private ResponseEntity<?> update(@PathVariable("id") Long id,
+  private ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable("id") Long id,
       @Valid @RequestBody Milkdetail milkdetail, BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -89,14 +92,15 @@ public class MilkdetailRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.update(id, milkdetail)));
+        Map.of("status", "success", "message", milkdetailService.update(token, id, milkdetail)));
   }
 
   //http://localhost:1234/api/Milkdetail/delete/{id}
   @DeleteMapping("/delete/{id}")
-  private ResponseEntity<?> delete(@NonNull HttpServletRequest request,@PathVariable("id") Long id) {
+  private ResponseEntity<?> delete(@NonNull HttpServletRequest request,
+      @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    String message = milkdetailService.delete(token,id);
+    String message = milkdetailService.delete(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
   //http://localhost:1234/api/Milkdetail/getMilkDetail
@@ -155,6 +159,7 @@ public class MilkdetailRestController {
   public long getcountmilkdetail() {
     return milkdetailService.countMilkDetails();
   }
+
   @GetMapping("/more")
   private List<Milkdetail> hethang() {
     return milkdetailService.gethethang();

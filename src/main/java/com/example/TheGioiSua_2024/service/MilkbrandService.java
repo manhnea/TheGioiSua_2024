@@ -20,19 +20,20 @@ public class MilkbrandService implements IMilkbrandService {
   private JwtUtilities jwtUtilities;
   @Autowired
   private logService logService;
+
   @Override
   public List<Milkbrand> getAllMilkbrands() {
     return milkbrandRepository.findAll();
   }
 
   @Override
-  public String addMilkbrand(String token,Milkbrand milkbrand) {
+  public String addMilkbrand(String token, Milkbrand milkbrand) {
     String username = jwtUtilities.extractUsername(token);
     String message = String.format(
-            "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
-            milkbrand.getMilkbrandname(),
-            milkbrand.getDescription(),
-            milkbrand.getStatus()
+        "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
+        milkbrand.getMilkbrandname(),
+        milkbrand.getDescription(),
+        milkbrand.getStatus()
     );
 
     Log log = new Log(); // Tạo log
@@ -44,13 +45,26 @@ public class MilkbrandService implements IMilkbrandService {
   }
 
   @Override
-  public String updateMilkbrand(Long id, Milkbrand milkbrand) {
+  public String updateMilkbrand(String token, Long id, Milkbrand milkbrand) {
+    String username = jwtUtilities.extractUsername(token);
+    Log log = new Log(); // Tạo log
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id).orElseThrow();
+    String oldMilkbrandName = existingMilkbrand.getMilkbrandname();
+    String newMilkbrandName = milkbrand.getMilkbrandname();
+    String oldDescription = existingMilkbrand.getDescription();
+    String newDescription = milkbrand.getDescription();
+    String message = String.format(
+        "Tên thương hiệu: %s, Mô tả: %s thành Tên thương hiệu: %s, Mô tả: %s",
+        oldMilkbrandName, oldDescription, newMilkbrandName, newDescription
+    );
     String currentMilkbrandName = existingMilkbrand.getMilkbrandname();
     if (currentMilkbrandName.equals(milkbrand.getMilkbrandname())) {
       existingMilkbrand.setDescription(milkbrand.getDescription());
       existingMilkbrand.setStatus(Status.Active);
       milkbrandRepository.save(existingMilkbrand);
+      log.setAction("Cập nhật mô tả brand");
+      log.setDescription(message);
+      logService.saveLog(username, log);
       return "Cập nhật mô tả thương hiệu sữa thành công.";
     } else if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
       return "Thương hiệu sữa này đã tồn tại.";
@@ -59,12 +73,15 @@ public class MilkbrandService implements IMilkbrandService {
     existingMilkbrand.setStatus(Status.Active);
     existingMilkbrand.setDescription(milkbrand.getDescription());
     milkbrandRepository.save(existingMilkbrand);
+    log.setAction("Cập nhật mô tả brand");
+    log.setDescription(message);
+    logService.saveLog(username, log);
     return "Cập nhật thương hiệu sữa thành công.";
   }
 
 
   @Override
-  public String deleteMilkbrand(String token,Long id) {
+  public String deleteMilkbrand(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
