@@ -100,6 +100,7 @@ public class MilkdetailService implements IMilkdetailService {
   public String update(String token, Long id, Milkdetail milkdetail) {
     String username = jwtUtilities.extractUsername(token);
     try {
+      // Lấy dữ liệu cũ từ database
       Milkdetail milkdetailnew = milkdetailRepository.findById(id)
           .orElseThrow(() -> new RuntimeException("MilkDetail Không Tồn Tại"));
       Product product = productRepository.findById(milkdetail.getProduct().getId())
@@ -113,6 +114,28 @@ public class MilkdetailService implements IMilkdetailService {
               milkdetail.getUsageCapacity().getId())
           .orElseThrow(() -> new RuntimeException("Dung Tích Sử Dụng Không Tồn Tại"));
 
+      // Lưu các giá trị cũ
+      String oldMilkDetailCode = milkdetailnew.getMilkdetailcode();
+      Float oldPrice = milkdetailnew.getPrice();
+      String oldShelfLife = milkdetailnew.getShelflifeofmilk();
+      String oldDescription = milkdetailnew.getDescription();
+      Integer oldStockQuantity = milkdetailnew.getStockquantity();
+      String oldImgUrl = milkdetailnew.getImgUrl();
+      Integer oldStatus = milkdetailnew.getStatus();
+      String oldProduct =
+          milkdetailnew.getProduct() != null ? milkdetailnew.getProduct().getProductname() : "N/A";
+      String oldMilkTaste =
+          milkdetailnew.getMilkTaste() != null ? milkdetailnew.getMilkTaste().getMilktastename()
+              : "N/A";
+      String oldPackagingUnit =
+          milkdetailnew.getPackagingunit() != null ? milkdetailnew.getPackagingunit()
+              .getPackagingunitname()
+              : "N/A";
+      String oldUsageCapacity =
+          milkdetailnew.getUsageCapacity() != null ? milkdetailnew.getUsageCapacity().getUnit()
+              : "N/A";
+      int oldUsageCapacity1 = milkdetailnew.getUsageCapacity().getCapacity();
+      // Cập nhật giá trị mới
       milkdetailnew.setProduct(product);
       milkdetailnew.setMilkTaste(milktaste);
       milkdetailnew.setPackagingunit(packagingunit);
@@ -123,28 +146,30 @@ public class MilkdetailService implements IMilkdetailService {
       milkdetailnew.setStockquantity(milkdetail.getStockquantity());
       milkdetailnew.setImgUrl(milkdetail.getImgUrl());
       milkdetailnew.setStatus(Status.Active);
-      Log log = new Log(); // Tạo log
-      log.setAction("Sửa san pham");
-      log.setDescription(String.format(
-          "Cập nhật chi tiết sữa: Mã cũ: %s, Giá cũ: %.2f, Hạn sử dụng cũ: %s, Mô tả cũ: %s, Số lượng tồn cũ: %d, Ảnh cũ: %s, Trạng thái cũ: %d."
-              + "Mã mới: %s, Giá mới: %.2f, Hạn sử dụng mới: %s, Mô tả mới: %s, Số lượng tồn mới: %d, Ảnh mới: %s, Trạng thái mới: %d. "
-          ,
-          milkdetailnew.getMilkdetailcode(),
-          milkdetailnew.getPrice(),
-          milkdetailnew.getShelflifeofmilk(),
-          milkdetailnew.getDescription(),
-          milkdetailnew.getStockquantity(),
-          milkdetailnew.getImgUrl(),
-          milkdetailnew.getStatus(),
-          milkdetail.getMilkdetailcode(),
-          milkdetail.getPrice(),
-          milkdetail.getShelflifeofmilk(),
-          milkdetail.getDescription(),
-          milkdetail.getStockquantity(),
-          milkdetail.getImgUrl(),
-          milkdetail.getStatus()
 
+      // Tạo log với dữ liệu cũ và mới
+      Log log = new Log();
+      log.setAction("Sửa sản phẩm");
+      log.setDescription(String.format(
+          "Cập nhật chi tiết sữa: \n" +
+              "Sản phẩm cũ: %s, Vị sữa cũ: %s, Đơn vị đóng gói cũ: %s, Dung tích sử dụng cũ: %s %s, "
+              +
+              "Mã cũ: %s, Giá cũ: %.2f, Hạn sử dụng cũ: %s, Mô tả cũ: %s, Số lượng tồn cũ: %d, Ảnh cũ: %s, Trạng thái cũ: %d. \n"
+              +
+              "Sản phẩm mới: %s, Vị sữa mới: %s, Đơn vị đóng gói mới: %s, Dung tích sử dụng mới: %s, "
+              +
+              "Mã mới: %s, Giá mới: %.2f, Hạn sử dụng mới: %s, Mô tả mới: %s, Số lượng tồn mới: %d, Ảnh mới: %s, Trạng thái mới: %d.",
+          oldProduct, oldMilkTaste, oldPackagingUnit, oldUsageCapacity, oldUsageCapacity1,
+          oldMilkDetailCode, oldPrice, oldShelfLife, oldDescription, oldStockQuantity, oldImgUrl,
+          oldStatus,
+          product.getProductname(), milktaste.getMilktastename(),
+          packagingunit.getPackagingunitname(), usagecapacity.getCapacity(),
+          usagecapacity.getUnit(),
+          milkdetail.getMilkdetailcode(), milkdetail.getPrice(), milkdetail.getShelflifeofmilk(),
+          milkdetail.getDescription(), milkdetail.getStockquantity(), milkdetail.getImgUrl(),
+          milkdetail.getStatus()
       ));
+
       logService.saveLog(username, log);
       milkdetailRepository.save(milkdetailnew);
       return "Sửa thành công";
@@ -152,6 +177,7 @@ public class MilkdetailService implements IMilkdetailService {
       return e.getMessage();
     }
   }
+
 
   @Override
   public String delete(String token, Long id) {
