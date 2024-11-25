@@ -68,13 +68,13 @@ public class SpringSecurityConfig {
             "/user/updateAddress",
             "/user/updatePhonerNumber",
             "/user/profile/**",
-            "/Invoice/add",
-            "/Invoicedetail/add",
-            "/Userinvoice/add",
-            "/Voucher/voucercode",
+            "/Invoice/add/**",
+            "/Invoicedetail/add/**",
+            "/Userinvoice/add/**",
+            "/Voucher/voucercode/**",
             "/Invoice/getInvoices/**",
             "/Invoicedetail/getInvoiceDetailByUser/**",
-            "/payment/transactionHistory",
+            "/payment/transactionHistory/**",
             "/Invoice/cancel/**",
             "/Log/getlog/**"
         ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer
