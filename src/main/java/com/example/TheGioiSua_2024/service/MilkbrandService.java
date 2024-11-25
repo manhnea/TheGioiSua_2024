@@ -1,7 +1,9 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.repository.MilkbrandRepository;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilkbrandService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +16,29 @@ public class MilkbrandService implements IMilkbrandService {
 
   @Autowired
   private MilkbrandRepository milkbrandRepository;
-
+  @Autowired
+  private JwtUtilities jwtUtilities;
+  @Autowired
+  private logService logService;
   @Override
   public List<Milkbrand> getAllMilkbrands() {
     return milkbrandRepository.findAll();
   }
 
   @Override
-  public String addMilkbrand(Milkbrand milkbrand) {
+  public String addMilkbrand(String token,Milkbrand milkbrand) {
+    String username = jwtUtilities.extractUsername(token);
+    String message = String.format(
+            "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
+            milkbrand.getMilkbrandname(),
+            milkbrand.getDescription(),
+            milkbrand.getStatus()
+    );
 
+    Log log = new Log(); // Tạo log
+    log.setAction("Thêm voucher");
+    log.setDescription(message);
+    logService.saveLog(username, log);
     milkbrandRepository.save(milkbrand);
     return "Thêm thương hiệu sữa thành công.";
   }
@@ -48,16 +64,25 @@ public class MilkbrandService implements IMilkbrandService {
 
 
   @Override
-  public String deleteMilkbrand(Long id) {
+  public String deleteMilkbrand(String token,Long id) {
+    String username = jwtUtilities.extractUsername(token);
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
 
     if (existingMilkbrand.getStatus() == Status.Delete) {
       existingMilkbrand.setStatus(Status.Active);
+      Log log = new Log(); // Tạo log
+      log.setAction("Khôi phục brand");
+      log.setDescription(String.format(existingMilkbrand.getMilkbrandname()));
+      logService.saveLog(username, log);
       milkbrandRepository.save(existingMilkbrand);
       return "Khôi phục thương hiệu sữa thành công.";
     } else {
       existingMilkbrand.setStatus(Status.Delete);
+      Log log = new Log(); // Tạo log
+      log.setAction("Khóa brand");
+      log.setDescription(String.format(existingMilkbrand.getMilkbrandname()));
+      logService.saveLog(username, log);
       milkbrandRepository.save(existingMilkbrand);
       return "Khóa thương hiệu sữa thành công.";
     }

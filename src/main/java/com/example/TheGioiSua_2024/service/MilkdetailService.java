@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.*;
 import com.example.TheGioiSua_2024.repository.*;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilkdetailService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,10 @@ import java.util.List;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
-
+  @Autowired
+  private JwtUtilities jwtUtilities;
+  @Autowired
+  private logService logService;
   @Autowired
   private MilkdetailRepository milkdetailRepository;
   @Autowired
@@ -32,7 +36,7 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public String add(Milkdetail milkdetail) {
+  public String add(String token,Milkdetail milkdetail) {
     boolean exists = milkdetailRepository.existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(
         milkdetail.getProduct().getId(),
         milkdetail.getMilkTaste().getId(),
@@ -66,6 +70,27 @@ public class MilkdetailService implements IMilkdetailService {
     String milkdetailcode = String.format("MD%03d", maxId);
     milkdetail.setMilkdetailcode(milkdetailcode);
     milkdetail.setStatus(Status.Active);
+    String username = jwtUtilities.extractUsername(token);
+
+    String message = String.format(
+            "Tên sản phẩm: %s, Mô tả: %s, Đơn vị đóng gói: %s, Hương vị: %s, Số lượng trong kho: %d, URL hình ảnh: %s, Dung tích sử dụng: %s, Hạn sử dụng: %s, Trạng thái: %s, Mã chi tiết sữa: %s, Giá: %.2f",
+            milkdetail.getProduct(),
+            milkdetail.getDescription(),
+            milkdetail.getPackagingunit(),
+            milkdetail.getMilkTaste(),
+            milkdetail.getStockquantity(),
+            milkdetail.getImgUrl(),
+            milkdetail.getUsageCapacity(),
+            milkdetail.getShelflifeofmilk(),
+            milkdetail.getStatus(),
+            milkdetail.getMilkdetailcode(),
+            milkdetail.getPrice()
+    );
+
+    Log log = new Log(); // Tạo log
+    log.setAction("Thêm voucher");
+    log.setDescription(message);
+    logService.saveLog(username, log);
     milkdetailRepository.save(milkdetail);
     return "Thêm thành công";
   }
@@ -103,14 +128,23 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public String delete(Long id) {
+  public String delete(String token,Long id) {
+    String username = jwtUtilities.extractUsername(token);
     Milkdetail milkdetailnew = milkdetailRepository.findById(id).get();
     if (milkdetailnew.getStatus() == Status.Delete) {
       milkdetailnew.setStatus(Status.Active);
+      Log log = new Log(); // Tạo log
+      log.setAction("Khôi phục san pham");
+      log.setDescription(String.format(milkdetailnew.getMilkdetailcode()));
+      logService.saveLog(username, log);
       milkdetailRepository.save(milkdetailnew);
       return "Khôi phục thành công";
     } else {
       milkdetailnew.setStatus(Status.Delete);
+      Log log = new Log(); // Tạo log
+      log.setAction("Xoa san pham");
+      log.setDescription(String.format(milkdetailnew.getMilkdetailcode()));
+      logService.saveLog(username, log);
       milkdetailRepository.save(milkdetailnew);
       return "Xóa thành công";
     }

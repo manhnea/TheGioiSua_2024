@@ -2,10 +2,13 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +28,8 @@ public class MilkdetailRestController {
 
   @Autowired
   private MilkdetailService milkdetailService;
-
+  @Autowired
+  private JwtUtilities jwtUtilities;
   //http://localhost:1234/api/Milkdetail/lst
   @GetMapping("/lst")
   private List<Milkdetail> lst() {
@@ -53,8 +57,8 @@ public class MilkdetailRestController {
 
   //http://localhost:1234/api/Milkdetail/add
   @PostMapping("/add")
-  private ResponseEntity<?> add(@RequestBody @Valid Milkdetail milkdetail,
-      BindingResult bindingResult) {
+  private ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody @Valid Milkdetail milkdetail,
+                                BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -65,9 +69,9 @@ public class MilkdetailRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-
+    String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.add(milkdetail)));
+        Map.of("status", "success", "message", milkdetailService.add(token,milkdetail)));
   }
 
   //http://localhost:1234/api/Milkdetail/update/{id}
@@ -90,8 +94,9 @@ public class MilkdetailRestController {
 
   //http://localhost:1234/api/Milkdetail/delete/{id}
   @DeleteMapping("/delete/{id}")
-  private ResponseEntity<?> delete(@PathVariable("id") Long id) {
-    String message = milkdetailService.delete(id);
+  private ResponseEntity<?> delete(@NonNull HttpServletRequest request,@PathVariable("id") Long id) {
+    String token = jwtUtilities.getToken(request);
+    String message = milkdetailService.delete(token,id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
   //http://localhost:1234/api/Milkdetail/getMilkDetail

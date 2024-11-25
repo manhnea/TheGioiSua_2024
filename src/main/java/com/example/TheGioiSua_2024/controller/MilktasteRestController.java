@@ -1,10 +1,13 @@
 package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Milktaste;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilktasteService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import java.util.Map;
 @RequestMapping("/Milktaste")
 public class MilktasteRestController {
     @Autowired
+    private JwtUtilities jwtUtilities;
+    @Autowired
     private MilktasteService milktasteService;
     //http://localhost:1234/api/Milktaste/lst
     @GetMapping("/lst")
@@ -31,7 +36,7 @@ public class MilktasteRestController {
     }
     //http://localhost:1234/api/Milktaste/add
     @PostMapping("/add")
-    public ResponseEntity<?> add(@RequestBody @Valid Milktaste milktaste, BindingResult bindingResult) {
+    public ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody @Valid Milktaste milktaste, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -42,7 +47,8 @@ public class MilktasteRestController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-        return ResponseEntity.ok(Map.of("status", "success", "message", milktasteService.addMilktaste(milktaste)));
+        String token = jwtUtilities.getToken(request);
+        return ResponseEntity.ok(Map.of("status", "success", "message", milktasteService.addMilktaste(token,milktaste)));
     }
     //http://localhost:1234/api/Milktaste/update/{id}
     @PutMapping("/update/{id}")
@@ -61,8 +67,9 @@ public class MilktasteRestController {
     }
     //http://localhost:1234/api/Milktaste/delete/{id}
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        String message = milktasteService.deleteMilktaste(id);
+    public ResponseEntity<?> delete(@NonNull HttpServletRequest request,@PathVariable("id") Long id) {
+        String token = jwtUtilities.getToken(request);
+        String message = milktasteService.deleteMilktaste(token,id);
         return ResponseEntity.ok(Map.of("status", "success", "message",message ));
     }
 

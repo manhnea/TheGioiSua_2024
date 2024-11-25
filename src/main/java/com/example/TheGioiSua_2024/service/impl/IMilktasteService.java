@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface IMilktasteService {
     List<Milktaste> getAllMilktaste();
-    String addMilktaste(Milktaste milktaste);
+    String addMilktaste(String token,Milktaste milktaste);
     String updateMilktaste(Long id,Milktaste milktaste);
-    String deleteMilktaste(Long id);
+    String deleteMilktaste(String token,Long id);
     Optional<Milktaste> getMilktasteByName(String milktasteName);
 
     Milktaste getMilktasteById(Long id);

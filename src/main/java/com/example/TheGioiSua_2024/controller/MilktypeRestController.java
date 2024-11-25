@@ -1,10 +1,13 @@
 package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.MilkType;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilktypeService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import java.util.Map;
 @RequestMapping("/Milktype")
 public class MilktypeRestController {
     @Autowired
+    private JwtUtilities jwtUtilities;
+    @Autowired
     private MilktypeService milktypeService;
     //http://localhost:1234/api/Milktype/lst
     @GetMapping("/lst")
@@ -31,7 +36,7 @@ public class MilktypeRestController {
     }
     //http://localhost:1234/api/Milktype/add
     @PostMapping("/add")
-    public ResponseEntity<?> addMilktype(@RequestBody @Valid MilkType milktype, BindingResult bindingResult) {
+    public ResponseEntity<?> addMilktype(@NonNull HttpServletRequest request, @RequestBody @Valid MilkType milktype, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Map<String, String>> errors = new ArrayList<>();
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -42,7 +47,8 @@ public class MilktypeRestController {
             }
             return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
         }
-         milktypeService.AddMilktype(milktype);
+        String token = jwtUtilities.getToken(request);
+         milktypeService.AddMilktype(token,milktype);
         return ResponseEntity.ok(Map.of("status", "success", "message", "The milktype has been added successfully"));
     }//http://localhost:1234/api/Milktype/update/{id}
     @PutMapping("/update/{id}")
@@ -61,8 +67,9 @@ public class MilktypeRestController {
        return ResponseEntity.ok(Map.of("status", "success", "message", milktypeService.UpdateMilktype(id, milktype)));
     }//http://localhost:1234/api/Milktype/delete/{id}
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteMilktype(@PathVariable("id") Long id) {
-        String message = milktypeService.DeleteMilktype(id);
+    public ResponseEntity<?> deleteMilktype(@NonNull HttpServletRequest request,@PathVariable("id") Long id) {
+        String token = jwtUtilities.getToken(request);
+        String message = milktypeService.DeleteMilktype(token,id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
     }
 }

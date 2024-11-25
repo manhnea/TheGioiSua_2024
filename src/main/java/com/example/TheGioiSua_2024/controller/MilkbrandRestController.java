@@ -2,14 +2,17 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilkbrandService;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +26,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/Milkbrand")
 public class MilkbrandRestController {
-
+  @Autowired
+  private JwtUtilities jwtUtilities;
   @Autowired
   private MilkbrandService milkbrandService;
   @Autowired
@@ -42,8 +46,8 @@ public class MilkbrandRestController {
 
   //http://localhost:1234/api/Milkbrand/add
   @PostMapping("/add")
-  public ResponseEntity<?> add(@RequestBody @Valid Milkbrand milkbrand,
-      BindingResult bindingResult) {
+  public ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody @Valid Milkbrand milkbrand,
+                               BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -55,7 +59,8 @@ public class MilkbrandRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
 
-    String resultMessage = milkbrandService.addMilkbrand(milkbrand);
+    String token = jwtUtilities.getToken(request);
+    String resultMessage = milkbrandService.addMilkbrand(token,milkbrand);
     return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
   }
 
@@ -79,8 +84,9 @@ public class MilkbrandRestController {
 
   //http://localhost:1234/api/Milkbrand/delete/{id}
   @DeleteMapping("/delete/{id}") // Change to DELETE method
-  public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-    String message = milkbrandService.deleteMilkbrand(id);
+  public ResponseEntity<?> delete(@NonNull HttpServletRequest request,@PathVariable("id") Long id) {
+    String token = jwtUtilities.getToken(request);
+    String message = milkbrandService.deleteMilkbrand(token,id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
 

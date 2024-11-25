@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface IMilktypeService {
     List<MilkType> GetAllMilktype();
-    String AddMilktype(MilkType milktype);
+    String AddMilktype(String token,MilkType milktype);
     String UpdateMilktype(Long id,MilkType milktype);
-    String DeleteMilktype(Long id);
+    String DeleteMilktype(String token,Long id);
     Optional<MilkType> getMilkTypeByName(String milkTypeName);
 
     MilkType GetMilktypeById(Long id);
