@@ -49,6 +49,7 @@ public class LogController {
   }
 
   // Lấy logs của user từ token
+//  http://localhost:1234/api/Log/getlog
   @GetMapping("/getlog")
   public ResponseEntity<Page<Log>> getLogByUsername(
       @NonNull HttpServletRequest request,
