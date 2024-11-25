@@ -209,7 +209,8 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
   @Override
-  public String updateStockQuantity(Long id, int quantity) {
+  public String updateStockQuantity(String token, Long id, int quantity) {
+    String username = jwtUtilities.extractUsername(token);
     Milkdetail milkdetail = milkdetailRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("MilkDetail Không Tồn Tại"));
     if (quantity < 0 && milkdetail.getStockquantity() + quantity < 0) {
@@ -217,6 +218,15 @@ public class MilkdetailService implements IMilkdetailService {
     }
     milkdetail.setStockquantity(milkdetail.getStockquantity() + quantity);
     milkdetailRepository.save(milkdetail);
+    Log log = new Log(); // Tạo log
+    log.setAction("Cập nhật số lượng");
+    log.setDescription(String.format(
+        "Cập nhật số lượng sản phẩm: Mã: %s, Số lượng cũ: %d, Số lượng mới: %d",
+        milkdetail.getMilkdetailcode(),
+        milkdetail.getStockquantity() - quantity,
+        milkdetail.getStockquantity()
+    ));
+    logService.saveLog(username, log);
     return "Cập nhật số lượng thành công";
   }
 

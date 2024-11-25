@@ -31,7 +31,7 @@ public interface IMilkdetailService {
 
   long countMilkDetails();
 
-  String updateStockQuantity(Long id, int quantity);
+  String updateStockQuantity(String token, Long id, int quantity);
 
   List<Milkdetail> gethethang();
 }

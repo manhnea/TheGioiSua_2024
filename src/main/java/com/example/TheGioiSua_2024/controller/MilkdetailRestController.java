@@ -39,11 +39,12 @@ public class MilkdetailRestController {
 
   // http://localhost:1234/api/Milkdetail/update-stock/{id}
   @PutMapping("/update-stock/{id}")
-  public ResponseEntity<?> updateStockQuantity(
+  public ResponseEntity<?> updateStockQuantity(@NonNull HttpServletRequest request,
       @PathVariable Long id,
       @RequestParam int quantity) {
+    String token = jwtUtilities.getToken(request);
     try {
-      String message = milkdetailService.updateStockQuantity(id, quantity);
+      String message = milkdetailService.updateStockQuantity(token, id, quantity);
       return ResponseEntity.ok(Map.of("status", "success", "message", message));
     } catch (RuntimeException e) {
       return ResponseEntity.badRequest()
