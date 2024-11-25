@@ -143,7 +143,9 @@ public class MilkdetailService implements IMilkdetailService {
           milkdetail.getStockquantity(),
           milkdetail.getImgUrl(),
           milkdetail.getStatus()
+
       ));
+      logService.saveLog(username, log);
       milkdetailRepository.save(milkdetailnew);
       return "Sửa thành công";
     } catch (RuntimeException e) {
