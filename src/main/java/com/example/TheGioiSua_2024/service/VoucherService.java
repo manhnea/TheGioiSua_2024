@@ -196,7 +196,7 @@ public class VoucherService implements IVoucherService {
       log.setDescription(String.format("Mã Voucher: %s, Số tiền giảm: %s", voucher.getVouchercode(),
           discountAmount));
       logService.saveLog(username, log);
-      return ResponseEntity.ok(Map.of("discountAmount", discountAmount, "id", voucher.getId()));
+      return ResponseEntity.ok(Map.of("discountAmount", discountAmount, "Vouchercode", voucher.getVouchercode()));
     } catch (PersistenceException e) {
       return ResponseEntity.badRequest().body(Map.of("error", "Database Error: " + e.getMessage()));
     } catch (Exception e) {
