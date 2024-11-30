@@ -32,7 +32,7 @@ public class TelegramNotifier {
 
   // Phương thức gửi tin nhắn đến API khác
   public void sendMessageZalo(String messageContent) {
-    String url = "http://160.30.21.47:3002/api/sendmessage";
+    String url = "http://160.30.21.47:3030/api/sendmessage";
     Map<String, String> requestBody = new HashMap<>();
     requestBody.put("phone", "0338739954");
     requestBody.put("messageContent", messageContent);

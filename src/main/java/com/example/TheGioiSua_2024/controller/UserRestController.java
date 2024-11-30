@@ -8,15 +8,17 @@ import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
 import com.example.TheGioiSua_2024.dto.UserDto;
+import com.example.TheGioiSua_2024.dto.UserOnlineDto;
 import com.example.TheGioiSua_2024.entity.User;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
-import com.example.TheGioiSua_2024.security.WebSocketHandler;
 import com.example.TheGioiSua_2024.service.UserService;
 import com.example.TheGioiSua_2024.service.impl.IUserService;
+import com.example.TheGioiSua_2024.util.SessionUserLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -152,9 +154,8 @@ public class UserRestController {
     public User getUsersByRole(@PathVariable("id") Long id) {
         return iUserService.getbyID(id);
     }
-
-    @GetMapping("/online-users")
-    public Set<String> getOnlineUsers() {
-        return WebSocketHandler.getOnlineUsers().keySet(); // Trả về danh sách các userId đang online
+    @GetMapping("/online")
+    public Set<UserOnlineDto> onlineUsers(){
+        return SessionUserLogin.onlineUsers;
     }
 }

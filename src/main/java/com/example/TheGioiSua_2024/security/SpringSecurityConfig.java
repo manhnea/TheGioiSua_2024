@@ -60,7 +60,8 @@ public class SpringSecurityConfig {
                         "/Milktaste/lst",
                         "/api-docs/**",
                         "/swagger-ui/**",
-                        "/Checkout/**"
+                        "/Checkout/**",
+                        "/u-websocket/**","/user/online"
                 ).permitAll()
                 // Quyền của Customer
                 .requestMatchers(
