@@ -5,6 +5,7 @@ import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -33,5 +34,6 @@ public interface IInvoiceService {
 
   boolean cancelInvoice(Long id);
 
-  List<Object[]> findInvoices(Integer status, String invoiceCode, String username, String voucherCode, LocalDate startDate, LocalDate endDate);
+  List<Object[]> getInvoices(String username, String voucherCode, LocalDateTime startDate,
+    LocalDateTime endDate, Integer status, String invoiceCode);
 }

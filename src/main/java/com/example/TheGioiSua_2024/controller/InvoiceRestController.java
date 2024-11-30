@@ -4,7 +4,10 @@ import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.service.InvoiceService;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -45,7 +48,7 @@ public class InvoiceRestController {
   //RessourceEndPoint:http://localhost:1234/api/Invoice/update
   @PutMapping("/update/{id}")
   public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
-      BindingResult bindingResult) {
+    BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -57,7 +60,7 @@ public class InvoiceRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
+      Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
   }
 
 
@@ -88,8 +91,8 @@ public class InvoiceRestController {
   // Endpoint to count invoices for a specific month and year
   @GetMapping("/count")
   public long getCountInvoices(
-      @RequestParam int month,
-      @RequestParam int year) {
+    @RequestParam int month,
+    @RequestParam int year) {
     return invoiceService.countInvoices(month, year);
   }
 
@@ -102,17 +105,19 @@ public class InvoiceRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error"));
     }
   }
-  @GetMapping("Loc")
-  public List<Object[]> getInvoices(
-          @RequestParam(required = false) Integer status,
-          @RequestParam(required = false) String invoiceCode,
-          @RequestParam(required = false) String username,
-          @RequestParam(required = false) String voucherCode,
-          @RequestParam(required = false) LocalDate startDate,
-          @RequestParam(required = false) LocalDate endDate) {
 
-    return invoiceService.findInvoices(status, invoiceCode, username, voucherCode, startDate, endDate);
+  @GetMapping("/search")
+  public ResponseEntity<List<Object[]>> getInvoices(
+    @RequestParam(required = false) String username,
+    @RequestParam(required = false) String voucherCode,
+    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime startDate,
+    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime endDate,
+    @RequestParam(required = false) Integer status,
+    @RequestParam(required = false) String invoiceCode) {
+
+    List<Object[]> invoices = invoiceService.getInvoices(username, voucherCode, startDate, endDate,
+      status, invoiceCode);
+    return ResponseEntity.ok(invoices);
   }
-
 
 }

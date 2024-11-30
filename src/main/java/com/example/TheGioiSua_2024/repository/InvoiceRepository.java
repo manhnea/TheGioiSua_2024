@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -52,29 +53,22 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     + "AND YEAR(creationdate) = :year")
   long countInvoices(@Param("month") int month, @Param("year") int year);
 
-  @Override
   @Query("SELECT i FROM Invoice i WHERE i.status != 338 ORDER BY i.id DESC")
   List<Invoice> findAll();
 
-  @Query(value = "SELECT iv.id, iv.invoicecode, iv.deliveryaddress, iv.phonenumber, v.id, iv.creationdate, iv.discountamount, iv.paymentmethod, iv.status " +
-          "FROM Userinvoice ui " +
-          "JOIN ui.invoice iv " +
-          "LEFT JOIN iv.voucher v " +
-          "JOIN ui.user u " +
-          "WHERE (:status IS NULL OR iv.status = :status) " +
-          "AND (:invoiceCode IS NULL OR iv.invoicecode = :invoiceCode) " +
-          "AND (:username IS NULL OR u.username = :username) " +
-          "AND (:voucherCode IS NULL OR v.vouchercode = :voucherCode) " +
-          "AND (:startDate IS NULL OR :endDate IS NULL OR iv.creationdate BETWEEN :startDate AND :endDate)")
-  List<Object[]> findInvoicesLoc(
-          @Param("status") Integer status,
-          @Param("invoiceCode") String invoiceCode,
-          @Param("username") String username,
-          @Param("voucherCode") String voucherCode,
-          @Param("startDate") LocalDate startDate,
-          @Param("endDate") LocalDate endDate
-  );
-
-
-
+  @Query("SELECT iv FROM Userinvoice ui " +
+    "JOIN Invoice iv ON ui.invoice.id = iv.id " +
+    "JOIN User u ON ui.user.id = u.id " +
+    "JOIN Voucher v ON iv.voucher.id = v.id " +
+    "WHERE (:status IS NULL OR iv.status = :status) " +
+    "AND (:invoiceCode IS NULL OR iv.invoicecode = :invoiceCode) " +
+    "AND (:voucherCode IS NULL OR v.vouchercode = :voucherCode) " +
+    "AND u.username = :username " +
+    "AND (iv.creationdate BETWEEN :startDate AND :endDate)")
+  List<Object[]> findInvoices(@Param("username") String username,
+    @Param("voucherCode") String voucherCode,
+    @Param("startDate") LocalDateTime startDate,
+    @Param("endDate") LocalDateTime endDate,
+    @Param("status") Integer status,
+    @Param("invoiceCode") String invoiceCode);
 }
