@@ -10,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,4 +102,17 @@ public class InvoiceRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error"));
     }
   }
+  @GetMapping("Loc")
+  public List<Object[]> getInvoices(
+          @RequestParam(required = false) Integer status,
+          @RequestParam(required = false) String invoiceCode,
+          @RequestParam(required = false) String username,
+          @RequestParam(required = false) String voucherCode,
+          @RequestParam(required = false) LocalDate startDate,
+          @RequestParam(required = false) LocalDate endDate) {
+
+    return invoiceService.findInvoices(status, invoiceCode, username, voucherCode, startDate, endDate);
+  }
+
+
 }

@@ -4,7 +4,10 @@ import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 
 public interface IInvoiceService {
@@ -29,4 +32,6 @@ public interface IInvoiceService {
   boolean paymentOK(String codeinvoice);
 
   boolean cancelInvoice(Long id);
+
+  List<Object[]> findInvoices(Integer status, String invoiceCode, String username, String voucherCode, LocalDate startDate, LocalDate endDate);
 }

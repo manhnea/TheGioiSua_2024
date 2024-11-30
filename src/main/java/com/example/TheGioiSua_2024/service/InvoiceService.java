@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 
 @Service
@@ -196,4 +198,11 @@ public class InvoiceService implements IInvoiceService {
     }
     return true;
   }
+
+  @Override
+  public List<Object[]> findInvoices(Integer status, String invoiceCode, String username, String voucherCode, LocalDate startDate, LocalDate endDate) {
+    return invoiceRepository.findInvoicesLoc(status,invoiceCode,username,voucherCode,startDate,endDate);
+  }
+
+
 }
