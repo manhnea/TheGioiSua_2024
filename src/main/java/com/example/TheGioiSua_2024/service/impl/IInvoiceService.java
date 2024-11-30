@@ -4,7 +4,11 @@ import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 
 public interface IInvoiceService {
@@ -29,4 +33,7 @@ public interface IInvoiceService {
   boolean paymentOK(String codeinvoice);
 
   boolean cancelInvoice(Long id);
+
+  List<Object[]> getInvoices(String username, String voucherCode, LocalDateTime startDate,
+    LocalDateTime endDate, Integer status, String invoiceCode);
 }

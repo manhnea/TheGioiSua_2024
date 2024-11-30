@@ -17,12 +17,15 @@ import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 
 @Service
@@ -63,8 +66,10 @@ public class InvoiceService implements IInvoiceService {
     invoice.setTotalamount(invoiceDto.getTongTien());
     if (invoiceDto.getVoucherCode() != null) {
       voucher = voucherRepository.vouchercode(invoiceDto.getVoucherCode());
-      if(voucherRepository.existsUserInvoiceByUserAndVoucher(invoiceDto.getNguoiTao().getId(), voucher.getVouchercode())){
-          return ResponseEntity.badRequest().body(Map.of("error", "Tài Khoản Đã Sử Dụng Voucher Này Rồi"));
+      if (voucherRepository.existsUserInvoiceByUserAndVoucher(invoiceDto.getNguoiTao().getId(),
+        voucher.getVouchercode())) {
+        return ResponseEntity.badRequest()
+          .body(Map.of("error", "Tài Khoản Đã Sử Dụng Voucher Này Rồi"));
       }
       invoice.setVoucher(voucher);
       voucher.setUsagecount(voucher.getUsagecount() - 1);
@@ -114,12 +119,12 @@ public class InvoiceService implements IInvoiceService {
 
     // Kiểm tra và cập nhật từng trường nếu không phải null
     existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
-        : existingInvoice.getPhonenumber());
+      : existingInvoice.getPhonenumber());
     existingInvoice.setDeliveryaddress(
-        invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
-            : existingInvoice.getDeliveryaddress());
+      invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
+        : existingInvoice.getDeliveryaddress());
     existingInvoice.setStatus(
-        invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
+      invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
 
     // Lưu lại hóa đơn đã cập nhật
     invoiceRepository.save(existingInvoice);
@@ -176,7 +181,7 @@ public class InvoiceService implements IInvoiceService {
     invoicedetails = invoicedetailRepository.invoicedetails(invoice.getId());
     for (Invoicedetail invoicedetail : invoicedetails) {
       milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId())
-          .orElseThrow();
+        .orElseThrow();
       System.out.println("firt:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
       milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
       System.out.println("last:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
@@ -196,4 +201,13 @@ public class InvoiceService implements IInvoiceService {
     }
     return true;
   }
+
+  @Override
+  public List<Object[]> getInvoices(String username, String voucherCode, LocalDateTime startDate,
+    LocalDateTime endDate, Integer status, String invoiceCode) {
+    return invoiceRepository.findInvoices(username, voucherCode, startDate, endDate, status,
+      invoiceCode);
+  }
+
+
 }
