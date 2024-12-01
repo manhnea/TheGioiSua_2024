@@ -37,125 +37,126 @@ import org.springframework.validation.FieldError;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private final IUserService iUserService;
-    private final UserService userService;
-    private final JwtUtilities jwtUtilities;
+  private final IUserService iUserService;
+  private final UserService userService;
+  private final JwtUtilities jwtUtilities;
 
-    @GetMapping("/verify")
-    public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
-        ResponseEntity<?> response = userService.verifyAccount(token);
-        return response;
+  @GetMapping("/verify")
+  public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
+    ResponseEntity<?> response = userService.verifyAccount(token);
+    return response;
+  }
+
+  //RessourceEndPoint:http://localhost:1234/api/user/register
+  @PostMapping("/register")
+  public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+    return iUserService.register(registerDto);
+  }
+
+  //RessourceEndPoint:http://localhost:1234/api/user/authenticate
+  @PostMapping("/authenticate")
+  public ResponseEntity<?> authenticate(@RequestBody LoginDto loginDto) {
+    return iUserService.authenticate(loginDto);
+  }
+
+  //RessourceEndPoint:http://localhost:1234/api/user/profile/{id}
+  @GetMapping("/profile/{id}")
+  public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    UserDto userDto = iUserService.findUserById(id);
+    return ResponseEntity.ok(userDto);
+  }
+
+  @PostMapping("/forgot-password")
+  public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
+    return iUserService.forgotPassword(forgotPasswordDto);
+  }
+
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(@RequestParam("token") String token,
+    @RequestParam("newPassword") String newPassword) {
+    return iUserService.resetPassword(token, newPassword);
+  }
+
+  @PostMapping("/change-password")
+  public ResponseEntity<?> changePassword(@NonNull HttpServletRequest request,
+    @RequestParam("userId") Long userId,
+    @RequestParam("oldPassword") String oldPassword,
+    @RequestParam("newPassword") String newPassword) {
+    String token = jwtUtilities.getToken(request);
+    return iUserService.changePassword(token, userId, oldPassword, newPassword);
+  }
+
+  @PutMapping("/updatePhonerNumber")
+  public ResponseEntity<?> updatePhonerNumber(@NonNull HttpServletRequest request,
+    @RequestBody @Valid User user,
+    BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
+    if (bindingResult.hasFieldErrors("phonenumber")) { // Kiểm tra lỗi chỉ với trường phoneNumber
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors("phonenumber")) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
+  }
+
+  @PutMapping("/updateAddress")
+  public ResponseEntity<?> updateAddress(@NonNull HttpServletRequest request,
+    @RequestBody @Valid User user,
+    BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
+    if (bindingResult.hasFieldErrors("address")) { // Kiểm tra lỗi chỉ với trường phoneNumber
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors("address")) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
 
-    //RessourceEndPoint:http://localhost:1234/api/user/register
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
-        return iUserService.register(registerDto);
-    }
+    return ResponseEntity.ok(userService.updateAddress(token, user));
+  }
 
-    //RessourceEndPoint:http://localhost:1234/api/user/authenticate
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticate(@RequestBody LoginDto loginDto) {
-        return iUserService.authenticate(loginDto);
-    }
+  @GetMapping("/findTop5")
+  public List<String> findTop5() {
+    return iUserService.findTop5();
+  }
 
-    //RessourceEndPoint:http://localhost:1234/api/user/profile/{id}
-    @GetMapping("/profile/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        UserDto userDto = iUserService.findUserById(id);
-        return ResponseEntity.ok(userDto);
-    }
+  @GetMapping("/count")
+  public long countUsersByRoleAndStatus() {
+    return iUserService.countUsersByRoleAndStatus();
+  }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
-        return iUserService.forgotPassword(forgotPasswordDto);
-    }
+  @GetMapping("lst")
+  public List<User> getAllUsers() {
+    return iUserService.getAllUsers();
+  }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam("token") String token,
-            @RequestParam("newPassword") String newPassword) {
-        return iUserService.resetPassword(token, newPassword);
-    }
+  @PutMapping("/update/{id}")
+  public User updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+    return iUserService.updateUser(id, user);
+  }
 
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@NonNull HttpServletRequest request,
-            @RequestParam("userId") Long userId,
-            @RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword) {
-        String token = jwtUtilities.getToken(request);
-        return iUserService.changePassword(token, userId, oldPassword, newPassword);
-    }
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    String message = iUserService.deleteUser(id);
+    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+  }
 
-    @PutMapping("/updatePhonerNumber")
-    public ResponseEntity<?> updatePhonerNumber(@NonNull HttpServletRequest request,
-            @RequestBody @Valid User user,
-            BindingResult bindingResult) {
-        String token = jwtUtilities.getToken(request);
-        if (bindingResult.hasFieldErrors("phonenumber")) { // Kiểm tra lỗi chỉ với trường phoneNumber
-            List<Map<String, String>> errors = new ArrayList<>();
-            for (FieldError fieldError : bindingResult.getFieldErrors("phonenumber")) {
-                Map<String, String> error = new HashMap<>();
-                error.put("field", fieldError.getField());
-                error.put("message", fieldError.getDefaultMessage());
-                errors.add(error);
-            }
+  @GetMapping("/lst/{id}")
+  public User getUsersByRole(@PathVariable("id") Long id) {
+    return iUserService.getbyID(id);
+  }
 
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-        }
-        return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
-    }
-
-    @PutMapping("/updateAddress")
-    public ResponseEntity<?> updateAddress(@NonNull HttpServletRequest request,
-            @RequestBody @Valid User user,
-            BindingResult bindingResult) {
-        String token = jwtUtilities.getToken(request);
-        if (bindingResult.hasFieldErrors("address")) { // Kiểm tra lỗi chỉ với trường phoneNumber
-            List<Map<String, String>> errors = new ArrayList<>();
-            for (FieldError fieldError : bindingResult.getFieldErrors("address")) {
-                Map<String, String> error = new HashMap<>();
-                error.put("field", fieldError.getField());
-                error.put("message", fieldError.getDefaultMessage());
-                errors.add(error);
-            }
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-        }
-
-        return ResponseEntity.ok(userService.updateAddress(token, user));
-    }
-
-    @GetMapping("/findTop5")
-    public List<String> findTop5() {
-        return iUserService.findTop5();
-    }
-
-    @GetMapping("/count")
-    public long countUsersByRoleAndStatus() {
-        return iUserService.countUsersByRoleAndStatus();
-    }
-
-    @GetMapping("lst")
-    public List<User> getAllUsers() {
-        return iUserService.getAllUsers();
-    }
-
-    @PutMapping("/update/{id}")
-    public User updateUser(@PathVariable("id") Long id, @RequestBody User user) {
-        return iUserService.updateUser(id, user);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        String message = iUserService.deleteUser(id);
-        return ResponseEntity.ok(Map.of("status", "success", "message", message));
-    }
-
-    @GetMapping("/lst/{id}")
-    public User getUsersByRole(@PathVariable("id") Long id) {
-        return iUserService.getbyID(id);
-    }
-    @GetMapping("/online")
-    public Set<UserOnlineDto> onlineUsers(){
-        return SessionUserLogin.onlineUsers;
-    }
+  @GetMapping("/online")
+  public Set<UserOnlineDto> onlineUsers() {
+    return SessionUserLogin.onlineUsers;
+  }
 }

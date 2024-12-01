@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author Administrator
  */
 public class SessionUserLogin {
-    public static Set<UserOnlineDto> onlineUsers = new HashSet<>();
+
+  public static Set<UserOnlineDto> onlineUsers = new HashSet<>();
 }

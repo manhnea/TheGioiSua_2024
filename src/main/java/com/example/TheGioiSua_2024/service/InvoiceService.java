@@ -19,6 +19,8 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -203,11 +205,10 @@ public class InvoiceService implements IInvoiceService {
   }
 
   @Override
-  public List<Object[]> getInvoices(String username, String voucherCode, LocalDateTime startDate,
-    LocalDateTime endDate, Integer status, String invoiceCode) {
-    return invoiceRepository.findInvoices(username, voucherCode, startDate, endDate, status,
-      invoiceCode);
+  public Page<Invoice> getInvoices(String status, String invoiceCode, String username,
+    LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+    return invoiceRepository.findInvoices(status, invoiceCode, username, startDate, endDate,
+      pageable);
   }
-
 
 }

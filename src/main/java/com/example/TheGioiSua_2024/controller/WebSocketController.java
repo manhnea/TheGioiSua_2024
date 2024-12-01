@@ -20,25 +20,24 @@ import org.springframework.messaging.handler.annotation.Payload;
 public class WebSocketController {
 
 
-    // Phương thức này được gọi khi người dùng kết nối
-    @SubscribeMapping("/user/online")
-    public Set<UserOnlineDto> getOnlineUsers() {
-        return SessionUserLogin.onlineUsers;
-    }
+  // Phương thức này được gọi khi người dùng kết nối
+  @SubscribeMapping("/user/online")
+  public Set<UserOnlineDto> getOnlineUsers() {
+    return SessionUserLogin.onlineUsers;
+  }
 
-    // Phương thức này sẽ được gọi khi người dùng kết nối
-    @MessageMapping("/connect")
-    public void userConnect(@Payload UserOnlineDto userOnlineDto) {
-        SessionUserLogin.onlineUsers.add(userOnlineDto);  // Thêm người dùng vào danh sách online
-        System.out.println("User connected: " + userOnlineDto.getUserId());
-    }
+  // Phương thức này sẽ được gọi khi người dùng kết nối
+  @MessageMapping("/connect")
+  public void userConnect(@Payload UserOnlineDto userOnlineDto) {
+    SessionUserLogin.onlineUsers.add(userOnlineDto);  // Thêm người dùng vào danh sách online
+    System.out.println("User connected: " + userOnlineDto.getUserId());
+  }
 
-    // Phương thức này sẽ được gọi khi người dùng ngắt kết nối
-    @MessageMapping("/disconnect")
-    public void userDisconnect(@Payload UserOnlineDto userOnlineDto) {
-        boolean remove = SessionUserLogin.onlineUsers.remove(userOnlineDto);
-        System.out.println("User disconnected: " + userOnlineDto.getUserId());
-        // Xóa người dùng khỏi danh sách online
-    }
+  // Phương thức này sẽ được gọi khi người dùng ngắt kết nối
+  @MessageMapping("/disconnect")
+  public void userDisconnect(@Payload UserOnlineDto userOnlineDto) {
+    boolean remove = SessionUserLogin.onlineUsers.remove(userOnlineDto);
+    System.out.println("User disconnected: " + userOnlineDto.getUserId());
+    // Xóa người dùng khỏi danh sách online
+  }
 }
-

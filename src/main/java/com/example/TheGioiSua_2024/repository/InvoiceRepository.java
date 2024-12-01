@@ -6,6 +6,8 @@ import com.example.TheGioiSua_2024.entity.Milkbrand;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -53,22 +55,16 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     + "AND YEAR(creationdate) = :year")
   long countInvoices(@Param("month") int month, @Param("year") int year);
 
-  @Query("SELECT i FROM Invoice i WHERE i.status != 338 ORDER BY i.id DESC")
-  List<Invoice> findAll();
-
-  @Query("SELECT iv FROM Userinvoice ui " +
-    "JOIN Invoice iv ON ui.invoice.id = iv.id " +
+  @Query("SELECT iv FROM Invoice iv " +
+    "JOIN Userinvoice ui ON ui.invoice.id = iv.id " +
     "JOIN User u ON ui.user.id = u.id " +
-    "JOIN Voucher v ON iv.voucher.id = v.id " +
     "WHERE (:status IS NULL OR iv.status = :status) " +
     "AND (:invoiceCode IS NULL OR iv.invoicecode = :invoiceCode) " +
-    "AND (:voucherCode IS NULL OR v.vouchercode = :voucherCode) " +
-    "AND u.username = :username " +
-    "AND (iv.creationdate BETWEEN :startDate AND :endDate)")
-  List<Object[]> findInvoices(@Param("username") String username,
-    @Param("voucherCode") String voucherCode,
+    "AND (:username IS NULL OR u.username = :username) " +
+    "AND (:startDate IS NULL OR :endDate IS NULL OR iv.invoicecode BETWEEN :startDate AND :endDate)")
+  Page<Invoice> findInvoices(@Param("status") String status,
+    @Param("invoiceCode") String invoiceCode,
+    @Param("username") String username,
     @Param("startDate") LocalDateTime startDate,
-    @Param("endDate") LocalDateTime endDate,
-    @Param("status") Integer status,
-    @Param("invoiceCode") String invoiceCode);
+    @Param("endDate") LocalDateTime endDate, Pageable pageable);
 }

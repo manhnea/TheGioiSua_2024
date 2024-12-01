@@ -6,6 +6,9 @@ import com.example.TheGioiSua_2024.service.InvoiceService;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,16 +110,17 @@ public class InvoiceRestController {
   }
 
   @GetMapping("/search")
-  public ResponseEntity<List<Object[]>> getInvoices(
+  public ResponseEntity<Page<Invoice>> searchInvoices(
+    @RequestParam(required = false) String status,
+    @RequestParam(required = false) String invoiceCode,
     @RequestParam(required = false) String username,
-    @RequestParam(required = false) String voucherCode,
-    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime startDate,
-    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime endDate,
-    @RequestParam(required = false) Integer status,
-    @RequestParam(required = false) String invoiceCode) {
-
-    List<Object[]> invoices = invoiceService.getInvoices(username, voucherCode, startDate, endDate,
-      status, invoiceCode);
+    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate,
+    @RequestParam int page,
+    @RequestParam int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Invoice> invoices = invoiceService.getInvoices(status, invoiceCode, username, startDate,
+      endDate, pageable);
     return ResponseEntity.ok(invoices);
   }
 

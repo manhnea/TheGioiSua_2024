@@ -11,14 +11,17 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");  // Định nghĩa tên topic
-        config.setApplicationDestinationPrefixes("/app");  // Tiền tố cho các yêu cầu từ client
-    }
+  @Override
+  public void configureMessageBroker(MessageBrokerRegistry config) {
+    config.enableSimpleBroker("/topic");  // Định nghĩa tên topic
+    config.setApplicationDestinationPrefixes("/app");  // Tiền tố cho các yêu cầu từ client
+  }
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/u-websocket").setAllowedOrigins("http://localhost:3000","http://160.30.21.47:1234","http://160.30.21.47:3000","http://160.30.21.47:3004","http://localhost:3004/").withSockJS();  // Đăng ký endpoint WebSocket
-    }
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/u-websocket")
+      .setAllowedOrigins("http://localhost:3000", "http://160.30.21.47:1234",
+        "http://160.30.21.47:3000", "http://160.30.21.47:3004", "http://localhost:3004/")
+      .withSockJS();  // Đăng ký endpoint WebSocket
+  }
 }
