@@ -94,7 +94,8 @@ public class SpringSecurityConfig {
         "/Userinvoice/**",
         "/Usagecapacity/**",
         "/payment/**",
-        "/Log/**"
+        "/Log/**",
+        "/Thongke/**"
       ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
 
       // Quyền của Admin
