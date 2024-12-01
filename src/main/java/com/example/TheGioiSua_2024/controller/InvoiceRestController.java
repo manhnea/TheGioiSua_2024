@@ -116,9 +116,8 @@ public class InvoiceRestController {
     @RequestParam(required = false) String username,
     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate,
-    @RequestParam int page,
-    @RequestParam int size) {
-    Pageable pageable = PageRequest.of(page, size);
+    Pageable pageable) {
+
     Page<Invoice> invoices = invoiceService.getInvoices(status, invoiceCode, username, startDate,
       endDate, pageable);
     return ResponseEntity.ok(invoices);
