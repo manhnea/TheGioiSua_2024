@@ -56,14 +56,16 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
   long countInvoices(@Param("month") int month, @Param("year") int year);
 
   @Query(
-    "SELECT iv.id,iv.invoicecode,iv.creationdate,iv.voucher.id,iv.totalamount,iv.deliveryaddress,iv.discountamount,iv.paymentmethod,iv.status,iv.phonenumber FROM Invoice iv "
+    "SELECT iv.id, iv.invoicecode, iv.creationdate, iv.voucher.id, iv.totalamount, iv.deliveryaddress, iv.discountamount, iv.paymentmethod, iv.status, iv.phonenumber "
       +
+      "FROM Invoice iv " +
       "JOIN Userinvoice ui ON ui.invoice.id = iv.id " +
       "JOIN User u ON ui.user.id = u.id " +
       "WHERE (:status IS NULL OR iv.status = :status) " +
       "AND (:invoiceCode IS NULL OR iv.invoicecode = :invoiceCode) " +
       "AND (:username IS NULL OR u.username = :username) " +
-      "AND (:startDate IS NULL OR :endDate IS NULL OR iv.invoicecode BETWEEN :startDate AND :endDate)")
+      "AND (:startDate IS NULL OR :endDate IS NULL OR iv.creationdate BETWEEN :startDate AND :endDate)"
+  )
   Page<Invoice> findInvoices(@Param("status") String status,
     @Param("invoiceCode") String invoiceCode,
     @Param("username") String username,
