@@ -34,9 +34,6 @@ import org.springframework.http.ResponseEntity;
 @Service
 public class InvoiceService implements IInvoiceService {
 
-  ;
-
-  TelegramNotifier telegramNotifier = new TelegramNotifier();
   @Autowired
   private InvoiceRepository invoiceRepository;
 
@@ -48,6 +45,8 @@ public class InvoiceService implements IInvoiceService {
   private MilkdetailRepository milkdetailRepository;
   @Autowired
   private UserinvoiceRepository userinvoiceRepository;
+  @Autowired
+  private TelegramNotifier telegramNotifier;
 
   @Transactional
   public List<Invoice> getInvoiceList() {
@@ -103,6 +102,11 @@ public class InvoiceService implements IInvoiceService {
       byller.setStatus(Status.Pending);
       userinvoiceRepository.save(byller);
     } else if (invoice.getPaymentmethod().equals("COD")) {
+      telegramNotifier.sendMessageZalo(
+        "Mã Hóa Đơn: " + invoice.getInvoicecode() + "\n" + "Số Điện Thoại: "
+          + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
+          + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
+          + invoice.getPaymentmethod());
       invoice.setStatus(Status.ApproveOrders);
       invoiceRepository.save(invoice);
       seller.setInvoice(invoice);
@@ -112,17 +116,6 @@ public class InvoiceService implements IInvoiceService {
       byller.setInvoice(invoice);
       byller.setUser(ubyller);
       byller.setStatus(Status.Pending);
-      String message = String.format("Đơn Hàng Mới:\n" +
-          "Người Tạo: %s\n" +
-          "Mã Đơn Hàng: %s\n" +
-          "Hình Thức Thanh Toán: %s\n" +
-          "Trạng Thái: %s",
-        ubyller.getFullname(),
-        invoice.getInvoicecode(),
-        invoice.getPaymentmethod(),
-        invoice.getStatus());
-
-      telegramNotifier.sendMessageZalo(message);
       userinvoiceRepository.save(byller);
     }
     System.out.println(invoice.toString());

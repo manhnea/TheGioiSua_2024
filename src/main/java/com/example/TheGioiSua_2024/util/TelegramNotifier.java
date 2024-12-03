@@ -1,10 +1,12 @@
 package com.example.TheGioiSua_2024.util;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class TelegramNotifier {
 
   private final RestTemplate restTemplate;
@@ -21,9 +23,9 @@ public class TelegramNotifier {
 
     try {
       restTemplate.postForObject(
-          "https://api.telegram.org/bot7586885101:AAEXrfXyyiDKmc0VYe6FMKQ5BK7IdAOlH9s/sendMessage",
-          body,
-          String.class
+        "https://api.telegram.org/bot7586885101:AAEXrfXyyiDKmc0VYe6FMKQ5BK7IdAOlH9s/sendMessage",
+        body,
+        String.class
       );
     } catch (Exception e) {
       System.out.println("Lỗi khi gửi thông báo Telegram: " + e.getMessage());
