@@ -34,6 +34,9 @@ import org.springframework.http.ResponseEntity;
 @Service
 public class InvoiceService implements IInvoiceService {
 
+  ;
+
+  TelegramNotifier telegramNotifier = new TelegramNotifier();
   @Autowired
   private InvoiceRepository invoiceRepository;
 
@@ -45,9 +48,6 @@ public class InvoiceService implements IInvoiceService {
   private MilkdetailRepository milkdetailRepository;
   @Autowired
   private UserinvoiceRepository userinvoiceRepository;
-
-
-  private TelegramNotifier telegramNotifier;
 
   @Transactional
   public List<Invoice> getInvoiceList() {
@@ -112,8 +112,6 @@ public class InvoiceService implements IInvoiceService {
       byller.setInvoice(invoice);
       byller.setUser(ubyller);
       byller.setStatus(Status.Pending);
-
-      userinvoiceRepository.save(byller);
       String message = String.format("Đơn Hàng Mới:\n" +
           "Người Tạo: %s\n" +
           "Mã Đơn Hàng: %s\n" +
@@ -125,6 +123,7 @@ public class InvoiceService implements IInvoiceService {
         invoice.getStatus());
 
       telegramNotifier.sendMessageZalo(message);
+      userinvoiceRepository.save(byller);
     }
     System.out.println(invoice.toString());
     return ResponseEntity.ok("null");
