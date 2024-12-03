@@ -382,9 +382,9 @@ public class UserService implements IUserService {
   public ResponseEntity<?> updateFullName(String token, User user) {
     String username = jwtUtilities.extractUsername(token);
     try {
-      // Validate that fullname is not empty or null
+      // Kiểm tra fullname không được rỗng hoặc null
       if (user.getFullname() == null || user.getFullname().trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("Fullname cannot be empty");
+        return ResponseEntity.badRequest().body("Họ tên không được để trống");
       }
 
       // Tìm người dùng theo ID
@@ -397,15 +397,16 @@ public class UserService implements IUserService {
       String newFullName = user.getFullname(); // Lấy họ tên mới
       Log log = new Log(); // Tạo log
       log.setAction("Cập nhật họ tên");
-      log.setDescription(
-        String.format("Người dùng %s đã thay đổi họ tên từ %s thành %s",
-          u.getUsername(), oldFullName, newFullName));
+      log.setDescription(String.format("Người dùng %s đã thay đổi họ tên từ %s thành %s",
+        u.getUsername(), oldFullName, newFullName));
       logService.saveLog(username, log);
       iUserRepository.save(u);
-      return ResponseEntity.ok("User updated successfully");
+      return ResponseEntity.ok("Cập nhật người dùng thành công");
+    } catch (ResponseStatusException e) {
+      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("An error occurred while updating the user");
+        .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
     }
   }
 
@@ -413,17 +414,17 @@ public class UserService implements IUserService {
   public ResponseEntity<?> updatePhoneNumber(String token, User user) {
     String username = jwtUtilities.extractUsername(token);
     try {
-      // Validate that phonenumber is not empty or null
+      // Kiểm tra số điện thoại không được rỗng hoặc null
       if (user.getPhonenumber() == null || user.getPhonenumber().trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("Phone number cannot be empty");
+        return ResponseEntity.badRequest().body("Số điện thoại không được để trống");
       }
 
-      // Validate Vietnamese phone number format
+      // Kiểm tra định dạng số điện thoại Việt Nam
       String phoneRegex = "^(0[3|5|7|8|9])+([0-9]{8})$";
       Pattern pattern = Pattern.compile(phoneRegex);
       if (!pattern.matcher(user.getPhonenumber()).matches()) {
         return ResponseEntity.badRequest()
-          .body("Invalid phone number format. Please enter a valid Vietnamese phone number.");
+          .body("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam hợp lệ.");
       }
 
       // Tìm người dùng theo ID
@@ -436,15 +437,16 @@ public class UserService implements IUserService {
       String newPhoneNumber = user.getPhonenumber(); // Lấy số điện thoại mới
       Log log = new Log(); // Tạo log
       log.setAction("Cập nhật số điện thoại");
-      log.setDescription(
-        String.format("Người dùng %s đã thay đổi số điện thoại từ %s thành %s",
-          u.getUsername(), oldPhoneNumber, newPhoneNumber));
+      log.setDescription(String.format("Người dùng %s đã thay đổi số điện thoại từ %s thành %s",
+        u.getUsername(), oldPhoneNumber, newPhoneNumber));
       logService.saveLog(username, log);
       iUserRepository.save(u);
-      return ResponseEntity.ok("User updated successfully");
+      return ResponseEntity.ok("Cập nhật người dùng thành công");
+    } catch (ResponseStatusException e) {
+      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("An error occurred while updating the user");
+        .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
     }
   }
 
@@ -452,9 +454,9 @@ public class UserService implements IUserService {
   public ResponseEntity<?> updateAddress(String token, User user) {
     String username = jwtUtilities.extractUsername(token);
     try {
-      // Validate that address is not empty or null
+      // Kiểm tra địa chỉ không được rỗng hoặc null
       if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("Address cannot be empty");
+        return ResponseEntity.badRequest().body("Địa chỉ không được để trống");
       }
 
       // Tìm người dùng theo ID
@@ -467,16 +469,18 @@ public class UserService implements IUserService {
       String newAddress = user.getAddress(); // Lấy địa chỉ mới
       Log log = new Log(); // Tạo log
       log.setAction("Cập nhật địa chỉ");
-      log.setDescription(
-        String.format("Người dùng %s đã thay đổi địa chỉ từ %s thành %s",
-          u.getUsername(), oldAddress, newAddress));
+      log.setDescription(String.format("Người dùng %s đã thay đổi địa chỉ từ %s thành %s",
+        u.getUsername(), oldAddress, newAddress));
       logService.saveLog(username, log);
       iUserRepository.save(u);
-      return ResponseEntity.ok("User updated successfully");
+      return ResponseEntity.ok("Cập nhật người dùng thành công");
+    } catch (ResponseStatusException e) {
+      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("An error occurred while updating the user");
+        .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
     }
   }
+
 
 }
