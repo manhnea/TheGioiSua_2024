@@ -108,13 +108,12 @@ public class InvoiceService implements IInvoiceService {
       seller.setInvoice(invoice);
       seller.setStatus(Status.Pending);
       userinvoiceRepository.save(seller);
-
       User ubyller = invoiceDto.getNguoiTao();
       byller.setInvoice(invoice);
       byller.setUser(ubyller);
       byller.setStatus(Status.Pending);
 
-      // Cập nhật thông báo cho Telegram/Zalo
+      userinvoiceRepository.save(byller);
       String message = String.format("Đơn Hàng Mới:\n" +
           "Người Tạo: %s\n" +
           "Mã Đơn Hàng: %s\n" +
@@ -126,8 +125,6 @@ public class InvoiceService implements IInvoiceService {
         invoice.getStatus());
 
       telegramNotifier.sendMessageZalo(message);
-
-      userinvoiceRepository.save(byller);
     }
     System.out.println(invoice.toString());
     return ResponseEntity.ok("null");
