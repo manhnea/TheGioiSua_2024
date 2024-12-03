@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.UserinvoiceRepository;
 import com.example.TheGioiSua_2024.service.impl.ITotalStatisticsService;
 import java.time.LocalDate;
@@ -14,6 +15,8 @@ public class TotalStatisticsService implements ITotalStatisticsService {
 
   @Autowired
   private UserinvoiceRepository userinvoiceRepository;
+  @Autowired
+  private InvoiceRepository invoiceRepository;
 
   @Override
   public List<Object[]> getSalesRevenue(String voucher, LocalDateTime startDate,
@@ -25,5 +28,10 @@ public class TotalStatisticsService implements ITotalStatisticsService {
   public List<Object[]> getRevenueByDate(Integer voucherId, LocalDateTime startDate,
     LocalDateTime endDate) {
     return userinvoiceRepository.findRevenueByDate(voucherId, startDate, endDate);
+  }
+
+  @Override
+  public List<Object[]> getRevenueByMonth() {
+    return invoiceRepository.findRevenueByDate();
   }
 }

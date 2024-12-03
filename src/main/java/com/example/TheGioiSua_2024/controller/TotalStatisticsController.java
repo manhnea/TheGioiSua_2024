@@ -71,4 +71,24 @@ public class TotalStatisticsController {
     // Return the processed data
     return ResponseEntity.ok(data);
   }
+
+  @GetMapping("/by-month")
+  public ResponseEntity<List<Map<String, Object>>> getRevenueByMonth() {
+
+    // Fetch data from service layer
+    List<Object[]> revenue = totalStatisticsService.getRevenueByMonth();
+
+    // Convert Object[] to Map<String, Object> for better readability
+    List<Map<String, Object>> data = new ArrayList<>();
+    for (Object[] row : revenue) {
+      Map<String, Object> revenueByMonth = new HashMap<>();
+      revenueByMonth.put("Date", row[0]);
+      revenueByMonth.put("totalRevenue", row[1]);
+
+      data.add(revenueByMonth);
+    }
+
+    // Return the processed data
+    return ResponseEntity.ok(data);
+  }
 }

@@ -12,5 +12,7 @@ public interface ITotalStatisticsService {
 
   List<Object[]> getRevenueByDate(Integer voucherId, LocalDateTime startDate,
     LocalDateTime endDate);
+
+  List<Object[]> getRevenueByMonth();
 }
 

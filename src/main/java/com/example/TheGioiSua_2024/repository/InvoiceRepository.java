@@ -71,4 +71,15 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Param("username") String username,
     @Param("startDate") LocalDateTime startDate,
     @Param("endDate") LocalDateTime endDate, Pageable pageable);
+
+  @Query("SELECT DATE(i.creationdate), SUM(i.totalamount) " +
+    "FROM Invoice i " +
+    "WHERE MONTH(i.creationdate) = MONTH(CURRENT_DATE) " +
+    "AND YEAR(i.creationdate) = YEAR(CURRENT_DATE) " +
+    "AND i.status = 905 " +
+    "GROUP BY DATE(i.creationdate) " +
+    "ORDER BY DATE(i.creationdate) ASC")
+  List<Object[]> findRevenueByDate();
+
+
 }
