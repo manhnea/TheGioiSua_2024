@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ITotalStatisticsService {
 
-  List<Object[]> getSalesRevenue(Long voucherId, LocalDateTime startDate, LocalDateTime endDate,
-    Integer status);
+  List<Object[]> getSalesRevenue(String voucher, LocalDateTime startDate, LocalDateTime endDate);
+
+  List<Object[]> getRevenueByDate(Integer voucherId, LocalDateTime startDate,
+    LocalDateTime endDate);
 }
 

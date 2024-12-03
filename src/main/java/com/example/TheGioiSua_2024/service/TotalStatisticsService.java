@@ -16,8 +16,14 @@ public class TotalStatisticsService implements ITotalStatisticsService {
   private UserinvoiceRepository userinvoiceRepository;
 
   @Override
-  public List<Object[]> getSalesRevenue(Long voucherId, LocalDateTime startDate,
-    LocalDateTime endDate, Integer status) {
-    return userinvoiceRepository.getSalesRevenue(voucherId, startDate, endDate, status);
+  public List<Object[]> getSalesRevenue(String voucher, LocalDateTime startDate,
+    LocalDateTime endDate) {
+    return userinvoiceRepository.getSalesRevenue(voucher, startDate, endDate);
+  }
+
+  @Override
+  public List<Object[]> getRevenueByDate(Integer voucherId, LocalDateTime startDate,
+    LocalDateTime endDate) {
+    return userinvoiceRepository.findRevenueByDate(voucherId, startDate, endDate);
   }
 }

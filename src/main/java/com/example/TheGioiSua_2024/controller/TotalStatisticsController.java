@@ -24,14 +24,13 @@ public class TotalStatisticsController {
 
   @GetMapping("/sales-revenue")
   public ResponseEntity<List<Map<String, Object>>> getSalesRevenue(
-    @RequestParam(required = false) Long voucherId,
-    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-    @RequestParam(required = false) Integer status) {
+    @RequestParam(required = false) String voucher,
+    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
     // Fetch data from service layer
-    List<Object[]> revenue = totalStatisticsService.getSalesRevenue(voucherId, startDate, endDate,
-      status);
+    List<Object[]> revenue = totalStatisticsService.getSalesRevenue(voucher, startDate, endDate
+    );
 
     // Convert Object[] to Map<String, Object> for better readability
     List<Map<String, Object>> data = new ArrayList<>();
@@ -44,6 +43,29 @@ public class TotalStatisticsController {
       milkDetail.put("username", row[4]);
 
       data.add(milkDetail);
+    }
+
+    // Return the processed data
+    return ResponseEntity.ok(data);
+  }
+
+  @GetMapping("/by-date")
+  public ResponseEntity<List<Map<String, Object>>> getRevenueByDate(
+    @RequestParam(required = false) Integer voucherId,
+    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
+    // Fetch data from service layer
+    List<Object[]> revenue = totalStatisticsService.getRevenueByDate(voucherId, startDate, endDate);
+
+    // Convert Object[] to Map<String, Object> for better readability
+    List<Map<String, Object>> data = new ArrayList<>();
+    for (Object[] row : revenue) {
+      Map<String, Object> revenueByDate = new HashMap<>();
+      revenueByDate.put("date", row[0]);
+      revenueByDate.put("totalRevenue", row[1]);
+
+      data.add(revenueByDate);
     }
 
     // Return the processed data

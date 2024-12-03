@@ -40,7 +40,7 @@ public interface IUserService {
   ResponseEntity<?> resetPassword(String token, String newPassword);
 
   ResponseEntity<?> changePassword(String token, Long userId, String oldPassword,
-      String newPassword);
+    String newPassword);
 
   long countUsersByRoleAndStatus();
 
@@ -53,4 +53,6 @@ public interface IUserService {
   String deleteUser(Long id);
 
   User getbyID(Long id);
+
+  Object updateFullName(String token, User user);
 }

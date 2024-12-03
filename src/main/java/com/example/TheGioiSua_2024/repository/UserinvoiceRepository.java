@@ -20,23 +20,38 @@ public interface UserinvoiceRepository extends JpaRepository<Userinvoice, Long> 
   List<Object[]> findUserInvoices();
 
   @Query("SELECT md.milkdetailcode, " +
-    "SUM(od.quantity * od.price), " +
+    "iv.totalamount," +
     "SUM(od.quantity), " +
-    "COUNT(DISTINCT iv.id), " +
+    "v.vouchercode," +
     "u.username " +
     "FROM Userinvoice ui " +
     "JOIN ui.invoice iv " +
     "JOIN ui.user u " +
     "JOIN Invoicedetail od ON iv.id = od.invoice.id " +
+    "JOIN Voucher v ON iv.voucher.id = v.id " +
     "JOIN od.milkDetail md " +
-    "WHERE (:voucherId IS NULL OR iv.voucher.id = :voucherId) " +
-    "AND (iv.creationdate BETWEEN :startDate AND :endDate) " +
-    "AND (:status IS NULL OR iv.status = :status) " +
+    "WHERE (:voucher IS NULL OR v.vouchercode = :voucher) " +
+    "AND (:startDate IS NULL OR :endDate IS NULL OR iv.creationdate BETWEEN :startDate AND :endDate) "
+    +
     "AND u.username != 'admin' " +
+    "AND iv.status = 905 " +
     "GROUP BY md.milkdetailcode, u.username")
   List<Object[]> getSalesRevenue(
-    @Param("voucherId") Long voucherId,
+    @Param("voucher") String voucher,
     @Param("startDate") LocalDateTime startDate,
-    @Param("endDate") LocalDateTime endDate,
-    @Param("status") Integer status);
+    @Param("endDate") LocalDateTime endDate);
+
+
+  @Query(value = "SELECT DATE(i.creationdate) AS ngayHoaDon, SUM(i.totalamount) AS tongDoanhThu " +
+    "FROM Invoice i " +
+    "JOIN Userinvoice ui ON ui.invoice.id = i.id " +
+    "WHERE i.status = 905 " +
+    "AND (:startDate IS NULL OR :endDate IS NULL OR i.creationdate BETWEEN :startDate AND :endDate)"
+    +
+    "AND (:voucherid IS NULL OR i.voucher.id = :voucherid)" +
+    "GROUP BY DATE(i.creationdate) " +
+    "ORDER BY DATE(i.creationdate)")
+  List<Object[]> findRevenueByDate(@Param("voucherid") Integer voucherid,
+    @Param("startDate") LocalDateTime startDate,
+    @Param("endDate") LocalDateTime endDate);
 }

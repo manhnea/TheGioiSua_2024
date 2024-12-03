@@ -105,6 +105,25 @@ public class UserRestController {
     return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
   }
 
+  @PutMapping("/updateFullName")
+  public ResponseEntity<?> updateFullName(@NonNull HttpServletRequest request,
+    @RequestBody @Valid User user,
+    BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
+    if (bindingResult.hasFieldErrors("fullname")) { // Kiểm tra lỗi chỉ với trường phoneNumber
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors("fullname")) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+
+    return ResponseEntity.ok(userService.updateFullName(token, user));
+  }
+
   @PutMapping("/updateAddress")
   public ResponseEntity<?> updateAddress(@NonNull HttpServletRequest request,
     @RequestBody @Valid User user,
