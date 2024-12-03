@@ -90,8 +90,19 @@ public class UserRestController {
   public ResponseEntity<?> updatePhonerNumber(@NonNull HttpServletRequest request,
     @RequestBody @Valid User user,
     BindingResult bindingResult) {
-    String token = jwtUtilities.getToken(request);
-    if (bindingResult.hasFieldErrors("phonenumber")) { // Kiểm tra lỗi chỉ với trường phoneNumber
+    // Kiểm tra nếu phonenumber là null
+    if (user.getPhonenumber() == null || user.getPhonenumber().trim().isEmpty()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      Map<String, String> error = new HashMap<>();
+      error.put("field", "phonenumber");
+      error.put("message", "Số điện thoại không được để trống");
+      errors.add(error);
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+
+    // Kiểm tra lỗi với trường phonenumber
+    if (bindingResult.hasFieldErrors("phonenumber")) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors("phonenumber")) {
         Map<String, String> error = new HashMap<>();
@@ -102,6 +113,9 @@ public class UserRestController {
 
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+
+    // Nếu không có lỗi, tiếp tục xử lý cập nhật số điện thoại
+    String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
   }
 
