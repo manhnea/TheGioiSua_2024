@@ -15,6 +15,7 @@ import com.example.TheGioiSua_2024.repository.UserinvoiceRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
+import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,6 +45,9 @@ public class InvoiceService implements IInvoiceService {
   private MilkdetailRepository milkdetailRepository;
   @Autowired
   private UserinvoiceRepository userinvoiceRepository;
+
+
+  private TelegramNotifier telegramNotifier;
 
   @Transactional
   public List<Invoice> getInvoiceList() {
@@ -104,10 +108,25 @@ public class InvoiceService implements IInvoiceService {
       seller.setInvoice(invoice);
       seller.setStatus(Status.Pending);
       userinvoiceRepository.save(seller);
+
       User ubyller = invoiceDto.getNguoiTao();
       byller.setInvoice(invoice);
       byller.setUser(ubyller);
       byller.setStatus(Status.Pending);
+
+      // Cập nhật thông báo cho Telegram/Zalo
+      String message = String.format("Đơn Hàng Mới:\n" +
+          "Người Tạo: %s\n" +
+          "Mã Đơn Hàng: %s\n" +
+          "Hình Thức Thanh Toán: %s\n" +
+          "Trạng Thái: %s",
+        ubyller.getFullname(),
+        invoice.getInvoicecode(),
+        invoice.getPaymentmethod(),
+        invoice.getStatus());
+
+      telegramNotifier.sendMessageZalo(message);
+
       userinvoiceRepository.save(byller);
     }
     System.out.println(invoice.toString());
