@@ -64,7 +64,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
       "WHERE (:status IS NULL OR iv.status = :status) " +
       "AND (:invoiceCode IS NULL OR iv.invoicecode = :invoiceCode) " +
       "AND (:username IS NULL OR u.username = :username) " +
-      "AND (:startDate IS NULL OR :endDate IS NULL OR iv.creationdate BETWEEN :startDate AND :endDate)"
+      "AND (:startDate IS NULL OR :endDate IS NULL OR iv.creationdate BETWEEN :startDate AND :endDate) "
+      +
+      "ORDER BY iv.id DESC"
   )
   Page<Invoice> findInvoices(@Param("status") String status,
     @Param("invoiceCode") String invoiceCode,
