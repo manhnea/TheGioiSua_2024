@@ -79,11 +79,10 @@ public class UserRestController {
 
   @PostMapping("/change-password")
   public ResponseEntity<?> changePassword(@NonNull HttpServletRequest request,
-    @RequestParam("userId") Long userId,
     @RequestParam("oldPassword") String oldPassword,
     @RequestParam("newPassword") String newPassword) {
     String token = jwtUtilities.getToken(request);
-    return iUserService.changePassword(token, userId, oldPassword, newPassword);
+    return iUserService.changePassword(token, oldPassword, newPassword);
   }
 
   @PutMapping("/updatePhonerNumber")

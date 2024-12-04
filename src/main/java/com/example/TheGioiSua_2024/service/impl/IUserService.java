@@ -39,7 +39,7 @@ public interface IUserService {
 
   ResponseEntity<?> resetPassword(String token, String newPassword);
 
-  ResponseEntity<?> changePassword(String token, Long userId, String oldPassword,
+  ResponseEntity<?> changePassword(String token, String oldPassword,
     String newPassword);
 
   long countUsersByRoleAndStatus();
