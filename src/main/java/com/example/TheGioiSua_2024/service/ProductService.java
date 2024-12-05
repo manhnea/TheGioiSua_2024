@@ -2,6 +2,7 @@ package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.dto.ProductDto;
+import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
@@ -74,14 +75,14 @@ public class ProductService implements IProductService {
       product.setProductCode(productCode);
       product.setProductname(productname);
       MilkType milkType = milktypeRepository.findById(product.getMilkType().getId())
-          .orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
+        .orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
       Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId())
-          .orElseThrow(() -> new RuntimeException("Hãng Sữa Không Tồn Tại"));
+        .orElseThrow(() -> new RuntimeException("Hãng Sữa Không Tồn Tại"));
       String nameMilkBrand = milkbrand.getMilkbrandname();
       String nameMilkType = milkType.getMilkTypename();
       String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
-          + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
-          + RandomNumberGenerator.generateRandom4Digits();
+        + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
+        + RandomNumberGenerator.generateRandom4Digits();
 
       if (productRepository.findByProductname(productname).isPresent()) {
         return "Sản phẩm với tên này đã tồn tại.";
@@ -91,8 +92,8 @@ public class ProductService implements IProductService {
       }
       while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {
         urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
-            + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
-            + RandomNumberGenerator.generateRandom4Digits();
+          + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
+          + RandomNumberGenerator.generateRandom4Digits();
       }
       product.setProductUrl(StringUtil.removeAccent(urlProduct));
       product.setStatus(Status.Active);
@@ -100,11 +101,11 @@ public class ProductService implements IProductService {
       Log log = new Log();
       log.setAction("Thêm sản phẩm");
       log.setDescription(
-          String.format("Sản phẩm: %s - Loại: %s, Thương hiệu: %s, Đối tượng sử dụng: %s",
-              product.getProductname(),
-              product.getMilkType(),
-              product.getMilkBrand(),
-              product.getTargetUser()));
+        String.format("Sản phẩm: %s - Loại: %s, Thương hiệu: %s, Đối tượng sử dụng: %s",
+          product.getProductname(),
+          product.getMilkType(),
+          product.getMilkBrand(),
+          product.getTargetUser()));
       logService.saveLog(username, log);
       productRepository.save(product);
       return "Thêm sản phẩm thành công.";
@@ -120,28 +121,28 @@ public class ProductService implements IProductService {
 
     try {
       Product existingProduct = productRepository.findById(id)
-          .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
+        .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
 
       // Kiểm tra các thuộc tính liên quan
       MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow();
       String changeLog = String.format(
-          "Tên sản phẩm: %s -> %s, Loại: %s -> %s, Thương hiệu: %s -> %s, Đối tượng: %s -> %s",
-          existingProduct.getProductname(), product.getProductname(),
-          existingProduct.getMilkType().getMilkTypename(), milkType.getMilkTypename(),
-          existingProduct.getMilkBrand().getMilkbrandname(),
-          milkbrandRepository.findById(product.getMilkBrand().getId())
-              .orElseThrow(() -> new IllegalArgumentException("Milk brand not found"))
-              .getMilkbrandname(),
-          existingProduct.getTargetUser().getTargetName(),
-          targetuserRepository.findById(product.getTargetUser().getId())
-              .orElseThrow(() -> new IllegalArgumentException("Target user not found"))
-              .getTargetName()
+        "Tên sản phẩm: %s -> %s, Loại: %s -> %s, Thương hiệu: %s -> %s, Đối tượng: %s -> %s",
+        existingProduct.getProductname(), product.getProductname(),
+        existingProduct.getMilkType().getMilkTypename(), milkType.getMilkTypename(),
+        existingProduct.getMilkBrand().getMilkbrandname(),
+        milkbrandRepository.findById(product.getMilkBrand().getId())
+          .orElseThrow(() -> new IllegalArgumentException("Milk brand not found"))
+          .getMilkbrandname(),
+        existingProduct.getTargetUser().getTargetName(),
+        targetuserRepository.findById(product.getTargetUser().getId())
+          .orElseThrow(() -> new IllegalArgumentException("Target user not found"))
+          .getTargetName()
       );
 
       Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId())
-          .orElseThrow();
+        .orElseThrow();
       Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId())
-          .orElseThrow();
+        .orElseThrow();
       String currentproductName = existingProduct.getProductname();
       if (currentproductName.equals(product.getProductname())) {
         existingProduct.setMilkType(milkType);
@@ -199,7 +200,7 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public Page<ProductDto> getPageProduct(Pageable pageable) {
+  public Page<ProductlstDto> getPageProduct(Pageable pageable) {
     return productRepository.getPageProduct(pageable);
   }
 

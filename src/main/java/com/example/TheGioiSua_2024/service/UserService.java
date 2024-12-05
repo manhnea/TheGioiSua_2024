@@ -293,10 +293,11 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public ResponseEntity<?> changePassword(String token, Long userId, String oldPassword,
+  public ResponseEntity<?> changePassword(String token, String oldPassword,
     String newPassword) {
     // Retrieve user by ID
     String username = jwtUtilities.extractUsername(token);
+    Long userId = iUserRepository.findByUsername(username).get().getId();
     User user = iUserRepository.findById(userId)
       .orElseThrow(
         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
