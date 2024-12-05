@@ -4,45 +4,29 @@
  */
 package com.example.TheGioiSua_2024.controller;
 
-import com.example.TheGioiSua_2024.dto.UserOnlineDto;
-import com.example.TheGioiSua_2024.util.SessionUserLogin;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.socket.WebSocketSession;
-
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.stereotype.Controller;
 
+/**
+ *
+ * @author Administrator
+ */
 @Controller
 public class WebSocketController {
 
-    @MessageMapping("/sendMessage") // Đích nhận tin nhắn từ client
-    @SendTo("/topic/messages") // Đích gửi tin nhắn tới các client
-    public String sendMessage(String message) {
-        return message; // Trả lại tin nhắn nhận được
-    }
-    // Phương thức này được gọi khi người dùng kết nối
-
-    @SubscribeMapping("/user/online")
-    public Set<UserOnlineDto> getOnlineUsers() {
-        return SessionUserLogin.onlineUsers;
-    }
-
-    // Phương thức này sẽ được gọi khi người dùng kết nối
-    @MessageMapping("/connect")
-    public void userConnect(@Payload UserOnlineDto userOnlineDto) {
-        SessionUserLogin.onlineUsers.add(userOnlineDto);  // Thêm người dùng vào danh sách online
-        System.out.println("User connected: " + userOnlineDto.getUserId());
-    }
-
-    // Phương thức này sẽ được gọi khi người dùng ngắt kết nối
-    @MessageMapping("/disconnect")
-    public void userDisconnect(@Payload UserOnlineDto userOnlineDto) {
-        boolean remove = SessionUserLogin.onlineUsers.remove(userOnlineDto);
-        System.out.println("User disconnected: " + userOnlineDto.getUserId());
-        // Xóa người dùng khỏi danh sách online
+    @MessageMapping("/chat")
+    @SendTo("/topic/messages")
+    public String sendMessage(@Payload String message, SimpMessageHeaderAccessor headerAccessor) {
+        // Lấy username từ WebSocket session attributes
+        String username = (String) headerAccessor.getSessionAttributes().get("username");
+        
+        // Kiểm tra người gửi tin nhắn và xử lý thông điệp
+        System.out.println("Message from " + username + ": " + message);
+        
+        // Trả lời lại message cho các client đã đăng ký
+        return "Hello " + username + ", you said: " + message;
     }
 }

@@ -60,7 +60,7 @@ public class SpringSecurityConfig {
         "/Milktaste/lst",
         "/api-docs/**",
         "/swagger-ui/**",
-        "/Checkout/**", "/user/online","/u-websocket/**","/u-websocket"
+        "/Checkout/**", "/user/online","/ws", "/ws/**"
       ).permitAll()
       // Quyền của Customer
       .requestMatchers(
@@ -102,8 +102,7 @@ public class SpringSecurityConfig {
         "/admin/**",
         "/role/**",
         "/Voucher/**"
-      ).hasAuthority("Admin")
-      .anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
+      ).hasAuthority("Admin").anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
