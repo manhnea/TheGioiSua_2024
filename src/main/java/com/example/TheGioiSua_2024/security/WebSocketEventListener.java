@@ -4,72 +4,54 @@
  */
 package com.example.TheGioiSua_2024.security;
 
+import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Component
 public class WebSocketEventListener {
 
-    @Autowired
-    private WebSocketAuthInterceptor webSocketAuthInterceptor;
-
     @EventListener
-public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-    StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    System.out.println("Headers: " + headerAccessor.getMessageHeaders());
+    public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        GenericMessage<?> connectMessage = (GenericMessage<?>) headerAccessor.getMessageHeaders().get("simpConnectMessage");
 
-    // Truy xuất thông tin session từ simpConnectMessage
-    Object simpConnectMessage = headerAccessor.getHeader("simpConnectMessage");
-    
-    if (simpConnectMessage instanceof GenericMessage<?>) {
-        GenericMessage<?> connectMessage = (GenericMessage<?>) simpConnectMessage;
-        
-        // Lấy nativeHeaders
-        Map<String, Object> nativeHeaders = (Map<String, Object>) connectMessage.getHeaders().get("nativeHeaders");
+        if (connectMessage != null) {
+            // Lấy simpSessionAttributes từ GenericMessage
+            Map<String, Object> simpSessionAttributes = (Map<String, Object>) connectMessage.getHeaders().get("simpSessionAttributes");
 
-        if (nativeHeaders != null) {
-            // Lấy simpSessionAttributes từ nativeHeaders
-            Map<String, Object> simpSessionAttributes = (Map<String, Object>) nativeHeaders.get("simpSessionAttributes");
-            
             if (simpSessionAttributes != null) {
                 String sessionId = (String) simpSessionAttributes.get("sessionId");
                 String username = (String) simpSessionAttributes.get("username");
-
-                System.out.println("sessionId: " + sessionId);
-                System.out.println("username: " + username);
+                System.out.println("User: " + username + " Connected");
             } else {
                 System.out.println("simpSessionAttributes not found.");
             }
         } else {
-            System.out.println("nativeHeaders not found.");
+            System.out.println("simpConnectMessage not found.");
         }
-    } else {
-        System.out.println("simpConnectMessage not found or not of the expected type.");
     }
-}
 
+    @EventListener
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        System.out.println("Headers: " + headerAccessor.getMessageHeaders());
 
-    // Lắng nghe sự kiện khi ngắt kết nối WebSocket
-//    @EventListener
-//    public void handleWebSocketDisconnectListener(SessionDisconnectedEvent event) {
-////        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-////        
-////        // Lấy sessionId từ attributes khi ngắt kết nối
-////        String sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
-////
-////        System.out.println("Disconnected sessionId: " + sessionId);
-////
-////        // Xóa thông tin người dùng khỏi sessionUsernameMap khi ngắt kết nối
-////        if (sessionId != null) {
-////            webSocketAuthInterceptor.removeUserInfoBySessionId(sessionId);
-////            System.out.println("UserInfo removed for sessionId: " + sessionId);
-////        }
-//    }
+        // Trích xuất simpSessionAttributes từ header của thông điệp
+        Map<String, Object> simpSessionAttributes = (Map<String, Object>) headerAccessor.getMessageHeaders().get("simpSessionAttributes");
+
+        if (simpSessionAttributes != null) {
+            String sessionId = (String) simpSessionAttributes.get("sessionId");
+            String username = (String) simpSessionAttributes.get("username");
+            System.out.println("User: " + username + " Disconneted");
+        } else {
+            System.out.println("simpSessionAttributes not found.");
+        }
+    }
 }

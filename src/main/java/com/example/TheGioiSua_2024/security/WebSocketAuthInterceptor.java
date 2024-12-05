@@ -37,18 +37,17 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
                 String user = jwtUtilities.extractUsername(ntoken[1]);
                 UserDetails userDetails = customerUserDetailsService.loadUserByUsername(user);
                 if (userDetails != null) {
-//                    tao 1 lop de chua thong tin dang nhap      
+                    // Tạo sessionId và đặt thông tin vào attributes
                     String sessionId = UUID.randomUUID().toString();
-                    // Đặt sessionId và username vào attributes cho WebSocket
-                    attributes.put("sessionId", sessionId);
-                    attributes.put("username", userDetails.getUsername());
-                    System.out.println("sessionId: "+ sessionId);
-                    System.out.println("username: "+ userDetails.getUsername());
-                    return true; // Cho phép handshake
+                    attributes.put("sessionId", sessionId);  // Lưu sessionId
+                    attributes.put("username", userDetails.getUsername());  // Lưu username
+                    System.out.println("sessionId: " + sessionId);
+                    System.out.println("username: " + userDetails.getUsername());
+                    return true;  // Cho phép kết nối WebSocket
                 }
             }
         }
-        return false; // Từ chối handshake nếu token không hợp lệ hoặc không tìm thấy người dùng
+        return false;  // Từ chối nếu token không hợp lệ hoặc không tìm thấy người dùng
     }
 
     @Override
