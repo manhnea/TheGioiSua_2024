@@ -124,7 +124,7 @@ public class UserService implements IUserService {
     user.setStatus(Status.Inactive); // Đặt trạng thái chưa xác minh
     Role role = iRoleRepository.findById(2L).orElseThrow(); // 2L user role
     user.setRole(role);
-    iUserRepository.save(user);
+//    iUserRepository.save(user);
 
     // Tạo token xác minh và gửi email
     String verificationToken = jwtUtilities.generateVerificationToken(user.getId());
@@ -248,10 +248,12 @@ public class UserService implements IUserService {
     String email = forgotPasswordDto.getEmail();
 
     // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
-    User user = iUserRepository.findByEmail(email)
-      .orElseThrow(
-        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email không tồn tại"));
-
+    User user = iUserRepository.findByEmail(email);
+    if(user == null){
+        ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(Collections.singletonMap("error", "Email không tồn tại"));
+        
+    }
     // Tạo token khôi phục mật khẩu
     String recoveryToken = jwtUtilities.generateRecoveryToken(user.getId());
     user.setVerificationToken(recoveryToken);

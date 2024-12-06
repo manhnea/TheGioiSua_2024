@@ -416,5 +416,51 @@ public class EmailSend {
       throw new IllegalStateException("Không thể gửi email khôi phục mật khẩu", e);
     }
   }
+  
+  
+  public void sendAccountPasswordEmail(String email, String username, String password) {
+    String subject = "Thông tin tài khoản của bạn";
+    String message = "<!DOCTYPE html>\n" +
+        "<html lang=\"en\">\n" +
+        "<head>\n" +
+        "    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com/\">\n" +
+        "    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Public+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap\">\n" +
+        "    <link href=\"https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap\" rel=\"stylesheet\">\n" +
+        "    <style type=\"text/css\">\n" +
+        "        body {\n" +
+        "            text-align: center;\n" +
+        "            margin: 0 auto;\n" +
+        "            width: 650px;\n" +
+        "            font-family: 'Public Sans', sans-serif;\n" +
+        "            background-color: #e2e2e2;\n" +
+        "        }\n" +
+        "        .mb-3 { margin-bottom: 30px; }\n" +
+        "        p { font-size: 14px; color: #939393; font-family: 'Nunito Sans', sans-serif; }\n" +
+        "        .theme-color { color: #0DA487; }\n" +
+        "    </style>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "    <h3 style=\"font-weight: 700; font-size: 20px;\">Thông tin tài khoản của bạn</h3>\n" +
+        "    <p>Xin chào,</p>\n" +
+        "    <p>Chúng tôi xin thông báo rằng tài khoản của bạn đã được tạo thành công.</p>\n" +
+        "    <p><strong>Tên tài khoản:</strong> " + username + "</p>\n" +
+        "    <p><strong>Mật khẩu:</strong> " + password + "</p>\n" +
+        "    <p>Vui lòng giữ thông tin này an toàn và không chia sẻ với bất kỳ ai.</p>\n" +
+        "    <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>\n" +
+        "    <p class=\"theme-color\">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>\n" +
+        "</body>\n" +
+        "</html>";
+    
+    try {
+      MimeMessage mimeMessage = mailSender.createMimeMessage();
+      MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+      helper.setTo(email);
+      helper.setSubject(subject);
+      helper.setText(message, true);
+      mailSender.send(mimeMessage);
+    } catch (MessagingException e) {
+      throw new IllegalStateException("Không thể gửi email xác minh", e);
+    }
+}
 
 }

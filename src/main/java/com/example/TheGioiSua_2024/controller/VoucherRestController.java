@@ -10,9 +10,6 @@ import com.example.TheGioiSua_2024.service.logService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
@@ -112,9 +109,8 @@ public class VoucherRestController {
     voucherDto.setTotal(total);
     return voucherService.discountmoney(token, voucherDto);
   }
-  @GetMapping("/voucherPage")
-  public Page<Voucher> voucherPage(@RequestParam("page") int page, @RequestParam("size") int size) {
-    Pageable pageable = PageRequest.of(page, size);
-    return voucherService.getVoucherPage(pageable);
+  @GetMapping("/voucherActive")
+  public ResponseEntity<?> voucherActive(){
+      return voucherService.voucherActive();
   }
 }
