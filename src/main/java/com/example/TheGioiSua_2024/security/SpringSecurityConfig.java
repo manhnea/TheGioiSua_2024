@@ -72,6 +72,7 @@ public class SpringSecurityConfig {
       .requestMatchers(
         "/user/updateAddress/**",
         "/user/updatePhonerNumber/**",
+        "/user/updateFullName/**",
         "/user/profile/**",
         "/Invoice/add",
         "/Invoicedetail/add/**",

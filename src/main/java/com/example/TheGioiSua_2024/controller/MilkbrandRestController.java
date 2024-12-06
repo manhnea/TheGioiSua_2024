@@ -48,8 +48,8 @@ public class MilkbrandRestController {
   //http://localhost:1234/api/Milkbrand/add
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-      @RequestBody @Valid Milkbrand milkbrand,
-      BindingResult bindingResult) {
+    @RequestBody @Valid Milkbrand milkbrand,
+    BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -69,8 +69,8 @@ public class MilkbrandRestController {
   //http://localhost:1234/api/Milkbrand/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable Long id,
-      @RequestBody @Valid Milkbrand milkbrand,
-      BindingResult bindingResult) {
+    @RequestBody @Valid Milkbrand milkbrand,
+    BindingResult bindingResult) {
     String token = jwtUtilities.getToken(request);
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
@@ -83,24 +83,25 @@ public class MilkbrandRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message",
-            milkbrandService.updateMilkbrand(token, id, milkbrand)));
+      Map.of("status", "success", "message",
+        milkbrandService.updateMilkbrand(token, id, milkbrand)));
   }
 
   //http://localhost:1234/api/Milkbrand/delete/{id}
   @DeleteMapping("/delete/{id}") // Change to DELETE method
   public ResponseEntity<?> delete(@NonNull HttpServletRequest request,
-      @PathVariable("id") Long id) {
+    @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
     String message = milkbrandService.deleteMilkbrand(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
 
-
+  // http://localhost:1234/api/Milkdetail/getMilkDetailPage
 
   @GetMapping("/getMilkBrandPage")
-  public Page<Milkbrand> getMilkBrandPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+  public Page<Milkbrand> getMilkBrandPage(@RequestParam("page") int page,
+    @RequestParam("size") int size) {
     Pageable pageable = PageRequest.of(page, size);
-   return milkbrandService.getMilkbrandPage(pageable);
+    return milkbrandService.getMilkbrandPage(pageable);
   }
 }

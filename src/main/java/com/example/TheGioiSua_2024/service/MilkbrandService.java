@@ -8,7 +8,6 @@ import com.example.TheGioiSua_2024.service.impl.IMilkbrandService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +32,10 @@ public class MilkbrandService implements IMilkbrandService {
   public String addMilkbrand(String token, Milkbrand milkbrand) {
     String username = jwtUtilities.extractUsername(token);
     String message = String.format(
-        "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
-        milkbrand.getMilkbrandname(),
-        milkbrand.getDescription(),
-        milkbrand.getStatus()
+      "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
+      milkbrand.getMilkbrandname(),
+      milkbrand.getDescription(),
+      milkbrand.getStatus()
     );
 
     Log log = new Log(); // Tạo log
@@ -57,8 +56,8 @@ public class MilkbrandService implements IMilkbrandService {
     String oldDescription = existingMilkbrand.getDescription();
     String newDescription = milkbrand.getDescription();
     String message = String.format(
-        "Tên thương hiệu: %s, Mô tả: %s thành Tên thương hiệu: %s, Mô tả: %s",
-        oldMilkbrandName, oldDescription, newMilkbrandName, newDescription
+      "Tên thương hiệu: %s, Mô tả: %s thành Tên thương hiệu: %s, Mô tả: %s",
+      oldMilkbrandName, oldDescription, newMilkbrandName, newDescription
     );
     String currentMilkbrandName = existingMilkbrand.getMilkbrandname();
     if (currentMilkbrandName.equals(milkbrand.getMilkbrandname())) {
@@ -87,7 +86,7 @@ public class MilkbrandService implements IMilkbrandService {
   public String deleteMilkbrand(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
+      .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
 
     if (existingMilkbrand.getStatus() == Status.Delete) {
       existingMilkbrand.setStatus(Status.Active);
@@ -118,7 +117,6 @@ public class MilkbrandService implements IMilkbrandService {
   public Page<Milkbrand> getMilkbrandPage(Pageable pageable) {
     return milkbrandRepository.findAll(pageable);
   }
-
 
 }
 

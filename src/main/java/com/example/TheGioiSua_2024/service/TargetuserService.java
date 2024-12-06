@@ -66,7 +66,7 @@ public class TargetuserService implements ITargetuserService {
       existingTargetuser.setStatus(Status.Active);
       log.setAction("Cập nhật người dùng mục tiêu");
       log.setDescription("Cập nhật người dùng mục tiêu " + oldTargetName + " thành " + newTargetName
-          + " và mô tả từ " + oldDescription + " thành " + newDescription);
+        + " và mô tả từ " + oldDescription + " thành " + newDescription);
       logService.saveLog(username, log);
       targetuserRepository.save(existingTargetuser);
       return "Cập nhật người dùng mục tiêu thành công.";
@@ -80,7 +80,7 @@ public class TargetuserService implements ITargetuserService {
     existingTargetuser.setTargetName(targetuser.getTargetName());
     log.setAction("Cập nhật người dùng mục tiêu");
     log.setDescription("Cập nhật người dùng mục tiêu " + oldTargetName + " thành " + newTargetName
-        + " và mô tả từ " + oldDescription + " thành " + newDescription);
+      + " và mô tả từ " + oldDescription + " thành " + newDescription);
     targetuserRepository.save(existingTargetuser);
     return "Cập nhật người dùng mục tiêu thành công.";
   }

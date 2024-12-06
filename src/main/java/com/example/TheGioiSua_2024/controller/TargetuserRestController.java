@@ -39,7 +39,7 @@ public class TargetuserRestController {
   //http://localhost:1234/api/Targetuser/add
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-      @RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
+    @RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -52,7 +52,7 @@ public class TargetuserRestController {
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", targetuserService.addTargetuser(token, targetuser)));
+      Map.of("status", "success", "message", targetuserService.addTargetuser(token, targetuser)));
   }
 
   @GetMapping("/lst/{id}")
@@ -63,8 +63,8 @@ public class TargetuserRestController {
   //http://localhost:1234/api/Targetuser/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@NonNull HttpServletRequest request,
-      @RequestBody @Valid Targetuser targetuser,
-      BindingResult bindingResult, @PathVariable("id") Long id) {
+    @RequestBody @Valid Targetuser targetuser,
+    BindingResult bindingResult, @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
@@ -77,20 +77,22 @@ public class TargetuserRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message",
-            targetuserService.updateTargetuser(token, id, targetuser)));
+      Map.of("status", "success", "message",
+        targetuserService.updateTargetuser(token, id, targetuser)));
   }
 
   //http://localhost:1234/api/Targetuser/delete/{id}
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<?> delete(@NonNull HttpServletRequest request,
-      @PathVariable("id") Long id) {
+    @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
     String message = targetuserService.deleteTargetuser(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
+
   @GetMapping("/getTargetuserPage")
-  public Page<Targetuser> targetusersPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+  public Page<Targetuser> targetusersPage(@RequestParam("page") int page,
+    @RequestParam("size") int size) {
     Pageable pageable = PageRequest.of(page, size);
     return targetuserService.getTargetuserPage(pageable);
   }
