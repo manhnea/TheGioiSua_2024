@@ -14,7 +14,7 @@ import com.example.TheGioiSua_2024.repository.ProductRepository;
 import com.example.TheGioiSua_2024.repository.TargetuserRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
-import com.example.TheGioiSua_2024.util.RandomNumberGenerator;
+import com.example.TheGioiSua_2024.util.Random;
 import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.StringUtil;
 import java.util.Optional;
@@ -82,7 +82,7 @@ public class ProductService implements IProductService {
       String nameMilkType = milkType.getMilkTypename();
       String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
         + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
-        + RandomNumberGenerator.generateRandom4Digits();
+        + Random.generateRandom4Digits();
 
       if (productRepository.findByProductname(productname).isPresent()) {
         return "Sản phẩm với tên này đã tồn tại.";
@@ -93,7 +93,7 @@ public class ProductService implements IProductService {
       while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {
         urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
           + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
-          + RandomNumberGenerator.generateRandom4Digits();
+          + Random.generateRandom4Digits();
       }
       product.setProductUrl(StringUtil.removeAccent(urlProduct));
       product.setStatus(Status.Active);

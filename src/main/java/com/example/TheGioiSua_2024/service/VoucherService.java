@@ -159,7 +159,6 @@ public class VoucherService implements IVoucherService {
 
   @Override
   public ResponseEntity<?> discountmoney(String token, VoucherDto voucherDto) {
-    String username = jwtUtilities.extractUsername(token);
     try {
       double discountAmount = 0;
       Voucher voucher = voucherRepository.vouchercode(voucherDto.getVouchercode());
@@ -195,7 +194,6 @@ public class VoucherService implements IVoucherService {
       log.setAction("Sử dụng voucher");
       log.setDescription(String.format("Mã Voucher: %s, Số tiền giảm: %s", voucher.getVouchercode(),
           discountAmount));
-      logService.saveLog(username, log);
       return ResponseEntity.ok(Map.of("discountAmount", discountAmount, "Vouchercode", voucher.getVouchercode()));
     } catch (PersistenceException e) {
       return ResponseEntity.badRequest().body(Map.of("error", "Database Error: " + e.getMessage()));
@@ -204,5 +202,10 @@ public class VoucherService implements IVoucherService {
     }
 
   }
+
+    @Override
+    public ResponseEntity<?> voucherActive() {
+        return ResponseEntity.ok(Map.of("Succes",  voucherRepository.voucherActive()));
+   }
 
 }

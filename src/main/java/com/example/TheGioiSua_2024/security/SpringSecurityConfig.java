@@ -60,7 +60,13 @@ public class SpringSecurityConfig {
         "/Milktaste/lst",
         "/api-docs/**",
         "/swagger-ui/**",
-        "/Checkout/**", "/user/online","/ws", "/ws/**"
+        "/Checkout/**",
+        "/user/online",
+        "/ws",
+        "/ws/**",
+        "/Voucher/voucherActive",
+        "/Voucher/voucercode/**",
+        "/Invoice/add"
       ).permitAll()
       // Quyền của Customer
       .requestMatchers(
@@ -70,7 +76,6 @@ public class SpringSecurityConfig {
         "/Invoice/add",
         "/Invoicedetail/add/**",
         "/Userinvoice/add/**",
-        "/Voucher/voucercode/**",
         "/Invoice/getInvoices/**",
         "/Invoicedetail/getInvoiceDetailByUser/**",
         "/payment/transactionHistory/**",

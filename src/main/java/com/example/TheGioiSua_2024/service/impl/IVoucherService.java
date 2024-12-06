@@ -23,4 +23,5 @@ public interface IVoucherService {
   Voucher getVoucherById(Long id);
 
   ResponseEntity<?> discountmoney(String token, VoucherDto voucherDto);
+  ResponseEntity<?> voucherActive();
 }

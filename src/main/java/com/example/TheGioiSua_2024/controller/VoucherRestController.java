@@ -109,5 +109,8 @@ public class VoucherRestController {
     voucherDto.setTotal(total);
     return voucherService.discountmoney(token, voucherDto);
   }
-
+  @GetMapping("/voucherActive")
+  public ResponseEntity<?> voucherActive(){
+      return voucherService.voucherActive();
+  }
 }

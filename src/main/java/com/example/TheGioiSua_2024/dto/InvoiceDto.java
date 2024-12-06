@@ -26,11 +26,12 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceDto {
-
     Long invoiceID;
     String invoiceCode;
     String nguoiMua;
-    String nguoiBan;
+    String nguoiDuyetDon;
+    String nguoiNhanHang;
+    String email;
     LocalDateTime ngayTao;
     String deliveryaddress;
     String phonenumber;
@@ -39,14 +40,15 @@ public class InvoiceDto {
     int sotienGiamGia;
     int tongTien;
     List<Invoicedetail> invoiceDetails;
-    User nguoiTao;
     int trangThai;
 
-    public InvoiceDto(Long invoiceID, String invoiceCode, String nguoiMua, String nguoiBan, LocalDateTime ngayTao, String deliveryaddress, String phonenumber, String paymentmethod, String voucherCode, int sotienGiamGia, int tongTien, int trangThai) {
+    public InvoiceDto(Long invoiceID, String invoiceCode, String nguoiMua, String nguoiDuyetDon, String nguoiNhanHang, String email, LocalDateTime ngayTao, String deliveryaddress, String phonenumber, String paymentmethod, String voucherCode, int sotienGiamGia, int tongTien, int trangThai) {
         this.invoiceID = invoiceID;
         this.invoiceCode = invoiceCode;
         this.nguoiMua = nguoiMua;
-        this.nguoiBan = nguoiBan;
+        this.nguoiDuyetDon = nguoiDuyetDon;
+        this.nguoiNhanHang = nguoiNhanHang;
+        this.email = email;
         this.ngayTao = ngayTao;
         this.deliveryaddress = deliveryaddress;
         this.phonenumber = phonenumber;
@@ -56,14 +58,14 @@ public class InvoiceDto {
         this.tongTien = tongTien;
         this.trangThai = trangThai;
     }
-
+    
     @Override
     public String toString() {
         return "InvoiceDto{"
                 + "invoiceID=" + invoiceID
                 + ", invoiceCode='" + invoiceCode + '\''
                 + ", nguoiMua='" + nguoiMua + '\''
-                + ", nguoiBan='" + nguoiBan + '\''
+                + ", nguoiBan='" + nguoiDuyetDon + '\''
                 + ", ngayTao=" + ngayTao
                 + ", deliveryaddress='" + deliveryaddress + '\''
                 + ", phonenumber='" + phonenumber + '\''
@@ -72,7 +74,7 @@ public class InvoiceDto {
                 + ", sotienGiamGia=" + sotienGiamGia
                 + ", tongTien=" + tongTien
                 + ", invoiceDetails=" + invoiceDetails
-                + ", nguoiTao=" + nguoiTao
+                + ", nguoiNhanHang=" + nguoiNhanHang
                 + ", trangThai=" + trangThai
                 + '}';
     }

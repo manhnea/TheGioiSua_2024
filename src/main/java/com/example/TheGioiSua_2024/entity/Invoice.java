@@ -29,6 +29,8 @@ public class Invoice {
     private String invoicecode;
     private String deliveryaddress;
     private String paymentmethod;
+    private String fullname;
+    private String email;
     private String phonenumber;
     @CreationTimestamp
     private LocalDateTime creationdate;
