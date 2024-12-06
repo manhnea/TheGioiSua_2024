@@ -15,6 +15,7 @@ import com.example.TheGioiSua_2024.repository.UserinvoiceRepository;
 import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoiceService;
 import com.example.TheGioiSua_2024.util.Status;
+import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,6 +45,8 @@ public class InvoiceService implements IInvoiceService {
   private MilkdetailRepository milkdetailRepository;
   @Autowired
   private UserinvoiceRepository userinvoiceRepository;
+  @Autowired
+  private TelegramNotifier telegramNotifier;
 
   @Transactional
   public List<Invoice> getInvoiceList() {
@@ -99,6 +102,11 @@ public class InvoiceService implements IInvoiceService {
       byller.setStatus(Status.Pending);
       userinvoiceRepository.save(byller);
     } else if (invoice.getPaymentmethod().equals("COD")) {
+      telegramNotifier.sendMessageZalo(
+        "Mã Hóa Đơn: " + invoice.getInvoicecode() + "\n" + "Số Điện Thoại: "
+          + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
+          + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
+          + invoice.getPaymentmethod());
       invoice.setStatus(Status.ApproveOrders);
       invoiceRepository.save(invoice);
       seller.setInvoice(invoice);

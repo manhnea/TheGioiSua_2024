@@ -38,7 +38,8 @@ public class PackagingunitService implements IPackagingunitService {
     String username = jwtUtilities.extractUsername(token);
     Log log = new Log();
     log.setAction("Thêm đơn vị đóng gói");
-    log.setDescription(String.format("đơn vị đóng gói %s" + packagingunit.getPackagingunitname()));
+    log.setDescription("đơn vị đóng gói %s" + packagingunit.getPackagingunitname());
+    logService.saveLog(username, log);
     packagingunitRepository.save(packagingunit);
     return "Thêm đơn vị đóng gói thành công.";
   }
@@ -65,7 +66,7 @@ public class PackagingunitService implements IPackagingunitService {
     Log log = new Log();
     log.setAction("Cập nhật đơn vị đóng gói");
     log.setDescription(
-        String.format("đơn vị đóng gói %s thành %s", oldpackagingunitName, newpackagingunitName));
+      String.format("đơn vị đóng gói %s thành %s", oldpackagingunitName, newpackagingunitName));
     logService.saveLog(username, log);
     existingPackagingunit.setPackagingunitname(packagingunit.getPackagingunitname());
     packagingunitRepository.save(existingPackagingunit);
@@ -82,14 +83,14 @@ public class PackagingunitService implements IPackagingunitService {
       existingPackagingunit.setStatus(Status.Active);
       log.setAction("Khôi phục đơn vị đóng gói");
       log.setDescription(
-          String.format("đơn vị đóng gói %s", existingPackagingunit.getPackagingunitname()));
+        String.format("đơn vị đóng gói %s", existingPackagingunit.getPackagingunitname()));
       packagingunitRepository.save(existingPackagingunit);
       return "Khôi phục đơn vị đóng gói thành công.";
     } else {
       existingPackagingunit.setStatus(Status.Delete);
       log.setAction("Xóa đơn vị đóng gói");
       log.setDescription(
-          String.format("đơn vị đóng gói %s", existingPackagingunit.getPackagingunitname()));
+        String.format("đơn vị đóng gói %s", existingPackagingunit.getPackagingunitname()));
       packagingunitRepository.save(existingPackagingunit);
       return "Xóa đơn vị đóng gói thành công.";
     }
@@ -98,7 +99,7 @@ public class PackagingunitService implements IPackagingunitService {
   @Override
   public Optional<Packagingunit> getPackagingunitByName(String packagingunitName) {
     return packagingunitRepository.findByPackagingunitname(
-        packagingunitName); // Đã sửa để trả về đối tượng thực tế
+      packagingunitName); // Đã sửa để trả về đối tượng thực tế
   }
 
   @Override
