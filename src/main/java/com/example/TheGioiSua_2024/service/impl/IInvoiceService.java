@@ -36,6 +36,8 @@ public interface IInvoiceService {
 
   boolean cancelInvoice(Long id);
 
-  Page<Invoice> getInvoices(String status, String invoiceCode, String username,
+  Page<Invoice> getInvoices(String paymentmethod, String status, String invoiceCode,
+    String phonenumber,
+    String deliveryAddress,
     LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 }

@@ -111,15 +111,21 @@ public class InvoiceRestController {
 
   @GetMapping("/search")
   public ResponseEntity<Page<Invoice>> searchInvoices(
+    @RequestParam(required = false) String paymentmethod,
     @RequestParam(required = false) String status,
     @RequestParam(required = false) String invoiceCode,
-    @RequestParam(required = false) String username,
+    @RequestParam(required = false) String phonenumber,
+    @RequestParam(required = false) String deliveryAddress,
+
     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
     @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate
     , Pageable pageable) {
-    Page<Invoice> invoices = invoiceService.getInvoices(status, invoiceCode, username, startDate,
+    Page<Invoice> invoices = invoiceService.getInvoices(paymentmethod, status, invoiceCode,
+      phonenumber,
+      deliveryAddress, startDate,
       endDate, pageable);
     return ResponseEntity.ok(invoices);
   }
+
 
 }
