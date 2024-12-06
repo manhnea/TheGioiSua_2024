@@ -9,6 +9,8 @@ import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilktypeService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -96,6 +98,12 @@ public class MilktypeService implements IMilktypeService {
     public MilkType GetMilktypeById(Long id) {
         return milktypeRepository.findById(id).orElseThrow();
     }
+
+    @Override
+    public Page<MilkType> GetMilktypePage(Pageable pageable) {
+        return milktypeRepository.findAll(pageable);
+    }
+
     @Override
     public List<MilkType> GetAllMilktype() {
         return milktypeRepository.findAll();

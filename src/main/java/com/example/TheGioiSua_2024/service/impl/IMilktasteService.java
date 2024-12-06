@@ -2,6 +2,8 @@ package com.example.TheGioiSua_2024.service.impl;
 
 
 import com.example.TheGioiSua_2024.entity.Milktaste;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +16,5 @@ public interface IMilktasteService {
     Optional<Milktaste> getMilktasteByName(String milktasteName);
 
     Milktaste getMilktasteById(Long id);
+    Page<Milktaste> getMilktastePage(Pageable pageable);
 }

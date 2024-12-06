@@ -1,6 +1,8 @@
 package com.example.TheGioiSua_2024.service.impl;
 
 import com.example.TheGioiSua_2024.entity.Milkbrand;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,4 +17,6 @@ public interface IMilkbrandService {
   String deleteMilkbrand(String token, Long id);
 
   Milkbrand getMilkbrandById(Long id);
+
+  Page<Milkbrand> getMilkbrandPage(Pageable pageable);
 }

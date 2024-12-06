@@ -1,6 +1,8 @@
 package com.example.TheGioiSua_2024.service.impl;
 
 import com.example.TheGioiSua_2024.entity.Usagecapacity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,4 +17,6 @@ public interface IUsagecapacityService {
   String deleteUsagecapacity(String token, Long id);
 
   Usagecapacity getUsagecapacityById(Long id);
+
+  Page<Usagecapacity> getUsagecapacityPage(Pageable pageable);
 }

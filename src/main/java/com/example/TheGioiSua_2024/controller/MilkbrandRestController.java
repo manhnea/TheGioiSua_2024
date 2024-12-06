@@ -96,7 +96,11 @@ public class MilkbrandRestController {
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
 
-  // http://localhost:1234/api/Milkdetail/getMilkDetailPage
 
 
+  @GetMapping("/getMilkBrandPage")
+  public Page<Milkbrand> getMilkBrandPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+   return milkbrandService.getMilkbrandPage(pageable);
+  }
 }

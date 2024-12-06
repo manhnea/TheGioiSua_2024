@@ -7,6 +7,9 @@ import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilkbrandService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -109,6 +112,11 @@ public class MilkbrandService implements IMilkbrandService {
   public Milkbrand getMilkbrandById(Long id) {
 
     return milkbrandRepository.findBydadata(id);
+  }
+
+  @Override
+  public Page<Milkbrand> getMilkbrandPage(Pageable pageable) {
+    return milkbrandRepository.findAll(pageable);
   }
 
 
