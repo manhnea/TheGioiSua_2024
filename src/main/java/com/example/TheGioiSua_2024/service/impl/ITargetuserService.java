@@ -4,6 +4,8 @@ import com.example.TheGioiSua_2024.entity.Targetuser;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ITargetuserService {
 
@@ -18,4 +20,7 @@ public interface ITargetuserService {
   Optional<Targetuser> getTargetuserByName(String targetname);
 
   Targetuser getTargetuserById(Long id);
+
+  Page<Targetuser> getTargetuserPage(Pageable pageable);
+
 }

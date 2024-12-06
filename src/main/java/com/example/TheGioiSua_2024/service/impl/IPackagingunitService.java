@@ -5,6 +5,8 @@ import com.example.TheGioiSua_2024.entity.Packagingunit;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IPackagingunitService {
 
@@ -19,4 +21,7 @@ public interface IPackagingunitService {
   Optional<Packagingunit> getPackagingunitByName(String packagingunitName);
 
   Packagingunit getPackagingunitById(Long id);
+
+  Page<Packagingunit> getPackagingunitPage(Pageable pageable);
+
 }

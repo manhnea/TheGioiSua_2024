@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -41,7 +44,7 @@ public class PackagingunitRestController {
   //http://localhost:1234/api/Packagingunit/add
   @PostMapping("/add")
   public ResponseEntity<?> addPackagingunit(@NonNull HttpServletRequest request,
-      @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult) {
+    @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -54,14 +57,14 @@ public class PackagingunitRestController {
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",
-        packagingunitService.addPackagingunit(token, packagingunit)));
+      packagingunitService.addPackagingunit(token, packagingunit)));
   }
 
   //http://localhost:1234/api/Packagingunit/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> updatePackagingunit(@NonNull HttpServletRequest request,
-      @PathVariable("id") Long id,
-      @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult) {
+    @PathVariable("id") Long id,
+    @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -74,15 +77,22 @@ public class PackagingunitRestController {
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",
-        packagingunitService.updatePackagingunit(token, id, packagingunit)));
+      packagingunitService.updatePackagingunit(token, id, packagingunit)));
   }
 
   //http://localhost:1234/api/Packagingunit/delete/{id}
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<?> deletePackagingunit(@NonNull HttpServletRequest request,
-      @PathVariable("id") Long id) {
+    @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
     String message = packagingunitService.deletePackagingunit(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
+  }
+
+  @GetMapping("/getPackagingunitPage")
+  public Page<Packagingunit> getPackagingunitPage(@RequestParam("page") int page,
+    @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return packagingunitService.getPackagingunitPage(pageable);
   }
 }
