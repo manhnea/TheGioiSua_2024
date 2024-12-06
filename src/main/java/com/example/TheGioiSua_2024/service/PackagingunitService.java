@@ -7,6 +7,8 @@ import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IPackagingunitService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -102,5 +104,10 @@ public class PackagingunitService implements IPackagingunitService {
   @Override
   public Packagingunit getPackagingunitById(Long id) {
     return packagingunitRepository.findById(id).orElseThrow();
+  }
+
+  @Override
+  public Page<Packagingunit> getPackagingunitPage(Pageable pageable) {
+    return packagingunitRepository.findAll(pageable);
   }
 }

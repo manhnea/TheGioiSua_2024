@@ -7,6 +7,8 @@ import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilktasteService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -97,5 +99,10 @@ public class MilktasteService implements IMilktasteService {
     @Override
     public Milktaste getMilktasteById(Long id) {
         return milktasteRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public Page<Milktaste> getMilktastePage(Pageable pageable) {
+        return milktasteRepository.findAll(pageable);
     }
 }

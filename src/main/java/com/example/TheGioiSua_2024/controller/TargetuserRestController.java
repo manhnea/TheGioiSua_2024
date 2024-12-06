@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -86,5 +89,9 @@ public class TargetuserRestController {
     String message = targetuserService.deleteTargetuser(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
-
+  @GetMapping("/getTargetuserPage")
+  public Page<Targetuser> targetusersPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return targetuserService.getTargetuserPage(pageable);
+  }
 }

@@ -6,6 +6,9 @@ import com.example.TheGioiSua_2024.service.MilktypeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
@@ -71,5 +74,10 @@ public class MilktypeRestController {
         String token = jwtUtilities.getToken(request);
         String message = milktypeService.DeleteMilktype(token,id);
         return ResponseEntity.ok(Map.of("status", "success", "message", message));
+    }
+    @GetMapping("/getTypePage")
+    public Page<MilkType> getTypePage(@RequestParam("page") int page, @RequestParam("size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return milktypeService.GetMilktypePage(pageable);
     }
 }
