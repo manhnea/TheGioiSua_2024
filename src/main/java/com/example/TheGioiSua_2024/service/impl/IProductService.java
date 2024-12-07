@@ -30,4 +30,6 @@ public interface IProductService {
   Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id);
 
   Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
+
+  Page<Product> getProductPage(Pageable pageable);
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -148,5 +149,11 @@ public class ProductRestController {
     Pageable pageable = PageRequest.of(page, size);
     return ResponseEntity.ok(Map.of("status", "success", "message",
         productService.getPageProductWithSearch(searchTerm, pageable)));
+  }
+
+  @GetMapping("/productPage")
+  public Page<Product> getProductPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return productService.getProductPage(pageable);
   }
 }

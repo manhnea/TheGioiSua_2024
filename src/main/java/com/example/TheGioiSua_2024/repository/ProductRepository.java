@@ -124,4 +124,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     + "OR mb.milkbrandname LIKE %:searchTerm% "
     + "OR tt.targetName LIKE %:searchTerm%)")
   Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
+
+    @Query("SELECT p FROM Product p ")
+  Page<Product> getProductPage(Pageable pageable);
 }

@@ -223,4 +223,9 @@ public class ProductService implements IProductService {
   public Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable) {
     return productRepository.getPageProductWithSearch(searchTerm, pageable);
   }
+
+  @Override
+  public Page<Product> getProductPage(Pageable pageable) {
+    return productRepository.getProductPage(pageable);
+  }
 }
