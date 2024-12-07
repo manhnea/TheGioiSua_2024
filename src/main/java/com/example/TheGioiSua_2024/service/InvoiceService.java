@@ -82,7 +82,11 @@ public class InvoiceService implements IInvoiceService {
             String p = Random.generateRandomPassword();
             nguoiMua = new User();
             String a[] = invoiceDto.getEmail().split("@");
-            nguoiMua.setUsername(a[0]);
+            String us = a[0] + String.valueOf(Random.generateRandom4Digits());
+            while (userRepository.existsByUsername(us)) {
+                us = a[0] + String.valueOf(Random.generateRandom4Digits());
+            }
+            nguoiMua.setUsername(us);
             nguoiMua.setFullname(invoiceDto.getNguoiNhanHang());
             nguoiMua.setEmail(invoiceDto.getEmail());
             nguoiMua.setPhonenumber(invoiceDto.getPhonenumber());

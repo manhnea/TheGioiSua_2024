@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Random {
     public static int generateRandom4Digits() {
         // Sinh số ngẫu nhiên trong khoảng từ 1000 đến 9999
-        return ThreadLocalRandom.current().nextInt(0000, 10000);
+        return ThreadLocalRandom.current().nextInt(0, 10000);
     }
     private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
