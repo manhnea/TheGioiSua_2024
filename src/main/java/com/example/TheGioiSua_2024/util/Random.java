@@ -19,9 +19,8 @@ public class Random {
     private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String DIGITS = "0123456789";
-    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{}|;:,.<>?";
 
-    private static final String ALL_CHARACTERS = UPPERCASE + LOWERCASE + DIGITS + SPECIAL_CHARACTERS;
+    private static final String ALL_CHARACTERS = UPPERCASE + LOWERCASE + DIGITS;
     private static final int PASSWORD_LENGTH = 12; // Độ dài mật khẩu
 
     public static String generateRandomPassword() {
@@ -32,7 +31,6 @@ public class Random {
         password.append(UPPERCASE.charAt(random.nextInt(UPPERCASE.length())));
         password.append(LOWERCASE.charAt(random.nextInt(LOWERCASE.length())));
         password.append(DIGITS.charAt(random.nextInt(DIGITS.length())));
-        password.append(SPECIAL_CHARACTERS.charAt(random.nextInt(SPECIAL_CHARACTERS.length())));
 
         // Tạo các ký tự ngẫu nhiên còn lại
         for (int i = 4; i < PASSWORD_LENGTH; i++) {
