@@ -82,7 +82,11 @@ public class InvoiceService implements IInvoiceService {
       String p = Random.generateRandomPassword();
       nguoiMua = new User();
       String a[] = invoiceDto.getEmail().split("@");
-      nguoiMua.setUsername(a[0]);
+      String us = a[0] + String.valueOf(Random.generateRandom4Digits());
+      while (userRepository.existsByUsername(us)) {
+        us = a[0] + String.valueOf(Random.generateRandom4Digits());
+      }
+      nguoiMua.setUsername(us);
       nguoiMua.setFullname(invoiceDto.getNguoiNhanHang());
       nguoiMua.setEmail(invoiceDto.getEmail());
       nguoiMua.setPhonenumber(invoiceDto.getPhonenumber());
@@ -143,23 +147,25 @@ public class InvoiceService implements IInvoiceService {
   }
 
   @Override
-  public String updateInvoice(Long id, Invoice invoice) {
+  public ResponseEntity<String> updateInvoice(Long id, Invoice invoice) {
     // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
-
-    // Kiểm tra và cập nhật từng trường nếu không phải null
-    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
-      : existingInvoice.getPhonenumber());
-    existingInvoice.setDeliveryaddress(
-      invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
-        : existingInvoice.getDeliveryaddress());
-    existingInvoice.setStatus(
-      invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
-
-    // Lưu lại hóa đơn đã cập nhật
-    invoiceRepository.save(existingInvoice);
-
-    return "Cập nhật hóa đơn thành công!";
+    Invoice existingInvoice = invoiceRepository.findById(id).orElse(null);
+    if (existingInvoice == null) {
+      // Nếu hóa đơn không tồn tại, trả về mã trạng thái 404 (Not Found)
+      return ResponseEntity.status(404).body("Hóa đơn không tồn tại!");
+    }// Kiểm tra trạng thái của hóa đơn trước khi cập nhật
+    if (existingInvoice.getStatus() == Status.Pending) {
+      // Kiểm tra và cập nhật từng trường nếu không phải null
+      existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber() : existingInvoice.getPhonenumber());
+      existingInvoice.setDeliveryaddress(invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress() : existingInvoice.getDeliveryaddress());
+      // Lưu lại hóa đơn đã cập nhật
+      invoiceRepository.save(existingInvoice);
+      // Trả về mã trạng thái 200 (OK) và thông báo thành công
+      return ResponseEntity.status(200).body("Cập nhật hóa đơn thành công!");
+    } else {
+      // Nếu hóa đơn đã được xác nhận, không thể cập nhật
+      return ResponseEntity.status(400).body("Hóa đơn đã được xác nhận không thể cập nhật!");
+    }
   }
 
   @Override
@@ -241,6 +247,16 @@ public class InvoiceService implements IInvoiceService {
       deliveryAddress,
       startDate, endDate,
       pageable);
+  }
+
+  @Override
+  public String updatestatus(Long id, Invoice invoice) {
+    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
+    existingInvoice.setStatus(
+            invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
+    // Lưu lại hóa đơn đã cập nhật
+    invoiceRepository.save(existingInvoice);
+    return "Cập nhật hóa đơn thành công!";
   }
 
 }

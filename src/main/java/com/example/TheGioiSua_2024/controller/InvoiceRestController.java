@@ -126,6 +126,21 @@ public class InvoiceRestController {
       endDate, pageable);
     return ResponseEntity.ok(invoices);
   }
-
+  @PutMapping("/updatestatus/{id}")
+  public ResponseEntity<?> updatestatus(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
+                                        BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    return ResponseEntity.ok(
+            Map.of("status", "success", "message", invoiceService.updatestatus(id, invoice)));
+  }
 
 }

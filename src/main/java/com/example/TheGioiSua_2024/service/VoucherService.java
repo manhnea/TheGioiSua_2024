@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -207,5 +209,9 @@ public class VoucherService implements IVoucherService {
     public ResponseEntity<?> voucherActive() {
         return ResponseEntity.ok(Map.of("Succes",  voucherRepository.voucherActive()));
    }
+  @Override
+  public Page<Voucher> getVoucherPage(Pageable pageable) {
+    return voucherRepository.findAll(pageable);
+  }
 
 }

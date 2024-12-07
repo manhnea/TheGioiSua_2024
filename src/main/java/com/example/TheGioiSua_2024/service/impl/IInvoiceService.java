@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,7 @@ public interface IInvoiceService {
 
   ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
 
-  String updateInvoice(Long id, Invoice invoice);
-
+  ResponseEntity updateInvoice(Long id, Invoice invoice);
   String deleteInvoice(Long id);
 
   Invoice getInvoiceById(Long id);
@@ -40,4 +40,6 @@ public interface IInvoiceService {
     String phonenumber,
     String deliveryAddress,
     LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    String updatestatus(Long id, @Valid Invoice invoice);
 }
