@@ -146,27 +146,6 @@ public class InvoiceService implements IInvoiceService {
       "null");
   }
 
-  @Override
-  public ResponseEntity<String> updateInvoice(Long id, Invoice invoice) {
-    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-    Invoice existingInvoice = invoiceRepository.findById(id).orElse(null);
-    if (existingInvoice == null) {
-      // Nếu hóa đơn không tồn tại, trả về mã trạng thái 404 (Not Found)
-      return ResponseEntity.status(404).body("Hóa đơn không tồn tại!");
-    }// Kiểm tra trạng thái của hóa đơn trước khi cập nhật
-    if (existingInvoice.getStatus() == Status.Pending) {
-      // Kiểm tra và cập nhật từng trường nếu không phải null
-      existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber() : existingInvoice.getPhonenumber());
-      existingInvoice.setDeliveryaddress(invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress() : existingInvoice.getDeliveryaddress());
-      // Lưu lại hóa đơn đã cập nhật
-      invoiceRepository.save(existingInvoice);
-      // Trả về mã trạng thái 200 (OK) và thông báo thành công
-      return ResponseEntity.status(200).body("Cập nhật hóa đơn thành công!");
-    } else {
-      // Nếu hóa đơn đã được xác nhận, không thể cập nhật
-      return ResponseEntity.status(400).body("Hóa đơn đã được xác nhận không thể cập nhật!");
-    }
-  }
 
   @Override
   public String deleteInvoice(Long id) {
@@ -248,14 +227,55 @@ public class InvoiceService implements IInvoiceService {
       startDate, endDate,
       pageable);
   }
-
   @Override
-  public String updatestatus(Long id, Invoice invoice) {
+  public String updateInvoice(Long id, Invoice invoice) {
+    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
     Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
+    existingInvoice.setFullname(invoice.getFullname() != null ? invoice.getFullname()
+            : existingInvoice.getFullname());
+    // Kiểm tra và cập nhật từng trường nếu không phải null
+    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
+            : existingInvoice.getPhonenumber());
+    existingInvoice.setDeliveryaddress(
+            invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
+                    : existingInvoice.getDeliveryaddress());
     existingInvoice.setStatus(
             invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
-    // Lưu lại hóa đơn đã cập nhật
     invoiceRepository.save(existingInvoice);
+    return "Cập nhật hóa đơn thành công!";
+  }
+
+
+
+  @Override
+  public String updatequantity(Long id, Invoice invoice) {
+    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+  Voucher voucher = voucherRepository.findById(existingInvoice.getVoucher().getId()).orElseThrow();
+    if (invoice.getVoucher() != null && invoice.getVoucher().getVouchercode() != null) {
+      voucher = voucherRepository.vouchercode(invoice.getVoucher().getVouchercode());
+    }
+    System.out.printf(".updatequantity(%d, %s)%n", id, invoice.getTotalamount());
+    System.out.printf("voucher: %s%n", voucher);
+    if (voucher != null && invoice.getTotalamount() >= voucher.getMinamount()) {
+      System.out.printf(".updatequantityaaaaaaaaaaaaaaaaaaaaa(%d, %s)%n", id, invoice.getTotalamount());
+      // Tính toán số tiền giảm giá theo tỷ lệ % của voucher
+     int discountAmount =  invoice.getTotalamount() * voucher.getDiscountpercentage() / 100;
+      if (discountAmount > voucher.getMaxamount()) {
+        discountAmount = (int) voucher.getMaxamount();
+      }
+      int total = invoice.getTotalamount() - discountAmount;
+      existingInvoice.setDiscountamount(discountAmount);
+      existingInvoice.setTotalamount(total);
+    } else {
+      // Nếu không có voucher hoặc voucher không hợp lệ, không giảm giá
+      existingInvoice.setDiscountamount(0);
+      existingInvoice.setTotalamount(invoice.getTotalamount());
+    }
+
+    // Lưu hóa đơn đã được cập nhật (chỉ lưu một lần ở cuối)
+    invoiceRepository.save(existingInvoice);
+
+    // Trả về thông báo thành công
     return "Cập nhật hóa đơn thành công!";
   }
 

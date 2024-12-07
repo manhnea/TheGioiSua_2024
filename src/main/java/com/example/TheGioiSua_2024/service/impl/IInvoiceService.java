@@ -20,7 +20,7 @@ public interface IInvoiceService {
 
   ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
 
-  ResponseEntity updateInvoice(Long id, Invoice invoice);
+  String updateInvoice(Long id, Invoice invoice);
   String deleteInvoice(Long id);
 
   Invoice getInvoiceById(Long id);
@@ -41,5 +41,5 @@ public interface IInvoiceService {
     String deliveryAddress,
     LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
 
-    String updatestatus(Long id, @Valid Invoice invoice);
+  String updatequantity(Long id, @Valid Invoice invoice);
 }
