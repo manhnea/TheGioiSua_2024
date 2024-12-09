@@ -138,10 +138,18 @@ public class InvoiceService implements IInvoiceService {
         + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
         + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
         + invoice.getPaymentmethod());
-    seller.setInvoice(invoice);
-    seller.setUser(nguoiMua);
-    seller.setStatus(Status.Pending);
-    userinvoiceRepository.save(seller);
+    byller.setInvoice(invoice);
+    byller.setUser(nguoiMua);
+    byller.setStatus(Status.Pending);
+    userinvoiceRepository.save(byller);
+    if(!invoiceDto.getPaymentmethod().equals("COD")){
+      User admin = new User();
+      admin.setId(1l);
+      seller.setInvoice(invoice);
+      seller.setUser(admin);
+      seller.setStatus(Status.Pending);
+      userinvoiceRepository.save(seller);
+    }
     return ResponseEntity.ok(
       "null");
   }
