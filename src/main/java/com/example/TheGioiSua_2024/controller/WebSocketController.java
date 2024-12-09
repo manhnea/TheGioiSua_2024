@@ -39,19 +39,19 @@ public class WebSocketController {
         List<UserOnlineDto> staffOnline = online.stream()
                 .filter(user -> "Staff".equals(user.getRole()))
                 .collect(Collectors.toList());
-        int counter = 0; // Khởi tạo bộ đếm
-        int staffCount = staffOnline.size();
-        for (UserOnlineDto userOnlineDto : staffOnline) {
-            List<InvoiceDto> invoiceList = new ArrayList<>();
-            InvoiceDto invoiceDto = invoiceRepository.getInvoiceByCode(message);
-            invoiceList.add(invoiceDto);
-            messagingTemplate.convertAndSendToUser(
-                    userOnlineDto.getUsername(), // Gửi đến username của người nhận
-                    "/queue/messages", // Đảm bảo là /user/{username}/queue/messages
-                    message
-            );
-            
-        }
+//        int counter = 0; // Khởi tạo bộ đếm
+//        int staffCount = staffOnline.size();
+//        for (UserOnlineDto userOnlineDto : staffOnline) {
+//            List<InvoiceDto> invoiceList = new ArrayList<>();
+//            InvoiceDto invoiceDto = invoiceRepository.f(message);
+//            invoiceList.add(invoiceDto);
+//            messagingTemplate.convertAndSendToUser(
+//                    userOnlineDto.getUsername(), // Gửi đến username của người nhận
+//                    "/queue/messages", // Đảm bảo là /user/{username}/queue/messages
+//                    message
+//            );
+//            
+//        }
         messagingTemplate.convertAndSend("/topic/messages", message);
     }
 

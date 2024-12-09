@@ -176,7 +176,7 @@ public class InvoiceService implements IInvoiceService {
 
   @Override
   public List<InvoiceDto> getInvoices(Long id) {
-    return invoiceRepository.findInvoices(id);
+    return invoiceRepository.findInvoicesByBuyerId(id);
   }
 
   @Override
