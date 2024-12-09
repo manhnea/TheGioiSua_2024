@@ -116,7 +116,6 @@ public class VoucherRestController {
   public ResponseEntity<?> voucherActive(){
       return voucherService.voucherActive();
   }
-
   @GetMapping("/voucherPage")
   public Page<Voucher> getVoucherPage(@RequestParam("page") int page, @RequestParam("size") int size) {
     Pageable pageable = PageRequest.of(page, size);

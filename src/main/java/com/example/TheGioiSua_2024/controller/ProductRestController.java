@@ -150,7 +150,6 @@ public class ProductRestController {
     return ResponseEntity.ok(Map.of("status", "success", "message",
         productService.getPageProductWithSearch(searchTerm, pageable)));
   }
-
   @GetMapping("/productPage")
   public Page<Product> getProductPage(@RequestParam("page") int page, @RequestParam("size") int size) {
     Pageable pageable = PageRequest.of(page, size);

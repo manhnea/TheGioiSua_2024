@@ -88,7 +88,6 @@ public class UsagecapacityRestController {
     String message = usagecapacityService.deleteUsagecapacity(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
-
   @GetMapping("/getUsagecapacityPage")
   public Page<Usagecapacity> getUsagecapacityPage(@RequestParam("page") int page, @RequestParam("size") int size) {
     Pageable pageable = PageRequest.of(page, size);

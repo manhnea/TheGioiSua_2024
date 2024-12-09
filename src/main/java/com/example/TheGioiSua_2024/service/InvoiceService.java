@@ -82,7 +82,11 @@ public class InvoiceService implements IInvoiceService {
       String p = Random.generateRandomPassword();
       nguoiMua = new User();
       String a[] = invoiceDto.getEmail().split("@");
-      nguoiMua.setUsername(a[0]);
+      String us = a[0] + String.valueOf(Random.generateRandom4Digits());
+      while (userRepository.existsByUsername(us)) {
+        us = a[0] + String.valueOf(Random.generateRandom4Digits());
+      }
+      nguoiMua.setUsername(us);
       nguoiMua.setFullname(invoiceDto.getNguoiNhanHang());
       nguoiMua.setEmail(invoiceDto.getEmail());
       nguoiMua.setPhonenumber(invoiceDto.getPhonenumber());
@@ -134,33 +138,22 @@ public class InvoiceService implements IInvoiceService {
         + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
         + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
         + invoice.getPaymentmethod());
-    seller.setInvoice(invoice);
-    seller.setUser(nguoiMua);
-    seller.setStatus(Status.Pending);
-    userinvoiceRepository.save(seller);
+    byller.setInvoice(invoice);
+    byller.setUser(nguoiMua);
+    byller.setStatus(Status.Pending);
+    userinvoiceRepository.save(byller);
+    if(!invoiceDto.getPaymentmethod().equals("COD")){
+      User admin = new User();
+      admin.setId(1l);
+      seller.setInvoice(invoice);
+      seller.setUser(admin);
+      seller.setStatus(Status.Pending);
+      userinvoiceRepository.save(seller);
+    }
     return ResponseEntity.ok(
       "null");
   }
 
-  @Override
-  public String updateInvoice(Long id, Invoice invoice) {
-    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
-
-    // Kiểm tra và cập nhật từng trường nếu không phải null
-    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
-      : existingInvoice.getPhonenumber());
-    existingInvoice.setDeliveryaddress(
-      invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
-        : existingInvoice.getDeliveryaddress());
-    existingInvoice.setStatus(
-      invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
-
-    // Lưu lại hóa đơn đã cập nhật
-    invoiceRepository.save(existingInvoice);
-
-    return "Cập nhật hóa đơn thành công!";
-  }
 
   @Override
   public String deleteInvoice(Long id) {
@@ -241,6 +234,57 @@ public class InvoiceService implements IInvoiceService {
       deliveryAddress,
       startDate, endDate,
       pageable);
+  }
+  @Override
+  public String updateInvoice(Long id, Invoice invoice) {
+    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
+    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
+    existingInvoice.setFullname(invoice.getFullname() != null ? invoice.getFullname()
+            : existingInvoice.getFullname());
+    // Kiểm tra và cập nhật từng trường nếu không phải null
+    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
+            : existingInvoice.getPhonenumber());
+    existingInvoice.setDeliveryaddress(
+            invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
+                    : existingInvoice.getDeliveryaddress());
+    existingInvoice.setStatus(
+            invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
+    invoiceRepository.save(existingInvoice);
+    return "Cập nhật hóa đơn thành công!";
+  }
+
+
+
+  @Override
+  public String updatequantity(Long id, Invoice invoice) {
+    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+  Voucher voucher = voucherRepository.findById(existingInvoice.getVoucher().getId()).orElseThrow();
+    if (invoice.getVoucher() != null && invoice.getVoucher().getVouchercode() != null) {
+      voucher = voucherRepository.vouchercode(invoice.getVoucher().getVouchercode());
+    }
+    System.out.printf(".updatequantity(%d, %s)%n", id, invoice.getTotalamount());
+    System.out.printf("voucher: %s%n", voucher);
+    if (voucher != null && invoice.getTotalamount() >= voucher.getMinamount()) {
+      System.out.printf(".updatequantityaaaaaaaaaaaaaaaaaaaaa(%d, %s)%n", id, invoice.getTotalamount());
+      // Tính toán số tiền giảm giá theo tỷ lệ % của voucher
+     int discountAmount =  invoice.getTotalamount() * voucher.getDiscountpercentage() / 100;
+      if (discountAmount > voucher.getMaxamount()) {
+        discountAmount = (int) voucher.getMaxamount();
+      }
+      int total = invoice.getTotalamount() - discountAmount;
+      existingInvoice.setDiscountamount(discountAmount);
+      existingInvoice.setTotalamount(total);
+    } else {
+      // Nếu không có voucher hoặc voucher không hợp lệ, không giảm giá
+      existingInvoice.setDiscountamount(0);
+      existingInvoice.setTotalamount(invoice.getTotalamount());
+    }
+
+    // Lưu hóa đơn đã được cập nhật (chỉ lưu một lần ở cuối)
+    invoiceRepository.save(existingInvoice);
+
+    // Trả về thông báo thành công
+    return "Cập nhật hóa đơn thành công!";
   }
 
 }

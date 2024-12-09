@@ -118,4 +118,20 @@ public class InvoicedetailController {
   public Map<String, Object> getInvoiceSummary() {
     return invoicedetailService.getInvoiceSummary();
   }
+  @PutMapping("/updateCount/{id}")
+  public ResponseEntity<?> updateCountinvoicedetail(@PathVariable Long id, @RequestBody @Valid Invoicedetail invoicedetail,
+                                                    BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    return ResponseEntity.ok(Map.of("status", "success", "message",
+            invoicedetailService.updateCountinvoicedetail(id, invoicedetail)));
+  }
 }

@@ -17,6 +17,6 @@ public interface IUsagecapacityService {
   String deleteUsagecapacity(String token, Long id);
 
   Usagecapacity getUsagecapacityById(Long id);
-
   Page<Usagecapacity> getUsagecapacityPage(Pageable pageable);
+
 }

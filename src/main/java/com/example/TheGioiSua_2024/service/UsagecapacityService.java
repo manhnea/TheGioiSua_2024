@@ -34,6 +34,7 @@ public class UsagecapacityService implements IUsagecapacityService {
         String.format("Thêm đơn vị sử dụng %s với dung lượng %d", usagecapacity.getUnit(),
             usagecapacity.getCapacity()));
     logService.saveLog(username, log);
+
     usagecapacityRepository.save(usagecapacity);
     return "Đã thêm đơn vị sử dụng thành công.";
   }

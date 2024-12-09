@@ -209,6 +209,10 @@ public class VoucherService implements IVoucherService {
     public ResponseEntity<?> voucherActive() {
         return ResponseEntity.ok(Map.of("Succes",  voucherRepository.voucherActive()));
    }
+  @Override
+  public Page<Voucher> getVoucherPage(Pageable pageable) {
+    return voucherRepository.findAll(pageable);
+  }
 
   @Override
   public Page<Voucher> getVoucherPage(Pageable pageable) {

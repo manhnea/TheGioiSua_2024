@@ -42,6 +42,7 @@ public class MilkbrandService implements IMilkbrandService {
     log.setAction("Thêm voucher");
     log.setDescription(message);
     logService.saveLog(username, log);
+    milkbrand.setStatus(Status.Active);
     milkbrandRepository.save(milkbrand);
     return "Thêm thương hiệu sữa thành công.";
   }
