@@ -264,23 +264,14 @@ public class InvoiceService implements IInvoiceService {
     // Check if the invoice has a voucher
     if (existingInvoice.getVoucher() != null && existingInvoice.getVoucher().getId() != null) {
       Voucher voucher = voucherRepository.findById(existingInvoice.getVoucher().getId()).orElseThrow();
-
-//      // Check if the voucher has been used up
-//      if (voucher.getUsagecount() < 1) {
-//        existingInvoice.setDiscountamount(0);
-//        existingInvoice.setTotalamount(invoice.getTotalamount());
-//        return "Voucher đã hết lượt sử dụng!";
-//      }
-
-      // Apply discount if the invoice total is greater than or equal to the minimum amount required by the voucher
       if (existingInvoice.getTotalamount() >= voucher.getMinamount()) {
-        int discountAmount = existingInvoice.getTotalamount() * voucher.getDiscountpercentage() / 100;
+        int discountAmount = invoice.getTotalamount() * voucher.getDiscountpercentage() / 100;
         if (discountAmount > voucher.getMaxamount()) {
           discountAmount = (int) voucher.getMaxamount();
         }
 
         // Calculate new total after applying discount
-        int total = existingInvoice.getTotalamount() - discountAmount;
+        int total = invoice.getTotalamount() - discountAmount;
 
         // Update discount amount and total amount in the invoice
         existingInvoice.setDiscountamount(discountAmount);
