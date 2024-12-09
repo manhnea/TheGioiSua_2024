@@ -123,8 +123,8 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
           "GROUP BY invoice.id, invoice.invoicecode, invoice.totalamount")
   List<Object[]> findInvoiceSummaries();
 
-  @Query("SELECT SUM(invoice.totalamount) FROM Invoice invoice WHERE invoice.status = 338")
-  Double findTotalAmount();
+  @Query("SELECT SUM(i.totalamount) FROM Invoice i WHERE i.status = 905")
+  int findTotalAmount();
   @Query("SELECT id FROM Invoicedetail id where id.invoice.id = :invoiceId")
   List<Invoicedetail> invoicedetails(Long invoiceId);
 }

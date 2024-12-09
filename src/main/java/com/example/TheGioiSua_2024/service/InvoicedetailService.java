@@ -205,8 +205,8 @@ String fullname = (String) record[14];
   @Override
   public Map<String, Object> getInvoiceSummary() {
     List<Object[]> invoiceSummaries = invoicedetailRepository.findInvoiceSummaries();
-    Double totalAmount = invoicedetailRepository.findTotalAmount();
-
+    int totalAmounts = invoicedetailRepository.findTotalAmount();
+    System.out.printf("Total amount: %d\n", totalAmounts);
     List<Map<String, Object>> invoices = new ArrayList<>();
     for (Object[] row : invoiceSummaries) {
       Map<String, Object> invoice = new HashMap<>();
@@ -219,7 +219,7 @@ String fullname = (String) record[14];
 
     Map<String, Object> result = new HashMap<>();
     result.put("invoices", invoices);
-    result.put("totalAmount", totalAmount);
+    result.put("totalAmount", totalAmounts);
 
     return result;
   }
