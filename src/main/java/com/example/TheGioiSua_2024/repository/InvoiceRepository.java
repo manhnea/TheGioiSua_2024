@@ -38,7 +38,24 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     + "AND uvSeller.status = uvBuyer.status "
     + "AND buyer.id = :buyerId ORDER BY i.id DESC")
   List<InvoiceDto> findInvoices(Long buyerId);
-
+  @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
+    + "i.id, i.invoicecode, buyer.fullname, seller.fullname, i.fullname, i.email, "
+    + "i.creationdate, i.deliveryaddress, i.phonenumber, i.paymentmethod, v.vouchercode, "
+    + "i.discountamount, i.totalamount, i.status) "
+    + "FROM Invoice i "
+    + "JOIN i.userInvoices uvBuyer "
+    + "LEFT JOIN i.voucher v "
+    + "JOIN uvBuyer.user buyer "
+    + "JOIN buyer.role rBuyer "
+    + "LEFT JOIN i.userInvoices uvSeller "
+    + "LEFT JOIN uvSeller.user seller "
+    + "LEFT JOIN seller.role rSeller "
+    + "WHERE rBuyer.id = 2 "
+    + "AND (rSeller.id = 1 OR seller IS NULL) "
+    + "AND uvBuyer <> uvSeller "
+    + "AND uvSeller.status = uvBuyer.status "
+    + "AND i.invoicecode = :codeInvoice")
+  InvoiceDto getInvoiceByCode(String codeInvoice);
   @Query("SELECT COALESCE(MAX(i.id), 0) FROM Invoice i")
   Integer findMaxId();
 

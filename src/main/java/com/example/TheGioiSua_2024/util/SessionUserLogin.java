@@ -12,6 +12,14 @@ import java.util.Set;
  * @author Administrator
  */
 public class SessionUserLogin {
-
   public static Set<UserOnlineDto> onlineUsers = new HashSet<>();
+  public static void login(UserOnlineDto UserOnlineDto){
+      onlineUsers.add(UserOnlineDto);
+  }
+  public static void logout(UserOnlineDto UserOnlineDto){
+      onlineUsers.remove(UserOnlineDto);
+  }
+  public static Set<UserOnlineDto> getOnline(){
+      return onlineUsers;
+ }
 }
