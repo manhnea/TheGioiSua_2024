@@ -45,7 +45,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       "    JOIN invoice ON invoicedetail.invoiceid = invoice.id " +
       "WHERE " +
       "    invoice.creationdate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) " +
-      "    AND invoice.status = 338 " +
+      "    AND invoice.status = 905 " +
       "GROUP BY " +
       "    YEAR(invoice.creationdate), " +
       "    MONTH(invoice.creationdate) " +
@@ -106,7 +106,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       "JOIN milktaste mt ON m.milktasteid = mt.id " +
       "JOIN packagingunit pu ON m.packagingunitid = pu.id " +
       "JOIN usagecapacity uc ON m.usagecapacityid = uc.id " +
-      "WHERE i.status = 338 " +
+      "WHERE i.status = 905 " +
       "GROUP BY m.id, p.productname, mt.milktastename, pu.packagingunitname, uc.capacity, uc.unit "
       +
       "ORDER BY SUM(id.totalprice) DESC", nativeQuery = true)
@@ -119,7 +119,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
           +
           "FROM Invoicedetail invoicedetail " +
           "JOIN invoicedetail.invoice invoice " +
-          "WHERE invoice.status = 338 " +
+          "WHERE invoice.status = 905 " +
           "GROUP BY invoice.id, invoice.invoicecode, invoice.totalamount")
   List<Object[]> findInvoiceSummaries();
 
