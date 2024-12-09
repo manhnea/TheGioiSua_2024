@@ -9,9 +9,12 @@ import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
@@ -99,18 +102,17 @@ public class MilkdetailService implements IMilkdetailService {
   @Override
   public String update(String token, Long id, Milkdetail milkdetail) {
     Milkdetail existingMilkDetail = milkdetailRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Chi tiết sữa không tồn tại với ID: " + id));
+            .orElseThrow(() -> new RuntimeException("Chi tiết sữa không tồn tại với ID: " + id));
 
     boolean exists = milkdetailRepository.existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(
-        milkdetail.getProduct().getId(),
-        milkdetail.getMilkTaste().getId(),
-        milkdetail.getPackagingunit().getId(),
-        milkdetail.getUsageCapacity().getId()
+            milkdetail.getProduct().getId(),
+            milkdetail.getMilkTaste().getId(),
+            milkdetail.getPackagingunit().getId(),
+            milkdetail.getUsageCapacity().getId()
     );
 
     // Nếu thông tin cập nhật giống thông tin đã tồn tại thì không cần tiếp tục.
-    if (exists &&
-        !existingMilkDetail.getId().equals(id)) { // Kiểm tra để đảm bảo không trùng với chính nó
+    if (exists && !existingMilkDetail.getId().equals(id)) { // Kiểm tra để đảm bảo không trùng với chính nó
       return "Chi tiết sữa với các thông tin này đã tồn tại";
     }
 
@@ -118,69 +120,76 @@ public class MilkdetailService implements IMilkdetailService {
 
     // Kiểm tra và lấy từng thực thể liên quan
     Product product = productRepository.findById(milkdetail.getProduct().getId())
-        .orElseThrow(() -> new RuntimeException(
-            "Sản phẩm không tồn tại với ID: " + milkdetail.getProduct().getId()));
+            .orElseThrow(() -> new RuntimeException(
+                    "Sản phẩm không tồn tại với ID: " + milkdetail.getProduct().getId()));
 
     Milktaste milktaste = milktasteRepository.findById(milkdetail.getMilkTaste().getId())
-        .orElseThrow(() -> new RuntimeException(
-            "Hương vị không tồn tại với ID: " + milkdetail.getMilkTaste().getId()));
+            .orElseThrow(() -> new RuntimeException(
+                    "Hương vị không tồn tại với ID: " + milkdetail.getMilkTaste().getId()));
 
     Packagingunit packagingunit = packagingunitRepository.findById(
-            milkdetail.getPackagingunit().getId())
-        .orElseThrow(() -> new RuntimeException(
-            "Đơn vị đóng gói không tồn tại với ID: " + milkdetail.getPackagingunit().getId()));
+                    milkdetail.getPackagingunit().getId())
+            .orElseThrow(() -> new RuntimeException(
+                    "Đơn vị đóng gói không tồn tại với ID: " + milkdetail.getPackagingunit().getId()));
 
     Usagecapacity usagecapacity = usagecapacityRepository.findById(
-            milkdetail.getUsageCapacity().getId())
-        .orElseThrow(() -> new RuntimeException(
-            "Dung tích sử dụng không tồn tại với ID: " + milkdetail.getUsageCapacity().getId()));
+                    milkdetail.getUsageCapacity().getId())
+            .orElseThrow(() -> new RuntimeException(
+                    "Dung tích sử dụng không tồn tại với ID: " + milkdetail.getUsageCapacity().getId()));
 
     // Lưu thông tin cũ để ghi log
     String oldInfo = String.format(
-        "Sản phẩm: %s, Vị sữa: %s, Đơn vị đóng gói: %s, Dung tích: %s, Mô tả: %s, Ảnh: %s, Hạn sử dụng: %s, Giá: %.2f",
-        existingMilkDetail.getProduct().getProductname(),
-        existingMilkDetail.getMilkTaste().getMilktastename(),
-        existingMilkDetail.getPackagingunit().getPackagingunitname(),
-        existingMilkDetail.getUsageCapacity().getUnit(),
-        existingMilkDetail.getDescription(),
-        existingMilkDetail.getImgUrl(),
-        existingMilkDetail.getShelflifeofmilk(),
-        existingMilkDetail.getPrice()
+            "Sản phẩm: %s, Vị sữa: %s, Đơn vị đóng gói: %s, Dung tích: %s, Mô tả: %s, Ảnh: %s, Hạn sử dụng: %s, Giá: %.2f",
+            existingMilkDetail.getProduct().getProductname(),
+            existingMilkDetail.getMilkTaste().getMilktastename(),
+            existingMilkDetail.getPackagingunit().getPackagingunitname(),
+            existingMilkDetail.getUsageCapacity().getUnit(),
+            existingMilkDetail.getDescription(),
+            existingMilkDetail.getImgUrl(),
+            existingMilkDetail.getShelflifeofmilk(),
+            existingMilkDetail.getPrice()
     );
 
-    // Cập nhật thông tin mới
+    // Update the status based on stock quantity
+    if (milkdetail.getStockquantity() <= 0) {
+      existingMilkDetail.setStatus(0); // Stock quantity is 0 or less, set status to 0
+    } else {
+      existingMilkDetail.setStatus(1); // Stock quantity is greater than 0, set status to 1
+    }
+
+    // Update other fields
     existingMilkDetail.setProduct(product);
     existingMilkDetail.setMilkTaste(milktaste);
     existingMilkDetail.setPackagingunit(packagingunit);
     existingMilkDetail.setUsageCapacity(usagecapacity);
     existingMilkDetail.setDescription(milkdetail.getDescription());
-    existingMilkDetail.setStockquantity(milkdetail.getStockquantity());
     existingMilkDetail.setImgUrl(milkdetail.getImgUrl());
     existingMilkDetail.setShelflifeofmilk(milkdetail.getShelflifeofmilk());
     existingMilkDetail.setPrice(milkdetail.getPrice());
+    existingMilkDetail.setStockquantity(milkdetail.getStockquantity());
 
     milkdetailRepository.save(existingMilkDetail);
 
     // Lưu thông tin mới để ghi log
     String newInfo = String.format(
-        "Sản phẩm: %s, Vị sữa: %s, Đơn vị đóng gói: %s, Dung tích: %s, Mô tả: %s, Ảnh: %s, Hạn sử dụng: %s, Giá: %.2f",
-        product.getProductname(),
-        milktaste.getMilktastename(),
-        packagingunit.getPackagingunitname(),
-        usagecapacity.getUnit(),
-        milkdetail.getDescription(),
-        milkdetail.getImgUrl(),
-        milkdetail.getShelflifeofmilk(),
-        milkdetail.getPrice()
+            "Sản phẩm: %s, Vị sữa: %s, Đơn vị đóng gói: %s, Dung tích: %s, Mô tả: %s, Ảnh: %s, Hạn sử dụng: %s, Giá: %.2f",
+            product.getProductname(),
+            milktaste.getMilktastename(),
+            packagingunit.getPackagingunitname(),
+            usagecapacity.getUnit(),
+            milkdetail.getDescription(),
+            milkdetail.getImgUrl(),
+            milkdetail.getShelflifeofmilk(),
+            milkdetail.getPrice()
     );
 
     // Ghi log
     Log log = new Log();
     log.setAction("Cập nhật chi tiết sữa");
     log.setDescription(String.format(
-        "Chi tiết sữa đã được cập nhật. Thông tin cũ: [%s]. Thông tin mới: [%s].",
-        oldInfo,
-        newInfo
+            "Chi tiết sữa đã được cập nhật. Thông tin cũ: [%s]. Thông tin mới: [%s].",
+            oldInfo,
+            newInfo
     ));
     logService.saveLog(username, log);
 
@@ -252,6 +261,7 @@ public class MilkdetailService implements IMilkdetailService {
       throw new RuntimeException("Số lượng không hợp lệ: không đủ hàng trong kho");
     }
     milkdetail.setStockquantity(milkdetail.getStockquantity() + quantity);
+    milkdetail.setStatus(1);
     milkdetailRepository.save(milkdetail);
     Log log = new Log(); // Tạo log
     log.setAction("Cập nhật số lượng");
@@ -269,6 +279,29 @@ public class MilkdetailService implements IMilkdetailService {
   public List<Milkdetail> gethethang() {
     return milkdetailRepository.gethethang();
   }
+
+  @Override
+  public Map<String, Object> checkCount(Long id, int quantity) {
+    // Retrieve the Milkdetail object by ID
+    Milkdetail milkdetail = milkdetailRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Chi tiết sữa không tồn tại với ID: " + id));
+
+    // Prepare the response data
+    Map<String, Object> response = new HashMap<>();
+    response.put("currentStock", milkdetail.getStockquantity());
+
+    // Check if the stock is sufficient
+    if (milkdetail.getStockquantity() < quantity) {
+      response.put("status", "error");
+      response.put("errors", "Số lượng trong kho không đủ");
+    } else {
+      response.put("status", "success");
+      response.put("message", "Số lượng trong kho đủ");
+    }
+
+    return response;
+  }
+
 
 
 }

@@ -119,9 +119,9 @@ public class InvoiceService implements IInvoiceService {
         return ResponseEntity.badRequest().body(Map.of("error", "Voucher Đã Hết Lượt Sử Dụng"));
       }
       if (voucherRepository.existsUserInvoiceByUserAndVoucher(nguoiMua.getId(),
-        voucher.getVouchercode())) {
+              voucher.getVouchercode())) {
         return ResponseEntity.badRequest()
-          .body(Map.of("error", "Tài Khoản Đã Sử Dụng Voucher Này Rồi"));
+                .body(Map.of("error", "Tài Khoản Đã Sử Dụng Voucher Này Rồi"));
       }
       invoice.setVoucher(voucher);
       voucher.setUsagecount(voucher.getUsagecount() - 1);
@@ -134,47 +134,26 @@ public class InvoiceService implements IInvoiceService {
       invoicedetailRepository.save(invoicedetail);
     }
     telegramNotifier.sendMessageZalo(
-      "Mã Hóa Đơn: " + invoice.getInvoicecode() + "\n" + "Số Điện Thoại: "
-        + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
-        + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
-        + invoice.getPaymentmethod());
+            "Mã Hóa Đơn: " + invoice.getInvoicecode() + "\n" + "Số Điện Thoại: "
+                    + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
+                    + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
+                    + invoice.getPaymentmethod());
     byller.setInvoice(invoice);
     byller.setUser(nguoiMua);
     byller.setStatus(Status.Pending);
     userinvoiceRepository.save(byller);
-    if(!invoiceDto.getPaymentmethod().equals("COD")){
-        User admin = new User();
-        admin.setId(1l);
-        seller.setInvoice(invoice);
-        seller.setUser(admin);
-        seller.setStatus(Status.Pending);
-        userinvoiceRepository.save(seller);
+    if (!invoiceDto.getPaymentmethod().equals("COD")) {
+      User admin = new User();
+      admin.setId(1l);
+      seller.setInvoice(invoice);
+      seller.setUser(admin);
+      seller.setStatus(Status.Pending);
+      userinvoiceRepository.save(seller);
     }
     return ResponseEntity.ok(
-      "null");
+            "null");
   }
 
-  @Override
-  public ResponseEntity<String> updateInvoice(Long id, Invoice invoice) {
-    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-    Invoice existingInvoice = invoiceRepository.findById(id).orElse(null);
-    if (existingInvoice == null) {
-      // Nếu hóa đơn không tồn tại, trả về mã trạng thái 404 (Not Found)
-      return ResponseEntity.status(404).body("Hóa đơn không tồn tại!");
-    }// Kiểm tra trạng thái của hóa đơn trước khi cập nhật
-    if (existingInvoice.getStatus() == Status.Pending) {
-      // Kiểm tra và cập nhật từng trường nếu không phải null
-      existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber() : existingInvoice.getPhonenumber());
-      existingInvoice.setDeliveryaddress(invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress() : existingInvoice.getDeliveryaddress());
-      // Lưu lại hóa đơn đã cập nhật
-      invoiceRepository.save(existingInvoice);
-      // Trả về mã trạng thái 200 (OK) và thông báo thành công
-      return ResponseEntity.status(200).body("Cập nhật hóa đơn thành công!");
-    } else {
-      // Nếu hóa đơn đã được xác nhận, không thể cập nhật
-      return ResponseEntity.status(400).body("Hóa đơn đã được xác nhận không thể cập nhật!");
-    }
-  }
 
   @Override
   public String deleteInvoice(Long id) {
@@ -225,7 +204,7 @@ public class InvoiceService implements IInvoiceService {
     invoicedetails = invoicedetailRepository.invoicedetails(invoice.getId());
     for (Invoicedetail invoicedetail : invoicedetails) {
       milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId())
-        .orElseThrow();
+              .orElseThrow();
       System.out.println("firt:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
       milkdetail.setStockquantity(milkdetail.getStockquantity() - invoicedetail.getQuantity());
       System.out.println("last:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
@@ -248,23 +227,66 @@ public class InvoiceService implements IInvoiceService {
 
   @Override
   public Page<Invoice> getInvoices(String paymentmethod, String status, String invoiceCode,
-    String phonenumber,
-    String deliveryAddress,
-    LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
+                                   String phonenumber,
+                                   String deliveryAddress,
+                                   LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
     return invoiceRepository.findInvoices(paymentmethod, status, invoiceCode, phonenumber,
-      deliveryAddress,
-      startDate, endDate,
-      pageable);
+            deliveryAddress,
+            startDate, endDate,
+            pageable);
   }
 
   @Override
-  public String updatestatus(Long id, Invoice invoice) {
+  public String updateInvoice(Long id, Invoice invoice) {
+    // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
     Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
+    existingInvoice.setFullname(invoice.getFullname() != null ? invoice.getFullname()
+            : existingInvoice.getFullname());
+    // Kiểm tra và cập nhật từng trường nếu không phải null
+    existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
+            : existingInvoice.getPhonenumber());
+    existingInvoice.setDeliveryaddress(
+            invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
+                    : existingInvoice.getDeliveryaddress());
     existingInvoice.setStatus(
             invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
-    // Lưu lại hóa đơn đã cập nhật
     invoiceRepository.save(existingInvoice);
     return "Cập nhật hóa đơn thành công!";
   }
 
+
+
+  @Override
+  public String updatequantity(Long id, Invoice invoice) {
+    // Find the existing invoice
+    Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
+
+    // Check if the invoice has a voucher
+    if (existingInvoice.getVoucher() != null && existingInvoice.getVoucher().getId() != null) {
+      Voucher voucher = voucherRepository.findById(existingInvoice.getVoucher().getId()).orElseThrow();
+      if (existingInvoice.getTotalamount() >= voucher.getMinamount()) {
+        int discountAmount = invoice.getTotalamount() * voucher.getDiscountpercentage() / 100;
+        if (discountAmount > voucher.getMaxamount()) {
+          discountAmount = (int) voucher.getMaxamount();
+        }
+
+        // Calculate new total after applying discount
+        int total = invoice.getTotalamount() - discountAmount;
+
+        // Update discount amount and total amount in the invoice
+        existingInvoice.setDiscountamount(discountAmount);
+        existingInvoice.setTotalamount(total);
+      }
+    } else {
+      // If there is no voucher, set discount amount to 0 and use the provided total amount
+      existingInvoice.setDiscountamount(0);
+      existingInvoice.setTotalamount(invoice.getTotalamount());
+    }
+
+    // Save the updated invoice (only once at the end)
+    invoiceRepository.save(existingInvoice);
+
+    // Return success message
+    return "Cập nhật hóa đơn thành công!";
+  }
 }
