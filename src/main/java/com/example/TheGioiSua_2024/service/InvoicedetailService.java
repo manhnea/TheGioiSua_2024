@@ -171,6 +171,7 @@ String fullname = (String) record[14];
       itemDetails.put("capacity", record[10]);
       itemDetails.put("unit", record[11]);
         itemDetails.put("ida", record[13]);
+        itemDetails.put("milkdetailid",record[15]);
       items.add(itemDetails);
     }
 
@@ -235,7 +236,6 @@ String fullname = (String) record[14];
       return ResponseEntity.status(404).body("Không tìm thấy hóa đơn với id: " + existingInvoicedetail.getInvoice().getId());
     }
     if (invoice.getStatus() == Status.AwaitingPayment) {
-
       existingInvoicedetail.setQuantity(invoicedetail.getQuantity());
       existingInvoicedetail.setTotalprice(invoicedetail.getQuantity() * existingInvoicedetail.getPrice());
       invoicedetailRepository.save(existingInvoicedetail);

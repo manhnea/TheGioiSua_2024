@@ -165,5 +165,20 @@ public class MilkdetailRestController {
   private List<Milkdetail> hethang() {
     return milkdetailService.gethethang();
   }
+  @GetMapping("checkcount/{id}")
+  public ResponseEntity<?> checkCount(@PathVariable Long id, @RequestParam int quantity) {
+    // Call the service to check stock
+    Map<String, Object> response = milkdetailService.checkCount(id, quantity);
+
+    // Check if the stock is insufficient
+    if ("error".equals(response.get("status"))) {
+      // If stock is insufficient, return a 400 Bad Request with the current stock in the response
+      return ResponseEntity.badRequest()
+              .body(response);
+    }
+    // If stock is sufficient, return a 200 OK response with the current stock in the response
+    return ResponseEntity.ok(response);
+  }
+
 
 }
