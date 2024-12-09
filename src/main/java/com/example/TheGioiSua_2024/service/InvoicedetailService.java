@@ -5,9 +5,11 @@ import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
+import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
 import com.example.TheGioiSua_2024.repository.MilkdetailRepository;
+import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.service.impl.IInvoicedetailService;
 import com.example.TheGioiSua_2024.util.Status;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class InvoicedetailService implements IInvoicedetailService {
 
   @Autowired
   private MilkdetailRepository milkdetailRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
 
   @Override
   public List<Invoicedetail> getInvoicedetailList() {
@@ -140,7 +144,7 @@ public class InvoicedetailService implements IInvoicedetailService {
       String deliveryAddress = (String) record[2];
       String phoneNumber = (String) record[3];
       int status = (int) record[12];
-
+String fullname = (String) record[14];
       String groupKey = invoiceCode + "-" + deliveryAddress + "-" + phoneNumber;
 
       // If the invoice group doesn't exist, create it
@@ -150,7 +154,7 @@ public class InvoicedetailService implements IInvoicedetailService {
         put("deliveryAddress", deliveryAddress);
         put("phoneNumber", phoneNumber);
         put("status", status);
-
+        put("fullname", fullname);
         put("items", new ArrayList<Map<String, Object>>());
       }});
 
@@ -166,6 +170,7 @@ public class InvoicedetailService implements IInvoicedetailService {
       itemDetails.put("milkTypeName", record[9]);
       itemDetails.put("capacity", record[10]);
       itemDetails.put("unit", record[11]);
+        itemDetails.put("ida", record[13]);
       items.add(itemDetails);
     }
 
@@ -220,30 +225,24 @@ public class InvoicedetailService implements IInvoicedetailService {
 
   @Override
   public ResponseEntity<String> updateCountinvoicedetail(Long id, Invoicedetail invoicedetail) {
-    // Tìm kiếm chi tiết hóa đơn theo id
     Invoicedetail existingInvoicedetail = invoicedetailRepository.findById(id).orElse(null);
     if (existingInvoicedetail == null) {
-      // Trả về mã lỗi 404 nếu không tìm thấy chi tiết hóa đơn
       return ResponseEntity.status(404).body("Không tìm thấy chi tiết hóa đơn với id: " + id);
     }
-    // Lấy hóa đơn từ chi tiết hóa đơn
-    Invoice invoice = invoiceRepository.findById(existingInvoicedetail.getInvoice().getId())
-            .orElse(null);
+    Invoice invoice = invoiceRepository.findById(existingInvoicedetail.getInvoice().getId()).orElse(null);
+
     if (invoice == null) {
-      // Trả về mã lỗi 404 nếu không tìm thấy hóa đơn
       return ResponseEntity.status(404).body("Không tìm thấy hóa đơn với id: " + existingInvoicedetail.getInvoice().getId());
     }
-    // Kiểm tra trạng thái hóa đơn, chỉ cập nhật nếu trạng thái là Pending
-    if (invoice.getStatus() == Status.Pending) {
-      // Cập nhật số lượng và tổng giá
+    if (invoice.getStatus() == Status.AwaitingPayment) {
+
       existingInvoicedetail.setQuantity(invoicedetail.getQuantity());
       existingInvoicedetail.setTotalprice(invoicedetail.getQuantity() * existingInvoicedetail.getPrice());
       invoicedetailRepository.save(existingInvoicedetail);
-      // Trả về mã trạng thái 200 (OK) và thông báo thành công
       return ResponseEntity.status(200).body("Cập nhật số lượng chi tiết hóa đơn thành công!");
     } else {
-      // Trả về mã trạng thái 400 (Bad Request) nếu trạng thái không phải Pending
       return ResponseEntity.status(400).body("Không thể cập nhật chi tiết hóa đơn vì trạng thái hóa đơn không phải Pending!");
     }
   }
+
 }
