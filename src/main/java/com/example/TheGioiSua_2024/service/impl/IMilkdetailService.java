@@ -5,8 +5,11 @@ import com.example.TheGioiSua_2024.entity.Milkdetail;
 
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface IMilkdetailService {
 
@@ -34,4 +37,7 @@ public interface IMilkdetailService {
   String updateStockQuantity(String token, Long id, int quantity);
 
   List<Milkdetail> gethethang();
+
+  Map<String, Object> checkCount(Long id, int quantity);
+
 }
