@@ -4,12 +4,20 @@ import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.service.InvoiceService;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,29 +44,14 @@ public class InvoiceRestController {
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/add
   @PostMapping("/add")
-  public ResponseEntity<?> addInvoice(@RequestBody @Valid Invoice invoice,
-      BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-    }
-    Long idInvoice = invoiceService.saveInvoice(invoice);
-    if (idInvoice < 1) {
-      return ResponseEntity.badRequest().body(Map.of("error", "Thêm Hoá Đơn Thất Bại"));
-    }
-    return ResponseEntity.ok(Map.of("message", idInvoice));
+  public ResponseEntity<?> addInvoice(@RequestBody InvoiceDto invoiceDto) {
+    return invoiceService.saveInvoice(invoiceDto);
   }
 
   //RessourceEndPoint:http://localhost:1234/api/Invoice/update
   @PutMapping("/update/{id}")
   public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
-      BindingResult bindingResult) {
+    BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -70,7 +63,7 @@ public class InvoiceRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
+      Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
   }
 
 
@@ -101,17 +94,54 @@ public class InvoiceRestController {
   // Endpoint to count invoices for a specific month and year
   @GetMapping("/count")
   public long getCountInvoices(
-      @RequestParam int month,
-      @RequestParam int year) {
+    @RequestParam int month,
+    @RequestParam int year) {
     return invoiceService.countInvoices(month, year);
   }
+
   @GetMapping("cancel/{id}")
-  public ResponseEntity<?> cancelinvoice(@PathVariable Long id){
-      boolean isCancelInvoice = invoiceService.cancelInvoice(id);
-      if(isCancelInvoice){
-          return ResponseEntity.ok(Map.of("message", "OK"));
-      }else{
-          return ResponseEntity.badRequest().body(Map.of("status", "error"));
-      }
+  public ResponseEntity<?> cancelinvoice(@PathVariable Long id) {
+    boolean isCancelInvoice = invoiceService.cancelInvoice(id);
+    if (isCancelInvoice) {
+      return ResponseEntity.ok(Map.of("message", "OK"));
+    } else {
+      return ResponseEntity.badRequest().body(Map.of("status", "error"));
+    }
   }
+
+  @GetMapping("/search")
+  public ResponseEntity<Page<Invoice>> searchInvoices(
+    @RequestParam(required = false) String paymentmethod,
+    @RequestParam(required = false) String status,
+    @RequestParam(required = false) String invoiceCode,
+    @RequestParam(required = false) String phonenumber,
+    @RequestParam(required = false) String deliveryAddress,
+
+    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime startDate,
+    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate
+    , Pageable pageable) {
+    Page<Invoice> invoices = invoiceService.getInvoices(paymentmethod, status, invoiceCode,
+      phonenumber,
+      deliveryAddress, startDate,
+      endDate, pageable);
+    return ResponseEntity.ok(invoices);
+  }
+
+@PutMapping("updatequantity/{id}")
+public ResponseEntity<?> updatequantity(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
+                                       BindingResult bindingResult) {
+  if (bindingResult.hasErrors()) {
+    List<Map<String, String>> errors = new ArrayList<>();
+    for (FieldError fieldError : bindingResult.getFieldErrors()) {
+      Map<String, String> error = new HashMap<>();
+      error.put("field", fieldError.getField());
+      error.put("message", fieldError.getDefaultMessage());
+      errors.add(error);
+    }
+    return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+  }
+  return ResponseEntity.ok(
+          Map.of("status", "success", "message", invoiceService.updatequantity(id, invoice)));
+}
+
 }

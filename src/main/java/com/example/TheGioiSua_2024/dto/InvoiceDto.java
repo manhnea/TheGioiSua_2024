@@ -4,7 +4,11 @@
  */
 package com.example.TheGioiSua_2024.dto;
 
+import com.example.TheGioiSua_2024.entity.Invoicedetail;
+import com.example.TheGioiSua_2024.entity.User;
+import com.example.TheGioiSua_2024.entity.Userinvoice;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +29,9 @@ public class InvoiceDto {
     Long invoiceID;
     String invoiceCode;
     String nguoiMua;
-    String nguoiBan;
+    String nguoiDuyetDon;
+    String nguoiNhanHang;
+    String email;
     LocalDateTime ngayTao;
     String deliveryaddress;
     String phonenumber;
@@ -33,5 +39,43 @@ public class InvoiceDto {
     String voucherCode;
     int sotienGiamGia;
     int tongTien;
+    List<Invoicedetail> invoiceDetails;
     int trangThai;
+
+    public InvoiceDto(Long invoiceID, String invoiceCode, String nguoiMua, String nguoiDuyetDon, String nguoiNhanHang, String email, LocalDateTime ngayTao, String deliveryaddress, String phonenumber, String paymentmethod, String voucherCode, int sotienGiamGia, int tongTien, int trangThai) {
+        this.invoiceID = invoiceID;
+        this.invoiceCode = invoiceCode;
+        this.nguoiMua = nguoiMua;
+        this.nguoiDuyetDon = nguoiDuyetDon;
+        this.nguoiNhanHang = nguoiNhanHang;
+        this.email = email;
+        this.ngayTao = ngayTao;
+        this.deliveryaddress = deliveryaddress;
+        this.phonenumber = phonenumber;
+        this.paymentmethod = paymentmethod;
+        this.voucherCode = voucherCode;
+        this.sotienGiamGia = sotienGiamGia;
+        this.tongTien = tongTien;
+        this.trangThai = trangThai;
+    }
+    
+    @Override
+    public String toString() {
+        return "InvoiceDto{"
+                + "invoiceID=" + invoiceID
+                + ", invoiceCode='" + invoiceCode + '\''
+                + ", nguoiMua='" + nguoiMua + '\''
+                + ", nguoiBan='" + nguoiDuyetDon + '\''
+                + ", ngayTao=" + ngayTao
+                + ", deliveryaddress='" + deliveryaddress + '\''
+                + ", phonenumber='" + phonenumber + '\''
+                + ", paymentmethod='" + paymentmethod + '\''
+                + ", voucherCode='" + voucherCode + '\''
+                + ", sotienGiamGia=" + sotienGiamGia
+                + ", tongTien=" + tongTien
+                + ", invoiceDetails=" + invoiceDetails
+                + ", nguoiNhanHang=" + nguoiNhanHang
+                + ", trangThai=" + trangThai
+                + '}';
+    }
 }

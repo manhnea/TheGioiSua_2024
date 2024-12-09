@@ -6,6 +6,8 @@ import com.example.TheGioiSua_2024.entity.Invoicedetail;
 
 import java.util.List;
 import java.util.Map;
+
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
 public interface IInvoicedetailService {
@@ -29,4 +31,6 @@ public interface IInvoicedetailService {
   List<Map<String, Object>> getMilkSalesDetails();
 
   Map<String, Object> getInvoiceSummary();
+
+  ResponseEntity updateCountinvoicedetail(Long id, @Valid Invoicedetail invoicedetail);
 }

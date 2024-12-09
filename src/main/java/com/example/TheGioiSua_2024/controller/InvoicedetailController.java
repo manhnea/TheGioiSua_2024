@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.InvoiceService;
 import com.example.TheGioiSua_2024.service.InvoicedetailService;
 import jakarta.validation.Valid;
@@ -26,6 +27,8 @@ public class InvoicedetailController {
   private InvoicedetailService invoicedetailService;
   @Autowired
   private InvoiceService invoiceService;
+  @Autowired
+  private JwtUtilities jwtUtilities;
 
   //    http://localhost:1234/Invoicedetail/lst
   @GetMapping("/lst")
@@ -114,5 +117,21 @@ public class InvoicedetailController {
   @GetMapping("/invoice-summary")
   public Map<String, Object> getInvoiceSummary() {
     return invoicedetailService.getInvoiceSummary();
+  }
+  @PutMapping("/updateCount/{id}")
+  public ResponseEntity<?> updateCountinvoicedetail(@PathVariable Long id, @RequestBody @Valid Invoicedetail invoicedetail,
+                                                    BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    return ResponseEntity.ok(Map.of("status", "success", "message",
+            invoicedetailService.updateCountinvoicedetail(id, invoicedetail)));
   }
 }

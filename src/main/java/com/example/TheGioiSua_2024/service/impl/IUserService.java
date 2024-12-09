@@ -12,7 +12,6 @@ import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 
 
@@ -29,18 +28,31 @@ public interface IUserService {
   Role saveRole(Role role);
 
   User saverUser(User user);
-  
-  ResponseEntity<?> updatePhoneNumber(User user);
-  ResponseEntity<?> updateAddress(User user);
+
+  ResponseEntity<?> updatePhoneNumber(String token, User user);
+
+  ResponseEntity<?> updateAddress(String token, User user);
+
   UserDto findUserById(Long id);
 
   ResponseEntity<?> forgotPassword(ForgotPasswordDto forgotPasswordDto);
 
   ResponseEntity<?> resetPassword(String token, String newPassword);
 
-  ResponseEntity<?> changePassword(Long userId, String oldPassword, String newPassword);
+  ResponseEntity<?> changePassword(String token, String oldPassword,
+    String newPassword);
 
   long countUsersByRoleAndStatus();
 
   List<String> findTop5();
+
+  List<User> getAllUsers();
+
+  User updateUser(Long id, User user);
+
+  String deleteUser(Long id);
+
+  User getbyID(Long id);
+
+  Object updateFullName(String token, User user);
 }

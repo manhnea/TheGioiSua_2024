@@ -2,10 +2,13 @@ package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,8 @@ public class MilkdetailRestController {
 
   @Autowired
   private MilkdetailService milkdetailService;
+  @Autowired
+  private JwtUtilities jwtUtilities;
 
   //http://localhost:1234/api/Milkdetail/lst
   @GetMapping("/lst")
@@ -34,11 +39,12 @@ public class MilkdetailRestController {
 
   // http://localhost:1234/api/Milkdetail/update-stock/{id}
   @PutMapping("/update-stock/{id}")
-  public ResponseEntity<?> updateStockQuantity(
+  public ResponseEntity<?> updateStockQuantity(@NonNull HttpServletRequest request,
       @PathVariable Long id,
       @RequestParam int quantity) {
+    String token = jwtUtilities.getToken(request);
     try {
-      String message = milkdetailService.updateStockQuantity(id, quantity);
+      String message = milkdetailService.updateStockQuantity(token, id, quantity);
       return ResponseEntity.ok(Map.of("status", "success", "message", message));
     } catch (RuntimeException e) {
       return ResponseEntity.badRequest()
@@ -53,7 +59,8 @@ public class MilkdetailRestController {
 
   //http://localhost:1234/api/Milkdetail/add
   @PostMapping("/add")
-  private ResponseEntity<?> add(@RequestBody @Valid Milkdetail milkdetail,
+  private ResponseEntity<?> add(@NonNull HttpServletRequest request,
+      @RequestBody @Valid Milkdetail milkdetail,
       BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
@@ -65,15 +72,16 @@ public class MilkdetailRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-
+    String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.add(milkdetail)));
+        Map.of("status", "success", "message", milkdetailService.add(token, milkdetail)));
   }
 
   //http://localhost:1234/api/Milkdetail/update/{id}
   @PutMapping("/update/{id}")
-  private ResponseEntity<?> update(@PathVariable("id") Long id,
+  private ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable("id") Long id,
       @Valid @RequestBody Milkdetail milkdetail, BindingResult bindingResult) {
+    String token = jwtUtilities.getToken(request);
     if (bindingResult.hasErrors()) {
       List<Map<String, String>> errors = new ArrayList<>();
       for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -85,13 +93,15 @@ public class MilkdetailRestController {
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.update(id, milkdetail)));
+        Map.of("status", "success", "message", milkdetailService.update(token, id, milkdetail)));
   }
 
   //http://localhost:1234/api/Milkdetail/delete/{id}
   @DeleteMapping("/delete/{id}")
-  private ResponseEntity<?> delete(@PathVariable("id") Long id) {
-    String message = milkdetailService.delete(id);
+  private ResponseEntity<?> delete(@NonNull HttpServletRequest request,
+      @PathVariable("id") Long id) {
+    String token = jwtUtilities.getToken(request);
+    String message = milkdetailService.delete(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
   //http://localhost:1234/api/Milkdetail/getMilkDetail
@@ -150,5 +160,25 @@ public class MilkdetailRestController {
   public long getcountmilkdetail() {
     return milkdetailService.countMilkDetails();
   }
+
+  @GetMapping("/more")
+  private List<Milkdetail> hethang() {
+    return milkdetailService.gethethang();
+  }
+  @GetMapping("checkcount/{id}")
+  public ResponseEntity<?> checkCount(@PathVariable Long id, @RequestParam int quantity) {
+    // Call the service to check stock
+    Map<String, Object> response = milkdetailService.checkCount(id, quantity);
+
+    // Check if the stock is insufficient
+    if ("error".equals(response.get("status"))) {
+      // If stock is insufficient, return a 400 Bad Request with the current stock in the response
+      return ResponseEntity.badRequest()
+              .body(response);
+    }
+    // If stock is sufficient, return a 200 OK response with the current stock in the response
+    return ResponseEntity.ok(response);
+  }
+
 
 }

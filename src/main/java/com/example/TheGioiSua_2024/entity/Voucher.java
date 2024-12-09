@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class Voucher {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,8 +27,6 @@ public class Voucher {
     @Size(min = 5, max = 20, message = "Mã voucher phải từ 5 đến 20 ký tự")
     private String vouchercode;
 
-
-    
 //    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai")
     private LocalDate startdate;
 
@@ -43,7 +42,7 @@ public class Voucher {
 
     @Min(value = 0, message = "Số lần sử dụng phải lớn hơn hoặc bằng 0")
     private int usagecount;
-
+    private int minamount;
     @Min(value = 0, message = "Trạng thái không hợp lệ")
     @Max(value = 1, message = "Trạng thái không hợp lệ")
     private int status;

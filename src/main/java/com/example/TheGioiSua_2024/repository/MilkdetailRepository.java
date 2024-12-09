@@ -5,6 +5,7 @@ import com.example.TheGioiSua_2024.entity.Milkdetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -99,6 +100,6 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 
   @Query("SELECT COUNT(a) FROM Milkdetail a")
   long countMilkDetails();
-
-
+  @Query("SELECT md FROM Milkdetail md WHERE md.stockquantity = 0")
+ List<Milkdetail>  gethethang();
 }

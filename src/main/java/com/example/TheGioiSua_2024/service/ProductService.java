@@ -2,6 +2,8 @@ package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.dto.ProductDto;
+import com.example.TheGioiSua_2024.dto.ProductlstDto;
+import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Product;
@@ -10,11 +12,14 @@ import com.example.TheGioiSua_2024.repository.MilkbrandRepository;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
 import com.example.TheGioiSua_2024.repository.ProductRepository;
 import com.example.TheGioiSua_2024.repository.TargetuserRepository;
+import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IProductService;
-import com.example.TheGioiSua_2024.util.RandomNumberGenerator;
+import com.example.TheGioiSua_2024.util.Random;
 import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.StringUtil;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 @Service
 public class ProductService implements IProductService {
 
+  private static final Logger log = LoggerFactory.getLogger(ProductService.class);
   @Autowired
   private ProductRepository productRepository;
   @Autowired
@@ -33,6 +39,10 @@ public class ProductService implements IProductService {
   private MilkbrandRepository milkbrandRepository;
   @Autowired
   private TargetuserRepository targetuserRepository;
+  @Autowired
+  private JwtUtilities jwtUtilities;
+  @Autowired
+  private logService logService;
 
   @Override
   public List<Product> getAllProduct() {
@@ -40,7 +50,7 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public String addProduct(Product product) {
+  public String addProduct(String token, Product product) {
     try {
       Integer maxId = productRepository.findMaxId();
 
@@ -65,14 +75,14 @@ public class ProductService implements IProductService {
       product.setProductCode(productCode);
       product.setProductname(productname);
       MilkType milkType = milktypeRepository.findById(product.getMilkType().getId())
-          .orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
+        .orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
       Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId())
-          .orElseThrow(() -> new RuntimeException("Hãng Sữa Không Tồn Tại"));
+        .orElseThrow(() -> new RuntimeException("Hãng Sữa Không Tồn Tại"));
       String nameMilkBrand = milkbrand.getMilkbrandname();
       String nameMilkType = milkType.getMilkTypename();
       String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
-          + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
-          + RandomNumberGenerator.generateRandom4Digits();
+        + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
+        + Random.generateRandom4Digits();
 
       if (productRepository.findByProductname(productname).isPresent()) {
         return "Sản phẩm với tên này đã tồn tại.";
@@ -82,11 +92,21 @@ public class ProductService implements IProductService {
       }
       while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {
         urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
-            + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
-            + RandomNumberGenerator.generateRandom4Digits();
+          + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
+          + Random.generateRandom4Digits();
       }
       product.setProductUrl(StringUtil.removeAccent(urlProduct));
       product.setStatus(Status.Active);
+      String username = jwtUtilities.extractUsername(token);
+      Log log = new Log();
+      log.setAction("Thêm sản phẩm");
+      log.setDescription(
+        String.format("Sản phẩm: %s - Loại: %s, Thương hiệu: %s, Đối tượng sử dụng: %s",
+          product.getProductname(),
+          product.getMilkType(),
+          product.getMilkBrand(),
+          product.getTargetUser()));
+      logService.saveLog(username, log);
       productRepository.save(product);
       return "Thêm sản phẩm thành công.";
     } catch (RuntimeException e) {
@@ -95,22 +115,42 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public String updateProduct(Long id, Product product) {
+  public String updateProduct(String token, Long id, Product product) {
+    String username = jwtUtilities.extractUsername(token);
+    Log log = new Log();
+
     try {
       Product existingProduct = productRepository.findById(id)
-          .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
+        .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
 
       // Kiểm tra các thuộc tính liên quan
       MilkType milkType = milktypeRepository.findById(product.getMilkType().getId()).orElseThrow();
+      String changeLog = String.format(
+        "Tên sản phẩm: %s -> %s, Loại: %s -> %s, Thương hiệu: %s -> %s, Đối tượng: %s -> %s",
+        existingProduct.getProductname(), product.getProductname(),
+        existingProduct.getMilkType().getMilkTypename(), milkType.getMilkTypename(),
+        existingProduct.getMilkBrand().getMilkbrandname(),
+        milkbrandRepository.findById(product.getMilkBrand().getId())
+          .orElseThrow(() -> new IllegalArgumentException("Milk brand not found"))
+          .getMilkbrandname(),
+        existingProduct.getTargetUser().getTargetName(),
+        targetuserRepository.findById(product.getTargetUser().getId())
+          .orElseThrow(() -> new IllegalArgumentException("Target user not found"))
+          .getTargetName()
+      );
+
       Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId())
-          .orElseThrow();
+        .orElseThrow();
       Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId())
-          .orElseThrow();
+        .orElseThrow();
       String currentproductName = existingProduct.getProductname();
       if (currentproductName.equals(product.getProductname())) {
         existingProduct.setMilkType(milkType);
         existingProduct.setMilkBrand(milkbrand);
         existingProduct.setTargetUser(targetuser);
+        log.setAction("Cập nhật sản phẩm");
+        log.setDescription(changeLog);
+        logService.saveLog(username, log);
         productRepository.save(existingProduct);
         return "Cập nhật Sản Phẩm thành công.";
       } else if (productRepository.findByProductname(product.getProductname()).isPresent()) {
@@ -120,6 +160,9 @@ public class ProductService implements IProductService {
       existingProduct.setMilkType(milkType);
       existingProduct.setMilkBrand(milkbrand);
       existingProduct.setTargetUser(targetuser);
+      log.setAction("Cập nhật sản phẩm");
+      log.setDescription(changeLog);
+      logService.saveLog(username, log);
       productRepository.save(existingProduct);
       return "Cập nhật sản phẩm thành công.";
 
@@ -130,14 +173,22 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public String deleteProduct(Long id) {
+  public String deleteProduct(String token, Long id) {
     Product existingProduct = productRepository.findById(id).orElseThrow();
+    String username = jwtUtilities.extractUsername(token);
+    Log log = new Log();
     if (existingProduct.getStatus() == Status.Delete) {
       existingProduct.setStatus(Status.Active);
+      log.setAction("Khôi phục sản phẩm");
+      log.setDescription(String.format("Khôi phục sản phẩm: %s", existingProduct.getProductname()));
+      logService.saveLog(username, log);
       productRepository.save(existingProduct);
       return "Khôi phục sản phẩm thành công.";
     } else {
       existingProduct.setStatus(Status.Delete);
+      log.setAction("Xóa sản phẩm");
+      log.setDescription(String.format("Xóa sản phẩm: %s", existingProduct.getProductname()));
+      logService.saveLog(username, log);
       productRepository.save(existingProduct);
       return "Xóa sản phẩm thành công.";
     }
@@ -149,7 +200,7 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public Page<ProductDto> getPageProduct(Pageable pageable) {
+  public Page<ProductlstDto> getPageProduct(Pageable pageable) {
     return productRepository.getPageProduct(pageable);
   }
 
@@ -166,5 +217,14 @@ public class ProductService implements IProductService {
   @Override
   public Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id) {
     return productRepository.getPageProductByTargetUser(pageable, id);
+  }
+
+  @Override
+  public Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable) {
+    return productRepository.getPageProductWithSearch(searchTerm, pageable);
+  }
+  @Override
+  public Page<Product> getProductPage(Pageable pageable) {
+    return productRepository.getProductPage(pageable);
   }
 }
