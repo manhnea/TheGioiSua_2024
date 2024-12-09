@@ -66,7 +66,8 @@ public class SpringSecurityConfig {
         "/ws/**",
         "/Voucher/voucherActive",
         "/Voucher/voucercode/**",
-        "/Invoice/add"
+        "/Invoice/add",
+              "/Setting/get"
       ).permitAll()
       // Quyền của Customer
       .requestMatchers(
@@ -101,7 +102,8 @@ public class SpringSecurityConfig {
         "/payment/**",
         "/Log/**",
         "/Thongke/**",
-        "/role/lst"
+        "/role/lst",
+              "/Setting/**"
       ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
 
       // Quyền của Admin
