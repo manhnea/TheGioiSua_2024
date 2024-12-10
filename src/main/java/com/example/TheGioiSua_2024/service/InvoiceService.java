@@ -112,6 +112,7 @@ public class InvoiceService implements IInvoiceService {
     invoice.setDeliveryaddress(invoiceDto.getDeliveryaddress());
     invoice.setPaymentmethod(invoiceDto.getPaymentmethod());
     invoice.setDiscountamount(invoiceDto.getSotienGiamGia());
+    invoice.setShippingfee(invoiceDto.getSotienShip());
     invoice.setTotalamount(invoiceDto.getTongTien());
     if (invoiceDto.getVoucherCode() != null) {
       voucher = voucherRepository.vouchercode(invoiceDto.getVoucherCode());
@@ -127,7 +128,10 @@ public class InvoiceService implements IInvoiceService {
       voucher.setUsagecount(voucher.getUsagecount() - 1);
       voucherRepository.save(voucher);
     }
-    invoice.setStatus(Status.AwaitingPayment);
+    invoice.setStatus(Status.ApproveOrders);
+    if(!invoiceDto.getPaymentmethod().equals("COD")){
+        invoice.setStatus(Status.UnPaid);
+    }
     invoiceRepository.save(invoice);
     for (Invoicedetail invoicedetail : invoicedetails) {
       invoicedetail.setInvoice(invoice);
@@ -140,14 +144,14 @@ public class InvoiceService implements IInvoiceService {
                     + invoice.getPaymentmethod());
     byller.setInvoice(invoice);
     byller.setUser(nguoiMua);
-    byller.setStatus(Status.Pending);
+    byller.setStatus(Status.Active);
     userinvoiceRepository.save(byller);
     if (!invoiceDto.getPaymentmethod().equals("COD")) {
       User admin = new User();
       admin.setId(1l);
       seller.setInvoice(invoice);
       seller.setUser(admin);
-      seller.setStatus(Status.Pending);
+      seller.setStatus(Status.Active);
       userinvoiceRepository.save(seller);
     }
     return ResponseEntity.ok(
@@ -176,7 +180,7 @@ public class InvoiceService implements IInvoiceService {
 
   @Override
   public List<InvoiceDto> getInvoices(Long id) {
-    return invoiceRepository.findInvoices(id);
+    return invoiceRepository.findInvoicesByBuyerId(id);
   }
 
   @Override

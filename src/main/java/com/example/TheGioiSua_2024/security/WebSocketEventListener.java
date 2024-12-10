@@ -4,10 +4,10 @@
  */
 package com.example.TheGioiSua_2024.security;
 
-import java.util.List;
+import com.example.TheGioiSua_2024.dto.UserOnlineDto;
+import com.example.TheGioiSua_2024.util.SessionUserLogin;
 import java.util.Map;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,12 @@ public class WebSocketEventListener {
             if (simpSessionAttributes != null) {
                 String sessionId = (String) simpSessionAttributes.get("sessionId");
                 String username = (String) simpSessionAttributes.get("username");
-                System.out.println("User: " + username + " Connected");
+                if (username != null) {
+                    String role = (String) simpSessionAttributes.get("role");
+                    UserOnlineDto dto = new UserOnlineDto(username, role);
+                    SessionUserLogin.login(dto);
+                    System.out.println("User: " + username + "\nRole: " + role + "\nConnected");
+                }
             } else {
                 System.out.println("simpSessionAttributes not found.");
             }
@@ -41,15 +46,19 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        System.out.println("Headers: " + headerAccessor.getMessageHeaders());
-
         // Trích xuất simpSessionAttributes từ header của thông điệp
         Map<String, Object> simpSessionAttributes = (Map<String, Object>) headerAccessor.getMessageHeaders().get("simpSessionAttributes");
 
         if (simpSessionAttributes != null) {
             String sessionId = (String) simpSessionAttributes.get("sessionId");
             String username = (String) simpSessionAttributes.get("username");
-            System.out.println("User: " + username + " Disconneted");
+            if (username != null) {
+                String role = (String) simpSessionAttributes.get("role");
+                UserOnlineDto dto = new UserOnlineDto(username, role);
+                SessionUserLogin.logout(dto);
+                System.out.println("User: " + username + "\nRole: " + role + "\nDisconneted");
+            }
+
         } else {
             System.out.println("simpSessionAttributes not found.");
         }

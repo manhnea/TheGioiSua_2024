@@ -10,32 +10,17 @@ package com.example.TheGioiSua_2024.util;
  */
 public class Status {
 
-    public static int Delete = 0;
-    public static int Active = 1;
-    public static int Inactive  = 2;
-    public static int ApproveOrders = 301; // chờ duyệt đơn
-    public static int Oder = 333; // giỏ hàng
-    public static int Pending = 334; // Chờ Xử Lí
-    public static int AwaitingPayment = 335; // Chờ Thanh Toán
-    public static int Canceled = 336; // Huỷ
-    public static int Refunded = 337; // Hoàn Tiền
-    public static int Completed = 338; // Hoàn Thành
-    public static int New = 900; // đơn mới
-    public static int Waiting = 901;// chờ lấy hàng
-    public static int PickUp = 902;  // lấy hàng
-    public static int Took = 903;  // đã lấy
-    public static int Delivery = 904;  // Giao hang
-    public static int DeliverySuccessful = 905; // Giao hàng thành công
-    public static int DeliveryFailed = 906;  // Giao hàng thất bại
-    public static int ReturnGoods = 907;  // trả lại hàng hóa
-    public static int Refund = 908;  // Chuyển hoàn
-    public static int Checked = 909; // đã đối soát
-    public static int CheckedCustomer = 910; // đã đối soát khách
-    public static int CODpaymenttoCustomer = 911; // COD trả cho khách
-    public static int WaitingforCODpayment = 912; // chờ thanh toán COD
-    public static int Complete = 913; // hoàn thành
-    public static int Cancellation = 914; // Đơn hủy
-    public static int LateDelivery = 915; // Giao hàng trễ
-    public static int PartialDelivery = 916; // Giao hàng 1 phần
-    public static int OrderError = 1000; // Giao hàng 1 phần
+    public static int Delete = 0;//Không hoạt động
+    public static int Active = 1;//Hoạt động
+    public static int Inactive = 2;//Hoạt động
+    public static int Canceled  = 336; //Huỷ Đơn
+    public static int Complete  = 913;//Hoàn thành
+    public static int Waiting  = 901;//Chờ lấy hàng
+    public static int Took  = 903;//Đã lấy hàng
+    public static int Delivery  = 904;//Giao hàng
+    public static int ApproveOrders  = 301;//Chờ Duyệt Đơn
+    public static int UnPaid  = 337;//Chưa Thanh Toán
+    public static int WaitingInvoice  = 338;//Đơn Chờ
+    public static int SuccessfulPayment  = 305;//Thanh toán thành công
+    
 }

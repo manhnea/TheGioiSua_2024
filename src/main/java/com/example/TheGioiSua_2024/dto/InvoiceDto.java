@@ -38,11 +38,12 @@ public class InvoiceDto {
     String paymentmethod;
     String voucherCode;
     int sotienGiamGia;
+    int sotienShip;
     int tongTien;
     List<Invoicedetail> invoiceDetails;
     int trangThai;
 
-    public InvoiceDto(Long invoiceID, String invoiceCode, String nguoiMua, String nguoiDuyetDon, String nguoiNhanHang, String email, LocalDateTime ngayTao, String deliveryaddress, String phonenumber, String paymentmethod, String voucherCode, int sotienGiamGia, int tongTien, int trangThai) {
+    public InvoiceDto(Long invoiceID, String invoiceCode, String nguoiMua, String nguoiDuyetDon, String nguoiNhanHang, String email, LocalDateTime ngayTao, String deliveryaddress, String phonenumber, String paymentmethod, String voucherCode, int sotienGiamGia, int sotienShip, int tongTien, int trangThai) {
         this.invoiceID = invoiceID;
         this.invoiceCode = invoiceCode;
         this.nguoiMua = nguoiMua;
@@ -55,9 +56,12 @@ public class InvoiceDto {
         this.paymentmethod = paymentmethod;
         this.voucherCode = voucherCode;
         this.sotienGiamGia = sotienGiamGia;
+        this.sotienShip = sotienShip;
         this.tongTien = tongTien;
         this.trangThai = trangThai;
     }
+
+    
     
     @Override
     public String toString() {
