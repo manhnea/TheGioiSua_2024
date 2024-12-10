@@ -112,6 +112,7 @@ public class InvoiceService implements IInvoiceService {
     invoice.setDeliveryaddress(invoiceDto.getDeliveryaddress());
     invoice.setPaymentmethod(invoiceDto.getPaymentmethod());
     invoice.setDiscountamount(invoiceDto.getSotienGiamGia());
+    invoice.setShippingfee(invoiceDto.getSotienShip());
     invoice.setTotalamount(invoiceDto.getTongTien());
     if (invoiceDto.getVoucherCode() != null) {
       voucher = voucherRepository.vouchercode(invoiceDto.getVoucherCode());
