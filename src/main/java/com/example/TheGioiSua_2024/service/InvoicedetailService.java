@@ -1,11 +1,9 @@
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.dto.InvoiceDetailAdminDTO;
 import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.Invoicedetail;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
-import com.example.TheGioiSua_2024.entity.Voucher;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
 import com.example.TheGioiSua_2024.repository.MilkdetailRepository;
@@ -14,13 +12,11 @@ import com.example.TheGioiSua_2024.service.impl.IInvoicedetailService;
 import com.example.TheGioiSua_2024.util.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Service
@@ -235,7 +231,7 @@ String fullname = (String) record[14];
     if (invoice == null) {
       return ResponseEntity.status(404).body("Không tìm thấy hóa đơn với id: " + existingInvoicedetail.getInvoice().getId());
     }
-    if (invoice.getStatus() == Status.AwaitingPayment) {
+    if (invoice.getStatus() == Status.ApproveOrders) {
       existingInvoicedetail.setQuantity(invoicedetail.getQuantity());
       existingInvoicedetail.setTotalprice(invoicedetail.getQuantity() * existingInvoicedetail.getPrice());
       invoicedetailRepository.save(existingInvoicedetail);

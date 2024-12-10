@@ -129,7 +129,7 @@ public class InvoiceService implements IInvoiceService {
     }
     invoice.setStatus(Status.ApproveOrders);
     if(!invoiceDto.getPaymentmethod().equals("COD")){
-        invoice.setStatus(Status.AwaitingPayment);
+        invoice.setStatus(Status.UnPaid);
     }
     invoiceRepository.save(invoice);
     for (Invoicedetail invoicedetail : invoicedetails) {

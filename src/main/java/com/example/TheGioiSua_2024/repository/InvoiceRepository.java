@@ -25,7 +25,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
             + "i.fullname, i.email, i.creationdate, i.deliveryaddress, "
             + "i.phonenumber, i.paymentmethod, v.vouchercode, "
-            + "i.discountamount, i.totalamount, i.status) "
+            + "i.discountamount, i.shippingfee, i.totalamount, i.status) "
             + "FROM Invoice i "
             + "JOIN i.userInvoices uvBuyer "
             + "JOIN uvBuyer.user buyer "
@@ -43,7 +43,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
             + "i.fullname, i.email, i.creationdate, i.deliveryaddress, "
             + "i.phonenumber, i.paymentmethod, v.vouchercode, "
-            + "i.discountamount, i.totalamount, i.status) "
+            + "i.discountamount, i.shippingfee, i.totalamount, i.status) "
             + "FROM Invoice i "
             + "JOIN i.userInvoices uvBuyer "
             + "JOIN uvBuyer.user buyer "
@@ -74,7 +74,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     long countInvoices(@Param("month") int month, @Param("year") int year);
 
     @Query(
-            "SELECT iv.id, iv.invoicecode, iv.creationdate, iv.voucher.id, iv.totalamount, iv.deliveryaddress, iv.discountamount, iv.paymentmethod, iv.status, iv.phonenumber "
+            "SELECT iv.id, iv.invoicecode, iv.creationdate, iv.voucher.id, iv.totalamount, iv.deliveryaddress, iv.discountamount, iv.shippingfee, iv.paymentmethod, iv.status, iv.phonenumber "
             + "FROM Invoice iv "
             + "JOIN Userinvoice ui ON ui.invoice.id = iv.id "
             + "JOIN User u ON ui.user.id = u.id "

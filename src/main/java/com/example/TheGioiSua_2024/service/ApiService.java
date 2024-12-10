@@ -2,6 +2,8 @@ package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.dto.TransactionHistory;
 import com.example.TheGioiSua_2024.entity.Invoice;
+import com.example.TheGioiSua_2024.entity.InvoiceLog;
+import com.example.TheGioiSua_2024.repository.InvoiceLogRepository;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
 import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.TelegramNotifier;
@@ -33,8 +35,9 @@ public class ApiService {
     private final String TOKEN = "hPuqegRLwpHBTEzfZnyoWKQxvmkdVlIGJUAYaCNscjSbFMXrDitO";
     private final String STK = "0338739954";
     @Autowired
-    private InvoiceService invoiceService;
-
+    private InvoiceService invoiceService; 
+    @Autowired
+    private InvoiceLogRepository invoiceLogRepository;
     public JsonNode callMbBankApi() {
         String url = "https://api.dichvudark.vn/api/ApiMbBank";
 
@@ -93,6 +96,7 @@ public class ApiService {
     }
 
     public JsonNode checkTransactionData(TransactionHistory request) {
+        InvoiceLog invoiceLog = new InvoiceLog();
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         JsonNode transactionData = fetchTransactionData();
@@ -107,12 +111,15 @@ public class ApiService {
                 Invoice doist = invoiceRepository.findbycode(description);
 
                 // Kiểm tra trạng thái đơn hàng
-                if (doist.getStatus() == Status.AwaitingPayment) {
+                if (doist.getStatus() == Status.UnPaid) {
                     // Cập nhật trạng thái đơn hàng và gửi thông báo nếu là AwaitingPayment
                     boolean isPayMent = invoiceService.paymentOK(description);
                     if (isPayMent) {
-                        doist.setStatus(Status.Waiting);
+                        doist.setStatus(Status.SuccessfulPayment);
                         invoiceRepository.save(doist);
+                        invoiceLog.setInvoice(doist);
+                        invoiceLog.setStatus(Status.SuccessfulPayment);
+                        invoiceLogRepository.save(invoiceLog);
                         String mess = "Thông báo: Bạn có một đơn hàng mới!"
                                 + "\nMã đơn hàng: " + description
                                 + "\nSố điện thoại: " + doist.getPhonenumber()
@@ -125,8 +132,8 @@ public class ApiService {
                         response.put("status", 400);
                         response.put("mess", "Error payment");
                     }
-                } else if (doist.getStatus() == Status.Pending) {
-                    response.put("status", 334);
+                } else if (doist.getStatus() == Status.SuccessfulPayment) {
+                    response.put("status", 305);
                     response.put("error", "Đơn hàng này đã được thanh toán.");
                 } else if (doist.getStatus() == Status.Canceled) {
                     response.put("status", 336);
