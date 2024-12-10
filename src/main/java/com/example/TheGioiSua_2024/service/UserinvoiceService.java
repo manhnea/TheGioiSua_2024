@@ -87,12 +87,18 @@ public class UserinvoiceService implements IUserinvoiceService {
 
       // Xử lý trạng thái
       String statusString = switch (status) {
-        case 334 -> "Đang chờ xử lý";
-        case 335 -> "Chờ thanh toán";
-        case 336 -> "Đã hủy";
-        case 338 -> "Hoàn thành";
+        case 301 -> "Chờ Duyệt Đơn";
+        case 305 -> "Thanh toán thành công";
+        case 336 -> "Huỷ Đơn";
+        case 337 -> "Chưa Thanh Toán";
+        case 338 -> "Đơn Chờ";
+        case 901 -> "Chờ lấy hàng";
+        case 903 -> "Đã lấy hàng";
+        case 904 -> "Giao hàng";
+        case 913 -> "Hoàn thành";
         default -> "Trạng thái không xác định";
       };
+
 
       // Trả về một Map để dễ dàng chuyển đổi thành JSON
       Map<String, Object> resultMap = new HashMap<>();
