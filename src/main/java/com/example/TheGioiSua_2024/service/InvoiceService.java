@@ -297,4 +297,19 @@ public class InvoiceService implements IInvoiceService {
         // Return success message
         return "Cập nhật hóa đơn thành công!";
     }
+
+    @Override
+    public boolean waitingInvoice(Long id) {
+        InvoiceLog invoiceLog = new InvoiceLog();
+        Invoice invoice = invoiceRepository.findById(id).get();
+        if(invoice == null || invoice.getStatus() != Status.ApproveOrders){
+            return false;
+        }
+        invoice.setStatus(Status.Waiting);
+        invoiceRepository.save(invoice);
+        invoiceLog.setInvoice(invoice);
+        invoiceLog.setStatus(Status.Waiting);
+        invoiceLogRepository.save(invoiceLog);
+        return true;
+    }
 }

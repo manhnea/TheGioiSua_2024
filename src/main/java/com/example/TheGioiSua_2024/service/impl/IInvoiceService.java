@@ -16,30 +16,32 @@ import org.springframework.http.ResponseEntity;
 
 public interface IInvoiceService {
 
-  List<Invoice> getInvoiceList();
+    List<Invoice> getInvoiceList();
 
-  ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
+    ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
 
-  String updateInvoice(Long id, Invoice invoice);
-  String deleteInvoice(Long id);
+    String updateInvoice(Long id, Invoice invoice);
 
-  Invoice getInvoiceById(Long id);
+    String deleteInvoice(Long id);
 
-  List<InvoiceDto> getInvoices(Long id);
+    Invoice getInvoiceById(Long id);
 
-  long countInvoices();  // Default to current month and year
+    List<InvoiceDto> getInvoices(Long id);
 
-  long countInvoices(int month, int year);  // Specific month and year
+    long countInvoices();  // Default to current month and year
 
+    long countInvoices(int month, int year);  // Specific month and year
 
-  boolean paymentOK(String codeinvoice);
+    boolean paymentOK(String codeinvoice);
 
-  boolean cancelInvoice(Long id);
+    boolean cancelInvoice(Long id);
 
-  Page<Invoice> getInvoices(String paymentmethod, String status, String invoiceCode,
-    String phonenumber,
-    String deliveryAddress,
-    LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+    boolean waitingInvoice(Long id);
 
-  String updatequantity(Long id, @Valid Invoice invoice);
+    Page<Invoice> getInvoices(String paymentmethod, String status, String invoiceCode,
+            String phonenumber,
+            String deliveryAddress,
+            LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    String updatequantity(Long id, @Valid Invoice invoice);
 }
