@@ -52,10 +52,13 @@ public class WebSocketEventListener {
         if (simpSessionAttributes != null) {
             String sessionId = (String) simpSessionAttributes.get("sessionId");
             String username = (String) simpSessionAttributes.get("username");
-            String role = (String) simpSessionAttributes.get("role");
-            UserOnlineDto dto = new UserOnlineDto(username, role);
-            SessionUserLogin.logout(dto);
-            System.out.println("User: " + username + "\nRole: " + role + "\nDisconneted");
+            if (username != null) {
+                String role = (String) simpSessionAttributes.get("role");
+                UserOnlineDto dto = new UserOnlineDto(username, role);
+                SessionUserLogin.logout(dto);
+                System.out.println("User: " + username + "\nRole: " + role + "\nDisconneted");
+            }
+
         } else {
             System.out.println("simpSessionAttributes not found.");
         }

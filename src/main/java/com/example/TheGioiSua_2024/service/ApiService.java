@@ -111,7 +111,7 @@ public class ApiService {
                     // Cập nhật trạng thái đơn hàng và gửi thông báo nếu là AwaitingPayment
                     boolean isPayMent = invoiceService.paymentOK(description);
                     if (isPayMent) {
-                        doist.setStatus(Status.Pending);
+                        doist.setStatus(Status.Waiting);
                         invoiceRepository.save(doist);
                         String mess = "Thông báo: Bạn có một đơn hàng mới!"
                                 + "\nMã đơn hàng: " + description

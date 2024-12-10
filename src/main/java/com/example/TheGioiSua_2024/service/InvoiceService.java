@@ -127,7 +127,10 @@ public class InvoiceService implements IInvoiceService {
       voucher.setUsagecount(voucher.getUsagecount() - 1);
       voucherRepository.save(voucher);
     }
-    invoice.setStatus(Status.AwaitingPayment);
+    invoice.setStatus(Status.ApproveOrders);
+    if(!invoiceDto.getPaymentmethod().equals("COD")){
+        invoice.setStatus(Status.AwaitingPayment);
+    }
     invoiceRepository.save(invoice);
     for (Invoicedetail invoicedetail : invoicedetails) {
       invoicedetail.setInvoice(invoice);
@@ -140,14 +143,14 @@ public class InvoiceService implements IInvoiceService {
                     + invoice.getPaymentmethod());
     byller.setInvoice(invoice);
     byller.setUser(nguoiMua);
-    byller.setStatus(Status.Pending);
+    byller.setStatus(Status.Active);
     userinvoiceRepository.save(byller);
     if (!invoiceDto.getPaymentmethod().equals("COD")) {
       User admin = new User();
       admin.setId(1l);
       seller.setInvoice(invoice);
       seller.setUser(admin);
-      seller.setStatus(Status.Pending);
+      seller.setStatus(Status.Active);
       userinvoiceRepository.save(seller);
     }
     return ResponseEntity.ok(
