@@ -15,7 +15,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
   // Truy vấn đầu tiên trả về InvoiceDetailDto
   @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDetailDto(" +
       "id.id, pu.packagingunitname, mt.milkTypename, mb.milkbrandname, " +
-      "mtt.milktastename, uc.capacity, uc.unit, id.quantity, id.price, id.totalprice, id.status) " +
+      "mtt.milktastename, uc.capacity, uc.unit, id.quantity, id.price, id.totalprice, md.imgUrl, id.status) " +
       "FROM Invoicedetail id " +
       "JOIN id.milkDetail md " +
       "JOIN md.product p " +

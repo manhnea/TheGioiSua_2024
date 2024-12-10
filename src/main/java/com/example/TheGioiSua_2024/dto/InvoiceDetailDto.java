@@ -31,5 +31,6 @@ public class InvoiceDetailDto {
     int quantity;
     double price;
     double totalprice;
+    String imgUrl;
     int status;
 }

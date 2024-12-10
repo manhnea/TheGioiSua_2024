@@ -35,9 +35,10 @@ public class ApiService {
     private final String TOKEN = "hPuqegRLwpHBTEzfZnyoWKQxvmkdVlIGJUAYaCNscjSbFMXrDitO";
     private final String STK = "0338739954";
     @Autowired
-    private InvoiceService invoiceService; 
+    private InvoiceService invoiceService;
     @Autowired
     private InvoiceLogRepository invoiceLogRepository;
+
     public JsonNode callMbBankApi() {
         String url = "https://api.dichvudark.vn/api/ApiMbBank";
 
@@ -119,6 +120,12 @@ public class ApiService {
                         invoiceRepository.save(doist);
                         invoiceLog.setInvoice(doist);
                         invoiceLog.setStatus(Status.SuccessfulPayment);
+                        invoiceLogRepository.save(invoiceLog);
+                        doist.setStatus(Status.Waiting);
+                        invoiceRepository.save(doist);
+                        invoiceLog = new InvoiceLog();
+                        invoiceLog.setInvoice(doist);
+                        invoiceLog.setStatus(Status.Waiting);
                         invoiceLogRepository.save(invoiceLog);
                         String mess = "Thông báo: Bạn có một đơn hàng mới!"
                                 + "\nMã đơn hàng: " + description
