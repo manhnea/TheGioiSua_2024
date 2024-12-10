@@ -4,10 +4,21 @@
  */
 package com.example.TheGioiSua_2024.controller;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDto;
+import com.example.TheGioiSua_2024.dto.UserOnlineDto;
+import com.example.TheGioiSua_2024.repository.InvoiceRepository;
+import com.example.TheGioiSua_2024.repository.InvoicedetailRepository;
+import com.example.TheGioiSua_2024.util.SessionUserLogin;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -17,16 +28,31 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class WebSocketController {
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    InvoiceRepository invoiceRepository;
+
     @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public String sendMessage(@Payload String message, SimpMessageHeaderAccessor headerAccessor) {
-        // Lấy username từ WebSocket session attributes
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        
-        // Kiểm tra người gửi tin nhắn và xử lý thông điệp
-        System.out.println("Message from " + username + ": " + message);
-        
-        // Trả lời lại message cho các client đã đăng ký
-        return "Hello " + username + ", you said: " + message;
+    public void sendMessage(@Payload String message) {
+        List<UserOnlineDto> online = new ArrayList<>(SessionUserLogin.onlineUsers);
+        List<UserOnlineDto> staffOnline = online.stream()
+                .filter(user -> "Staff".equals(user.getRole()))
+                .collect(Collectors.toList());
+//        int counter = 0; // Khởi tạo bộ đếm
+//        int staffCount = staffOnline.size();
+//        for (UserOnlineDto userOnlineDto : staffOnline) {
+//            List<InvoiceDto> invoiceList = new ArrayList<>();
+//            InvoiceDto invoiceDto = invoiceRepository.f(message);
+//            invoiceList.add(invoiceDto);
+//            messagingTemplate.convertAndSendToUser(
+//                    userOnlineDto.getUsername(), // Gửi đến username của người nhận
+//                    "/queue/messages", // Đảm bảo là /user/{username}/queue/messages
+//                    message
+//            );
+//            
+//        }
+        messagingTemplate.convertAndSend("/topic/messages", message);
     }
+
 }
