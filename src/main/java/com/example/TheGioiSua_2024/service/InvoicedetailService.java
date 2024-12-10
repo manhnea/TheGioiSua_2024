@@ -203,7 +203,7 @@ public class InvoicedetailService implements IInvoicedetailService {
     @Override
     public Map<String, Object> getInvoiceSummary() {
         List<Object[]> invoiceSummaries = invoicedetailRepository.findInvoiceSummaries();
-        Double totalAmount = invoicedetailRepository.findTotalAmount();
+        int totalAmount = invoicedetailRepository.findTotalAmount();
 
         List<Map<String, Object>> invoices = new ArrayList<>();
         for (Object[] row : invoiceSummaries) {

@@ -68,8 +68,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     @Query("SELECT COUNT(*) "
             + "FROM Invoice "
-            + "WHERE status = 334 "
-            + "AND MONTH(creationdate) = :month "
+            + "WHERE MONTH(creationdate) = :month "
             + "AND YEAR(creationdate) = :year")
     long countInvoices(@Param("month") int month, @Param("year") int year);
 
@@ -102,7 +101,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "FROM Invoice i "
             + "WHERE MONTH(i.creationdate) = MONTH(CURRENT_DATE) "
             + "AND YEAR(i.creationdate) = YEAR(CURRENT_DATE) "
-            + "AND i.status = 905 "
+            + "AND i.status = 913 "
             + "GROUP BY DATE(i.creationdate) "
             + "ORDER BY DATE(i.creationdate) ASC")
     List<Object[]> findRevenueByDate();

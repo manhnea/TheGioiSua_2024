@@ -34,7 +34,7 @@ public interface UserinvoiceRepository extends JpaRepository<Userinvoice, Long> 
     "AND (:startDate IS NULL OR :endDate IS NULL OR iv.creationdate BETWEEN :startDate AND :endDate) "
     +
     "AND u.username != 'admin' " +
-    "AND iv.status = 905 " +
+    "AND iv.status = 913 " +
     "GROUP BY md.milkdetailcode, u.username")
   List<Object[]> getSalesRevenue(
     @Param("voucher") String voucher,
@@ -45,7 +45,7 @@ public interface UserinvoiceRepository extends JpaRepository<Userinvoice, Long> 
   @Query(value = "SELECT DATE(i.creationdate) AS ngayHoaDon, SUM(i.totalamount) AS tongDoanhThu " +
     "FROM Invoice i " +
     "JOIN Userinvoice ui ON ui.invoice.id = i.id " +
-    "WHERE i.status = 905 " +
+    "WHERE i.status = 913 " +
     "AND (:startDate IS NULL OR :endDate IS NULL OR i.creationdate BETWEEN :startDate AND :endDate)"
     +
     "AND (:voucherid IS NULL OR i.voucher.id = :voucherid)" +
