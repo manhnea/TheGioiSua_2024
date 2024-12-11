@@ -18,8 +18,6 @@ public class MilkType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Tên loại sữa không được để trống")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ ]+$", message = "Tên loại sữa chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String milkTypename;
     private String description;
     private int status;

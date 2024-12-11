@@ -24,10 +24,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Tên sản phẩm không được để trống")
-    @Size(max = 100, message = "Tên sản phẩm không được dài quá 100 ký tự")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Tên sản phẩm chỉ được chứa các ký tự chữ, số và khoảng trắng")
-    private String productname;
+   private String productname;
 
     private String productCode;
 
@@ -44,7 +41,5 @@ public class Product {
     private Targetuser targetUser;
     private String productUrl;
     private String imgUrl;
-    @Min(value = 0, message = "Trạng thái không hợp lệ")
-    @Max(value = 1, message = "Trạng thái không hợp lệ")
     private int status;
 }

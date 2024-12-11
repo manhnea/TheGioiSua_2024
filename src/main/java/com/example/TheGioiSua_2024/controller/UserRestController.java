@@ -189,6 +189,6 @@ public class UserRestController {
 
   @GetMapping("/online")
   public Set<UserOnlineDto> onlineUsers() {
-    return SessionUserLogin.onlineUsers;
+    return SessionUserLogin.getOnline();
   }
 }

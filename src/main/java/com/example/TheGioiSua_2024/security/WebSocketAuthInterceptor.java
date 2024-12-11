@@ -1,5 +1,7 @@
 package com.example.TheGioiSua_2024.security;
 
+import com.example.TheGioiSua_2024.entity.User;
+import com.example.TheGioiSua_2024.repository.UserRepository;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +19,14 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
     @Autowired
     JwtUtilities jwtUtilities;
     @Autowired
-    CustomerUserDetailsService customerUserDetailsService;
+    UserRepository userRepository;
 
     // Sử dụng Map đơn giản để lưu trữ mối quan hệ sessionId và username
     private Map<String, String> sessionUsernameMap = new HashMap<>();
 
-    public WebSocketAuthInterceptor(JwtUtilities jwtUtilities, CustomerUserDetailsService customerUserDetailsService) {
+    public WebSocketAuthInterceptor(JwtUtilities jwtUtilities, UserRepository userRepository) {
         this.jwtUtilities = jwtUtilities;
-        this.customerUserDetailsService = customerUserDetailsService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -35,19 +37,18 @@ public class WebSocketAuthInterceptor implements HandshakeInterceptor {
             String ntoken[] = token.split("=");
             if (jwtUtilities.validateToken(ntoken[1])) {
                 String user = jwtUtilities.extractUsername(ntoken[1]);
-                UserDetails userDetails = customerUserDetailsService.loadUserByUsername(user);
+                User userDetails = userRepository.findByUsername(user).orElseThrow();
                 if (userDetails != null) {
                     // Tạo sessionId và đặt thông tin vào attributes
                     String sessionId = UUID.randomUUID().toString();
                     attributes.put("sessionId", sessionId);  // Lưu sessionId
                     attributes.put("username", userDetails.getUsername());  // Lưu username
-                    System.out.println("sessionId: " + sessionId);
-                    System.out.println("username: " + userDetails.getUsername());
-                    return true;  // Cho phép kết nối WebSocket
+                    attributes.put("role", userDetails.getRole().getRoleName());  // Lưu username
+                      // Cho phép kết nối WebSocket
                 }
             }
         }
-        return false;  // Từ chối nếu token không hợp lệ hoặc không tìm thấy người dùng
+        return true;  // Từ chối nếu token không hợp lệ hoặc không tìm thấy người dùng
     }
 
     @Override

@@ -121,7 +121,7 @@ public class UserService implements IUserService {
     user.setUsername(registerDto.getUsername());
     user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
     user.setRegistrationdate(new Date(System.currentTimeMillis()));
-    user.setStatus(Status.Inactive); // Đặt trạng thái chưa xác minh
+    user.setStatus(Status.Active); // Đặt trạng thái chưa xác minh
     Role role = iRoleRepository.findById(2L).orElseThrow(); // 2L user role
     user.setRole(role);
 //    iUserRepository.save(user);

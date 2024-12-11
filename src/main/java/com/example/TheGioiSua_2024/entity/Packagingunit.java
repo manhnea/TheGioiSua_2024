@@ -19,8 +19,6 @@ public class Packagingunit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @NotBlank(message = "Đơn vị bao bì không được để trống")
-  @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ()]+$", message = "Đơn vị bao bì chỉ được chứa các ký tự chữ, số (A-Z, a-z), và dấu ngoặc đơn ()")
   private String packagingunitname;
   private int status;
 }

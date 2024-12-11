@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.security;
 
+import com.example.TheGioiSua_2024.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -15,13 +16,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     JwtUtilities jwtUtilities;
     @Autowired
-    CustomerUserDetailsService customerUserDetailsService;
+    UserRepository userRepository;
 
-    public WebSocketConfig(JwtUtilities jwtUtilities, CustomerUserDetailsService customerUserDetailsService) {
+    public WebSocketConfig(JwtUtilities jwtUtilities, UserRepository userRepository) {
         this.jwtUtilities = jwtUtilities;
-        this.customerUserDetailsService = customerUserDetailsService;
+        this.userRepository = userRepository;
     }
 
+    
     
 
    
@@ -29,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .addInterceptors(new WebSocketAuthInterceptor(jwtUtilities, customerUserDetailsService)) // Thêm interceptor
+                .addInterceptors(new WebSocketAuthInterceptor(jwtUtilities, userRepository)) // Thêm interceptor
                 .setAllowedOrigins("http://localhost:3000", "http://160.30.21.47:1234",
                         "http://160.30.21.47:3000", "http://160.30.21.47:3004", "http://localhost:3004/")
                 .withSockJS();
@@ -37,7 +39,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic");  // Cấu hình message broker
+        registry.enableSimpleBroker("/queue", "/topic","/user");  // Cấu hình message broker
         registry.setApplicationDestinationPrefixes("/app"); // Thêm prefix cho các destination ứng dụng
+        registry.setUserDestinationPrefix("/user");
     }
 }

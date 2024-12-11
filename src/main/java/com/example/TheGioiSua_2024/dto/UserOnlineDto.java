@@ -11,40 +11,44 @@ import java.util.Objects;
  */
 public class UserOnlineDto {
 
-  private String userId;
-  private String role;
-  // Getters and setters
+    private String username;
+    private String role;
 
-  public String getUserId() {
-    return userId;
-  }
-
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
-
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    public String getUsername() {
+        return username;
     }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    UserOnlineDto that = (UserOnlineDto) obj;
-    return userId.equals(that.userId) && role.equals(that.role);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(userId, role);
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public UserOnlineDto(String username, String role) {
+        this.username = username;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        UserOnlineDto that = (UserOnlineDto) obj;
+        return username.equals(that.username) && role.equals(that.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, role);
+    }
 }

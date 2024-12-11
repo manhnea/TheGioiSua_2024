@@ -15,7 +15,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
   // Truy vấn đầu tiên trả về InvoiceDetailDto
   @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDetailDto(" +
       "id.id, pu.packagingunitname, mt.milkTypename, mb.milkbrandname, " +
-      "mtt.milktastename, uc.capacity, uc.unit, id.quantity, id.price, id.totalprice, id.status) " +
+      "mtt.milktastename, uc.capacity, uc.unit, id.quantity, id.price, id.totalprice, md.imgUrl, id.status) " +
       "FROM Invoicedetail id " +
       "JOIN id.milkDetail md " +
       "JOIN md.product p " +
@@ -45,7 +45,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       "    JOIN invoice ON invoicedetail.invoiceid = invoice.id " +
       "WHERE " +
       "    invoice.creationdate >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) " +
-      "    AND invoice.status = 338 " +
+      "    AND invoice.status = 913 " +
       "GROUP BY " +
       "    YEAR(invoice.creationdate), " +
       "    MONTH(invoice.creationdate) " +
@@ -70,7 +70,8 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
           + "    uc.unit,\n"
           + "i.status,\n"
           +"id.id,\n"
-          +"i.fullname\n"
+          +"i.fullname,\n"
+          +"id.milkDetail.id \n"
       + "FROM\n"
       + "    Invoicedetail id\n"
       + "        JOIN\n"
@@ -105,7 +106,7 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
       "JOIN milktaste mt ON m.milktasteid = mt.id " +
       "JOIN packagingunit pu ON m.packagingunitid = pu.id " +
       "JOIN usagecapacity uc ON m.usagecapacityid = uc.id " +
-      "WHERE i.status = 338 " +
+      "WHERE i.status = 913 " +
       "GROUP BY m.id, p.productname, mt.milktastename, pu.packagingunitname, uc.capacity, uc.unit "
       +
       "ORDER BY SUM(id.totalprice) DESC", nativeQuery = true)
@@ -118,11 +119,11 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
           +
           "FROM Invoicedetail invoicedetail " +
           "JOIN invoicedetail.invoice invoice " +
-          "WHERE invoice.status = 338 " +
+          "WHERE invoice.status = 913 " +
           "GROUP BY invoice.id, invoice.invoicecode, invoice.totalamount")
   List<Object[]> findInvoiceSummaries();
 
-  @Query("SELECT SUM(invoice.totalamount) FROM Invoice invoice WHERE invoice.status = 338")
+  @Query("SELECT SUM(i.totalamount) FROM Invoice i WHERE i.status = 913 ")
   Double findTotalAmount();
   @Query("SELECT id FROM Invoicedetail id where id.invoice.id = :invoiceId")
   List<Invoicedetail> invoicedetails(Long invoiceId);
