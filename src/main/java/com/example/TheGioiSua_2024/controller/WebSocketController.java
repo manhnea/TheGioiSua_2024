@@ -37,12 +37,14 @@ public class WebSocketController {
 
     @MessageMapping("/cod")
     public void sendMessage(@Payload String message) {
-        
+        // Lấy danh sách hóa đơn và danh sách nhân viên online
         List<InvoiceDto> invoicecode = invoiceRepository.findInvoicesByCOD();
         List<UserOnlineDto> online = new ArrayList<>(SessionUserLogin.onlineUsers);
         List<UserOnlineDto> staffOnline = online.stream()
                 .filter(user -> "Staff".equals(user.getRole()))
                 .collect(Collectors.toList());
+
+// Kiểm tra số lượng nhân viên và hóa đơn
         int staffCount = staffOnline.size();
         int invoiceCount = invoicecode.size();
 

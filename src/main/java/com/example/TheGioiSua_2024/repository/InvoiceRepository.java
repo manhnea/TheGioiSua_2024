@@ -54,6 +54,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "LEFT JOIN i.voucher v "
             + "WHERE rBuyer.id = 2 "
             + "AND i.paymentmethod = 'COD' "
+            + "AND i.status = 301 "
             + "ORDER BY i.id DESC")
     List<InvoiceDto> findInvoicesByCOD();
 
