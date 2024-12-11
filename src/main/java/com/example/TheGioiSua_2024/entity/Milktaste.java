@@ -18,8 +18,7 @@ public class Milktaste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Tên hương vị sữa không được để trống")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Tên hương vị sữa chỉ được chứa các ký tự chữ, số (A-Z, a-z, 0-9) và khoảng trắng")
+
     private String milktastename;
     private int status;
 }

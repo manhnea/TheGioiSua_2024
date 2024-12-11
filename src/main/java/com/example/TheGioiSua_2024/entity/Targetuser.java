@@ -19,9 +19,7 @@ public class Targetuser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Tên đối tượng không được để trống")
     @JsonProperty("targetuser")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Tên đối tượng chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9)")
     private String targetName;
     private String description;
     private int status;

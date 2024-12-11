@@ -19,8 +19,6 @@ public class Usagecapacity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int capacity;
-    @NotBlank(message = " Đơn vị không được để trống")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ0-9 ]+$", message = "Đơn vị chỉ được chứa các ký tự chữ và số (A-Z, a-z)")
     private String unit;
     private int status;
 }

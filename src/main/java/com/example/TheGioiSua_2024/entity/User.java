@@ -41,34 +41,15 @@ public class User implements UserDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String username;
-
-
-  @Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
   private String password;
-
-  @NotBlank(message = "Họ và tên không được để trống")
-  @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹ ]+$", message = "Họ và tên chỉ được chứa chữ cái và dấu cách")
-  @Size(max = 100, message = "Họ và tên không được vượt quá 100 ký tự")
   private String fullname;
-
   private Date registrationdate;
-
-  
-  @Pattern(regexp = "(84|0[3|5|7|8|9])+([0-9]{8})\\b", message = "Số điện thoại không hợp lệ")
   private String phonenumber;
-
-  @Size(max = 150, message = "Địa chỉ không được vượt quá 150 ký tự")
   private String address;
-
-
-  @Email(message = "Email không hợp lệ")
-  @Size(max = 100, message = "Email không được vượt quá 100 ký tự")
   private String email;
-
   private String verificationToken;
   private Timestamp tokenCreationTime;
   private int status;
-
   @ManyToOne
   @JoinColumn(name = "roleid")
   Role role;
