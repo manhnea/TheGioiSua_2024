@@ -41,19 +41,11 @@ public class Milkdetail {
 
     private String shelflifeofmilk;
 
-    @NotNull(message = "Giá là bắt buộc")
-    @DecimalMin(value = "0.0", inclusive = true, message = "Giá không được âm")
     private float price;
     private String imgUrl;
-    @NotBlank(message = "Mô tả là bắt buộc")
-    @Size(max = 500, message = "Mô tả không được vượt quá 500 ký tự")
     private String description;
 
-    @NotNull(message = "Số lượng tồn kho là bắt buộc")
-    @Min(value = 0, message = "Số lượng tồn kho không được âm")
     private int stockquantity;
 
-    @Min(value = 0, message = "Trạng thái không hợp lệ")
-    @Max(value = 1, message = "Trạng thái không hợp lệ")
     private int status;
 }
