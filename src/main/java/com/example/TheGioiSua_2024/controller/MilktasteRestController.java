@@ -3,6 +3,8 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Milktaste;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilktasteService;
+import com.example.TheGioiSua_2024.util.MilkbrandValidator;
+import com.example.TheGioiSua_2024.util.MilktasteValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,16 +46,22 @@ public class MilktasteRestController {
   //http://localhost:1234/api/Milktaste/add
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-    @RequestBody @Valid Milktaste milktaste, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    @RequestBody  Milktaste milktaste) {
+    Map<String, String> errors = MilktasteValidator.validateMilktaste(milktaste);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
@@ -63,16 +71,22 @@ public class MilktasteRestController {
   //http://localhost:1234/api/Milktaste/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@PathVariable("id") Long id,
-    @RequestBody @Valid Milktaste milktaste, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    @RequestBody  Milktaste milktaste) {
+    Map<String, String> errors = MilktasteValidator.validateMilktaste(milktaste);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     return ResponseEntity.ok(
       Map.of("status", "success", "message", milktasteService.updateMilktaste(id, milktaste)));

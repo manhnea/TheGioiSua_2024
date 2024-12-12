@@ -68,7 +68,7 @@ public class MilktypeService implements IMilktypeService {
     milktype1.setDescription(milktype.getDescription());
     milktype1.setMilkTypename(milktype.getMilkTypename());
     milktypeRepository.save(milktype1);
-    return "Sua Thanh Cong";
+    return "Cập nhật loại sữa thành công!";
   }
 
   @Override

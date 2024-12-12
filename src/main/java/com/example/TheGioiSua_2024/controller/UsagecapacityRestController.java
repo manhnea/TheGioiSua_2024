@@ -3,6 +3,8 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Usagecapacity;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.UsagecapacityService;
+import com.example.TheGioiSua_2024.util.TargetuserValidator;
+import com.example.TheGioiSua_2024.util.UsagecapacityValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -40,15 +42,21 @@ public class UsagecapacityRestController {
   @PostMapping("/add")
   public ResponseEntity<?> addUsagecapacity(@NonNull HttpServletRequest request,
       @RequestBody @Valid Usagecapacity usagecapacity, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    Map<String, String> errors = UsagecapacityValidator.validateUsagecapacity(usagecapacity);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",
@@ -64,16 +72,22 @@ public class UsagecapacityRestController {
   @PutMapping("/update/{id}")
   public ResponseEntity<?> updateUsagecapacity(@NonNull HttpServletRequest request,
       @PathVariable("id") Long id,
-      @RequestBody @Valid Usagecapacity usagecapacity, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+      @RequestBody  Usagecapacity usagecapacity) {
+    Map<String, String> errors = UsagecapacityValidator.validateUsagecapacity(usagecapacity);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",

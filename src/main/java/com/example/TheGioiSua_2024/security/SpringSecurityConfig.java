@@ -103,14 +103,15 @@ public class SpringSecurityConfig {
                         "/Log/**",
                         "/Thongke/**",
                         "/role/lst",
-                        "/Setting/**"
+                        "/Setting/**",
+                        "/Voucher/**"
                 ).hasAnyAuthority("Staff", "Admin") // Staff hoặc Admin đều được phép
 
                 // Quyền của Admin
                 .requestMatchers(
                         "/admin/**",
-                        "/role/**",
-                        "/Voucher/**"
+                        "/role/**"
+
                 ).hasAuthority("Admin").anyRequest().authenticated(); // Tất cả yêu cầu khác phải xác thực
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

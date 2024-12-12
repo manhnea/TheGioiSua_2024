@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Packagingunit;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.PackagingunitService;
+import com.example.TheGioiSua_2024.util.PackagingUnitValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -44,16 +45,22 @@ public class PackagingunitRestController {
   //http://localhost:1234/api/Packagingunit/add
   @PostMapping("/add")
   public ResponseEntity<?> addPackagingunit(@NonNull HttpServletRequest request,
-    @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    @RequestBody Packagingunit packagingunit) {
+    Map<String, String> errors = PackagingUnitValidator.validatePackagingUnit(packagingunit);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",
@@ -64,16 +71,22 @@ public class PackagingunitRestController {
   @PutMapping("/update/{id}")
   public ResponseEntity<?> updatePackagingunit(@NonNull HttpServletRequest request,
     @PathVariable("id") Long id,
-    @RequestBody @Valid Packagingunit packagingunit, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    @RequestBody  Packagingunit packagingunit) {
+    Map<String, String> errors = PackagingUnitValidator.validatePackagingUnit(packagingunit);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",

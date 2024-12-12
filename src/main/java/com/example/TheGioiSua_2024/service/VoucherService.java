@@ -114,6 +114,7 @@ public class VoucherService implements IVoucherService {
 
     existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
     existingVoucher.setMaxamount(voucher.getMaxamount());
+    existingVoucher.setMinamount(voucher.getMinamount());
     existingVoucher.setEnddate(voucher.getEnddate());
     existingVoucher.setUsagecount(voucher.getUsagecount());
     existingVoucher.setStartdate(voucher.getStartdate());
@@ -210,10 +211,7 @@ public class VoucherService implements IVoucherService {
     public ResponseEntity<?> voucherActive() {
         return ResponseEntity.ok(Map.of("Succes",  voucherRepository.voucherActive()));
    }
-  @Override
-  public Page<Voucher> getVoucherPage(Pageable pageable) {
-    return voucherRepository.findAll(pageable);
-  }
+
 
   @Override
   public Page<Voucher> getVoucherPage(Pageable pageable) {

@@ -5,6 +5,8 @@ import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilkbrandService;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
+import com.example.TheGioiSua_2024.util.MilkbrandValidator;
+import com.example.TheGioiSua_2024.util.VoucherValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,19 +50,27 @@ public class MilkbrandRestController {
   //http://localhost:1234/api/Milkbrand/add
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-    @RequestBody @Valid Milkbrand milkbrand,
-    BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    @RequestBody  Milkbrand milkbrand
+    ) {
+
+    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
+
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
 
+    // Step 3: Retrieve the token from the request header
     String token = jwtUtilities.getToken(request);
     String resultMessage = milkbrandService.addMilkbrand(token, milkbrand);
     return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
@@ -69,18 +79,22 @@ public class MilkbrandRestController {
   //http://localhost:1234/api/Milkbrand/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable Long id,
-    @RequestBody @Valid Milkbrand milkbrand,
-    BindingResult bindingResult) {
+    @RequestBody  Milkbrand milkbrand) {
     String token = jwtUtilities.getToken(request);
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     return ResponseEntity.ok(
       Map.of("status", "success", "message",
