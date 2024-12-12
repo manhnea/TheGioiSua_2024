@@ -315,6 +315,7 @@ public class InvoiceService implements IInvoiceService {
         userinvoice.setInvoice(invoice);
         userinvoice.setUser(user);
         userinvoice.setStatus(Status.Active);
+        userinvoiceRepository.save(userinvoice);
         return true;
     }
 }
