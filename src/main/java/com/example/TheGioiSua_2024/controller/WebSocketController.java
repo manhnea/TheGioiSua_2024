@@ -37,14 +37,11 @@ public class WebSocketController {
 
     @MessageMapping("/cod")
     public void sendMessage(@Payload String message) {
-        // Lấy danh sách hóa đơn và danh sách nhân viên online
         List<InvoiceDto> invoicecode = invoiceRepository.findInvoicesByCOD();
         List<UserOnlineDto> online = new ArrayList<>(SessionUserLogin.onlineUsers);
         List<UserOnlineDto> staffOnline = online.stream()
                 .filter(user -> "Staff".equals(user.getRole()))
                 .collect(Collectors.toList());
-
-// Kiểm tra số lượng nhân viên và hóa đơn
         int staffCount = staffOnline.size();
         int invoiceCount = invoicecode.size();
 
@@ -61,6 +58,11 @@ public class WebSocketController {
             for (int i = 0; i < staffCount; i++) {
                 // Tính số hóa đơn mà nhân viên i sẽ nhận
                 int staffInvoicesCount = invoicesPerStaff + (i < remainder ? 1 : 0); // Nếu có dư thì cộng thêm 1 hóa đơn cho nhân viên đầu tiên
+
+                // Đảm bảo không lấy quá số hóa đơn còn lại
+                if (currentInvoiceIndex + staffInvoicesCount > invoiceCount) {
+                    staffInvoicesCount = invoiceCount - currentInvoiceIndex;
+                }
 
                 // Lấy danh sách hóa đơn cho nhân viên hiện tại
                 List<InvoiceDto> staffInvoices = invoicecode.subList(currentInvoiceIndex, currentInvoiceIndex + staffInvoicesCount);
@@ -86,6 +88,7 @@ public class WebSocketController {
         } else {
             System.out.println("Không có nhân viên hoặc hóa đơn để xử lý.");
         }
+
     }
 
     @MessageMapping("/invoice")
