@@ -143,8 +143,8 @@ public class InvoiceRestController {
     }
 
     @PutMapping("/waiting/{id}")
-    public ResponseEntity<?> waiting(@PathVariable Long id) {
-        boolean is = invoiceService.waitingInvoice(id);
+    public ResponseEntity<?> waiting(@PathVariable Long id,@RequestBody Long usellerid) {
+        boolean is = invoiceService.waitingInvoice(id,usellerid);
         if (!is) {
             return ResponseEntity.badRequest().body(Map.of("Error", false));
         }

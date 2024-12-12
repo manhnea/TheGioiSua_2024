@@ -299,8 +299,10 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public boolean waitingInvoice(Long id) {
+    public boolean waitingInvoice(Long id,Long usellerid) {
+        User  user = userRepository.findById(usellerid).get();
         InvoiceLog invoiceLog = new InvoiceLog();
+        Userinvoice userinvoice = new Userinvoice();
         Invoice invoice = invoiceRepository.findById(id).get();
         if(invoice == null || invoice.getStatus() != Status.ApproveOrders){
             return false;
@@ -310,6 +312,9 @@ public class InvoiceService implements IInvoiceService {
         invoiceLog.setInvoice(invoice);
         invoiceLog.setStatus(Status.Waiting);
         invoiceLogRepository.save(invoiceLog);
+        userinvoice.setInvoice(invoice);
+        userinvoice.setUser(user);
+        userinvoice.setStatus(Status.Active);
         return true;
     }
 }
