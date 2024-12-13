@@ -17,7 +17,7 @@ public class MilkdetailValidator {
             errors.put("shelflifeofmilk", "Thời gian sử dụng sữa không được để trống");
         } else if (milkdetail.getShelflifeofmilk().length() < 5 || milkdetail.getShelflifeofmilk().length() > 50) {
             errors.put("shelflifeofmilk", "Thời gian sử dụng sữa phải có độ dài từ 5 đến 50 ký tự");
-        } else if (!milkdetail.getShelflifeofmilk().matches("^[A-Za-z0-9,.-\\s]+$")) {
+        } else if (!milkdetail.getShelflifeofmilk().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
             errors.put("shelflifeofmilk", "Thời gian sử dụng sữa chỉ được chứa chữ cái, chữ số, dấu phẩy, dấu chấm, dấu gạch ngang và khoảng trắng");
         }
 
