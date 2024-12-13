@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface UsagecapacityRepository extends JpaRepository<Usagecapacity, Long> {
-    @Query("SELECT u FROM Usagecapacity u WHERE u.unit = ?1")
-    Optional<Object> findByUnit(String unit);
+    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity = ?1 and u.unit = ?2")
+    Optional<Usagecapacity> findByCapacityAndUnit(int capacity,String unit);
 }

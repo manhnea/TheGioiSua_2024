@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsagecapacityService implements IUsagecapacityService {
@@ -22,6 +23,16 @@ public class UsagecapacityService implements IUsagecapacityService {
   private JwtUtilities jwtUtilities;
   @Autowired
   private logService logService;
+  @Override
+  public String checkDuplicateusagecapacity(int capacity, String unit) {
+    // Check if Usagecapacity with the same capacity and unit already exists
+    Optional<Usagecapacity> existingUsagecapacity = usagecapacityRepository.findByCapacityAndUnit(capacity, unit);
+
+    if (existingUsagecapacity.isPresent()) {
+        return "Đơn vị sử dụng này đã tồn tại."; // Usage capacity already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String addUsagecapacity(String token, Usagecapacity usagecapacity) {
@@ -60,8 +71,6 @@ public class UsagecapacityService implements IUsagecapacityService {
       logService.saveLog(username, log);
       usagecapacityRepository.save(existingUsagecapacity);
       return "Đã cập nhật đơn vị sử dụng thành công.";
-    } else if (usagecapacityRepository.findByUnit(usagecapacity.getUnit()).isPresent()) {
-      return "Đơn vị này đã tồn tại.";
     }
     existingUsagecapacity.setCapacity(usagecapacity.getCapacity());
     existingUsagecapacity.setUnit(usagecapacity.getUnit());

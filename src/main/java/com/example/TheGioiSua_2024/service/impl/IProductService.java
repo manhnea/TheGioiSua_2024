@@ -13,7 +13,9 @@ public interface IProductService {
 
   List<Product> getAllProduct();
 
-  String addProduct(String token, Product product);
+    String checkDuplicateproduct(String productname);
+
+    String addProduct(String token, Product product);
 
   String updateProduct(String token, Long id, Product product);
 

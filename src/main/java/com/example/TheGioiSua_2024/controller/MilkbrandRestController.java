@@ -69,7 +69,16 @@ public class MilkbrandRestController {
 
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
-
+    String checkDuplicateMessage = milkbrandService.checkDuplicatemilkbrand(milkbrand.getMilkbrandname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milkbrandname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     // Step 3: Retrieve the token from the request header
     String token = jwtUtilities.getToken(request);
     String resultMessage = milkbrandService.addMilkbrand(token, milkbrand);
@@ -94,6 +103,16 @@ public class MilkbrandRestController {
         errorList.add(error);
       });
 
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
+    String checkDuplicateMessage = milkbrandService.checkDuplicatemilkbrand(milkbrand.getMilkbrandname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milkbrandname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     return ResponseEntity.ok(

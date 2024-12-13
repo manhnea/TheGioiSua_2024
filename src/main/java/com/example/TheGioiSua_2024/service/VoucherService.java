@@ -9,7 +9,6 @@ import com.example.TheGioiSua_2024.service.impl.IVoucherService;
 import com.example.TheGioiSua_2024.util.Status;
 import jakarta.persistence.PersistenceException;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,21 +34,19 @@ public class VoucherService implements IVoucherService {
   public List<Voucher> getVoucherList() {
     return voucherRepository.findAll();
   }
+  @Override
+  public String checkDuplicatevoucher(String voucher) {
+    // Check if voucher with the same capacity and unit already exists
+    Optional<Voucher> existingvoucher = voucherRepository.findByVoucher(voucher);
+
+    if (existingvoucher.isPresent()) {
+        return "Voucher này đã tồn tại."; // Voucher already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String saveVoucher(String token, Voucher voucher) {
-    // Loại bỏ khoảng trắng ở đầu và cuối mã voucher
-    String trimmedName = voucher.getVouchercode().trim();
-    voucher.setVouchercode(trimmedName);
-    LocalDate currentDate = LocalDate.now();  // Lấy ngày hiện tại
-    if (currentDate.isBefore(voucher.getStartdate())) {
-      return "Ngày Bắt Đầu Phải Lớn Hơn Hoặc Bằng Ngày Hiện Tại";
-    }
-    // Kiểm tra xem mã voucher đã tồn tại chưa
-    Optional<Voucher> existingVoucher = getVoucherByName(trimmedName);
-    if (existingVoucher.isPresent()) {
-      return "Voucher với mã này đã tồn tại.";
-    }
     voucher.setStatus(Status.Active); // Kích hoạt voucher
     String username = jwtUtilities.extractUsername(token);
 
@@ -108,9 +105,7 @@ public class VoucherService implements IVoucherService {
 
       return "Đã cập nhật voucher thành công.";
     } // Nếu mã voucher thay đổi, kiểm tra xem mã mới đã tồn tại chưa
-    else if (voucherRepository.findByVoucher(voucher.getVouchercode()).isPresent()) {
-      return "Mã voucher này đã tồn tại.";
-    }
+    
 
     existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
     existingVoucher.setMaxamount(voucher.getMaxamount());

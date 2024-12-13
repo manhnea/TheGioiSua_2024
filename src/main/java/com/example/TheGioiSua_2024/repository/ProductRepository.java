@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   Optional<Product> findByProductUrl(String productUrl);
 
   @Query("SELECT p FROM Product p WHERE p.productname = :productname")
-  Optional<Object> findByProductname(String productname);
+  Optional<Product> findByProductname(String productname);
 
   @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductlstDto( "
     + "p.id, "

@@ -10,7 +10,9 @@ public interface IMilkbrandService {
 
   List<Milkbrand> getAllMilkbrands();
 
-  String addMilkbrand(String token, Milkbrand milkbrand);
+    String checkDuplicatemilkbrand(String milkbrand);
+
+    String addMilkbrand(String token, Milkbrand milkbrand);
 
   String updateMilkbrand(String token, Long id, Milkbrand milkbrand);
 

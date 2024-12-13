@@ -3,8 +3,6 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Targetuser;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.TargetuserService;
-import com.example.TheGioiSua_2024.util.PackagingUnitValidator;
-import com.example.TheGioiSua_2024.util.TargetuserValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -41,21 +39,25 @@ public class TargetuserRestController {
   //http://localhost:1234/api/Targetuser/add
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-    @RequestBody Targetuser targetuser) {
-    Map<String, String> errors = TargetuserValidator.validateTargetuser(targetuser);
-
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
+    @RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    String checkDuplicateMessage = targetuserService.checkDuplicatetargetuser(targetuser.getTargetName());
+    if (checkDuplicateMessage != null) {
       List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
+      Map<String, String> error = Map.of(
+              "field", "targetName",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
@@ -71,22 +73,26 @@ public class TargetuserRestController {
   //http://localhost:1234/api/Targetuser/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@NonNull HttpServletRequest request,
-    @RequestBody  Targetuser targetuser, @PathVariable("id") Long id) {
+    @RequestBody @Valid Targetuser targetuser,
+    BindingResult bindingResult, @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    Map<String, String> errors = TargetuserValidator.validateTargetuser(targetuser);
-
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
+    if (bindingResult.hasErrors()) {
+      List<Map<String, String>> errors = new ArrayList<>();
+      for (FieldError fieldError : bindingResult.getFieldErrors()) {
+        Map<String, String> error = new HashMap<>();
+        error.put("field", fieldError.getField());
+        error.put("message", fieldError.getDefaultMessage());
+        errors.add(error);
+      }
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }String checkDuplicateMessage = targetuserService.checkDuplicatetargetuser(targetuser.getTargetName());
+    if (checkDuplicateMessage != null) {
       List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
+      Map<String, String> error = Map.of(
+              "field", "targetName",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     return ResponseEntity.ok(

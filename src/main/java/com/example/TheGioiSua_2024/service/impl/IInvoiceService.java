@@ -36,7 +36,7 @@ public interface IInvoiceService {
 
     boolean cancelInvoice(Long id);
 
-    boolean waitingInvoice(Long id);
+    boolean waitingInvoice(Long id, Long usellerid);
 
     Page<Invoice> getInvoices(String paymentmethod, String status, String invoiceCode,
             String phonenumber,

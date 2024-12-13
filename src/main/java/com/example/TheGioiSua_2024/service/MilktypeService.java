@@ -2,9 +2,7 @@ package com.example.TheGioiSua_2024.service;
 
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.MilkType;
-import com.example.TheGioiSua_2024.entity.Milktaste;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
-import com.example.TheGioiSua_2024.repository.VoucherRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilktypeService;
 import com.example.TheGioiSua_2024.util.Status;
@@ -25,15 +23,19 @@ public class MilktypeService implements IMilktypeService {
   private logService logService;
   @Autowired
   private JwtUtilities jwtUtilities;
+  @Override
+  public String checkDuplicatMilkType(String milkType) {
+    // Check if Usagecapacity with the same capacity and unit already exists
+    Optional<MilkType> existingUsagecapacity = milktypeRepository.findByMilkTypename(milkType);
+
+    if (existingUsagecapacity.isPresent()) {
+        return "Loại sữa này đã tồn tại."; // Capacity and unit combination already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String AddMilktype(String token, MilkType milktype) {
-    String trimmedName = milktype.getMilkTypename().trim();
-    milktype.setMilkTypename(trimmedName);
-    Optional<MilkType> existingContainer = getMilkTypeByName(trimmedName);
-    if (existingContainer.isPresent()) {
-      return "Tên này đã tồn tại.";
-    }
     milktype.setStatus(Status.Active);
     String username = jwtUtilities.extractUsername(token);
 
@@ -61,8 +63,6 @@ public class MilktypeService implements IMilktypeService {
       existingMilkType.setStatus(Status.Active);
       milktypeRepository.save(existingMilkType);
       return "Cập nhật mô tả loại sữa sữa thành công.";
-    } else if (milktypeRepository.findByMilkTypename(milktype.getMilkTypename()).isPresent()) {
-      return "loại sữa sữa này đã tồn tại.";
     }
     MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
     milktype1.setDescription(milktype.getDescription());

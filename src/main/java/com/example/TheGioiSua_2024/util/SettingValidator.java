@@ -52,7 +52,7 @@ public class SettingValidator {
         // Validate fullname
         if (setting.getFullname() == null || setting.getFullname().isEmpty()) {
             errors.put("fullname", "Họ và tên không được để trống");
-        } else if (!setting.getFullname().matches("^[A-Za-z\\s]+$")) {
+        } else if (!setting.getFullname().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
             errors.put("fullname", "Họ và tên chỉ được chứa các ký tự chữ và khoảng trắng");
         }
 

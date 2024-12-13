@@ -11,7 +11,9 @@ public interface ITargetuserService {
 
   List<Targetuser> getAllTargetuser();
 
-  String addTargetuser(String token, Targetuser targetuser);
+    String checkDuplicatetargetuser(String targetusername);
+
+    String addTargetuser(String token, Targetuser targetuser);
 
   String updateTargetuser(String token, Long id, Targetuser targetuser);
 

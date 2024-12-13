@@ -62,6 +62,16 @@ public class PackagingunitRestController {
 
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
+    String checkDuplicateMessage = packagingunitService.checkDuplicatepackagingunit(packagingunit.getPackagingunitname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "packagingunitname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",
       packagingunitService.addPackagingunit(token, packagingunit)));
@@ -86,6 +96,16 @@ public class PackagingunitRestController {
         errorList.add(error);
       });
 
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
+    String checkDuplicateMessage = packagingunitService.checkDuplicatepackagingunit(packagingunit.getPackagingunitname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "packagingunitname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);

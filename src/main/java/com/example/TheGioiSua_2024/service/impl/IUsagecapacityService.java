@@ -10,6 +10,8 @@ public interface IUsagecapacityService {
 
   List<Usagecapacity> getAllUsagecapacity();
 
+  String checkDuplicateusagecapacity(int capacity, String unit);
+
   String addUsagecapacity(String token, Usagecapacity usagecapacity);
 
   String updateUsagecapacity(String token, Long id, Usagecapacity usagecapacity);

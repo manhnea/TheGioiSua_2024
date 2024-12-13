@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MilkbrandService implements IMilkbrandService {
@@ -27,7 +28,15 @@ public class MilkbrandService implements IMilkbrandService {
   public List<Milkbrand> getAllMilkbrands() {
     return milkbrandRepository.findAll();
   }
-
+  @Override
+  public String checkDuplicatemilkbrand(String milkbrand) {
+    // Check if Milkbrand with the same name already exists
+    Optional<Milkbrand> existingMilkbrand = milkbrandRepository.findByMilkbrandname(milkbrand);
+    if (existingMilkbrand.isPresent()) {
+      return "Vị sữa sữa này đã tồn tại."; // Milk brand already exists
+    }
+    return null; // No duplicates found
+  }
   @Override
   public String addMilkbrand(String token, Milkbrand milkbrand) {
     String username = jwtUtilities.extractUsername(token);

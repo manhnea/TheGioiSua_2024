@@ -12,7 +12,9 @@ public interface IMilktasteService {
 
   List<Milktaste> getAllMilktaste();
 
-  String addMilktaste(String token, Milktaste milktaste);
+    String checkDuplicatemilktaste(String milktaste);
+
+    String addMilktaste(String token, Milktaste milktaste);
 
   String updateMilktaste(Long id, Milktaste milktaste);
 

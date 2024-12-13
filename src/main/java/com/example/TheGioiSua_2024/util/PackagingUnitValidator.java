@@ -15,7 +15,7 @@ public class PackagingUnitValidator {
             errors.put("packagingunitname", "Tên đơn vị đóng gói không được để trống");
         } else if (packagingUnit.getPackagingunitname().length() < 3 || packagingUnit.getPackagingunitname().length() > 100) {
             errors.put("packagingunitname", "Tên đơn vị đóng gói phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!packagingUnit.getPackagingunitname().matches("^[A-Za-z0-9 ]+$")) {
+        } else if (!packagingUnit.getPackagingunitname().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
             errors.put("packagingunitname", "Tên đơn vị đóng gói chỉ được chứa các ký tự chữ, số và khoảng trắng");
         }
 

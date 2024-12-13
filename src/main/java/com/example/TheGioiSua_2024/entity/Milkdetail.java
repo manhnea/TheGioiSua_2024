@@ -41,9 +41,12 @@ public class Milkdetail {
 
     private String shelflifeofmilk;
 
+
     private float price;
     private String imgUrl;
+
     private String description;
+
 
     private int stockquantity;
 
