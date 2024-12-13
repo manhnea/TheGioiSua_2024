@@ -50,6 +50,16 @@ public class UsagecapacityRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    String checkDuplicateMessage = usagecapacityService.checkDuplicateusagecapacity(usagecapacity.getCapacity(),usagecapacity.getUnit());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "capacity",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",
         usagecapacityService.addUsagecapacity(token, usagecapacity)));
@@ -74,6 +84,16 @@ public class UsagecapacityRestController {
         errors.add(error);
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    String checkDuplicateMessage = usagecapacityService.checkDuplicateusagecapacity(usagecapacity.getCapacity(),usagecapacity.getUnit());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "capacity",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(Map.of("status", "success", "message",

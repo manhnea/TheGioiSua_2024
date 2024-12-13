@@ -55,6 +55,16 @@ public class MilktypeRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    String checkDuplicateMessage = milktypeService.checkDuplicatMilkType(milktype.getMilkTypename());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milkTypename",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     String token = jwtUtilities.getToken(request);
     milktypeService.AddMilktype(token, milktype);
     return ResponseEntity.ok(
@@ -74,7 +84,16 @@ public class MilktypeRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-
+    String checkDuplicateMessage = milktypeService.checkDuplicatMilkType(milktype.getMilkTypename());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milkTypename",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     return ResponseEntity.ok(
       Map.of("status", "success", "message", milktypeService.UpdateMilktype(id, milktype)));
   }//http://localhost:1234/api/Milktype/delete/{id}

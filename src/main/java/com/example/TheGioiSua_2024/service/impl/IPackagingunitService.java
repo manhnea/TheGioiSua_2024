@@ -12,6 +12,8 @@ public interface IPackagingunitService {
 
   List<Packagingunit> getAllPackagingunit();
 
+  String checkDuplicatepackagingunit(String packagingunit);
+
   String addPackagingunit(String token, Packagingunit packagingunit);
 
   String updatePackagingunit(String token, Long id, Packagingunit packagingunit);

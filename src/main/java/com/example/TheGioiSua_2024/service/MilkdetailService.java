@@ -9,12 +9,12 @@ import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {
@@ -38,19 +38,19 @@ public class MilkdetailService implements IMilkdetailService {
   public List<Milkdetail> getAll() {
     return milkdetailRepository.findAll();
   }
+  @Override
+  public String checkDuplicatemilkdetail(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity) {
+    // Check if Usagecapacity with the same capacity and unit already exists
+    Optional<Milkdetail> existingmilkdetail = milkdetailRepository.findByIds(getProduct, getMilkTaste, getPackagingunit, getUsageCapacity);
+    if (existingmilkdetail.isPresent()) {
+        return "Chi tiết sữa này đã tồn tại."; // Milk detail already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String add(String token, Milkdetail milkdetail) {
-    boolean exists = milkdetailRepository.existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(
-        milkdetail.getProduct().getId(),
-        milkdetail.getMilkTaste().getId(),
-        milkdetail.getPackagingunit().getId(),
-        milkdetail.getUsageCapacity().getId()
-    );
 
-    if (exists) {
-      return "Chi tiết sữa với các thông tin này đã tồn tại";
-    }
 
     // Check if all related entities exist
     boolean allEntitiesExist = productRepository.existsById(milkdetail.getProduct().getId()) &&
@@ -103,18 +103,6 @@ public class MilkdetailService implements IMilkdetailService {
   public String update(String token, Long id, Milkdetail milkdetail) {
     Milkdetail existingMilkDetail = milkdetailRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Chi tiết sữa không tồn tại với ID: " + id));
-
-    boolean exists = milkdetailRepository.existsByProductAndMilkTasteAndPackagingunitAndUsageCapacity(
-            milkdetail.getProduct().getId(),
-            milkdetail.getMilkTaste().getId(),
-            milkdetail.getPackagingunit().getId(),
-            milkdetail.getUsageCapacity().getId()
-    );
-
-    // Nếu thông tin cập nhật giống thông tin đã tồn tại thì không cần tiếp tục.
-    if (exists && !existingMilkDetail.getId().equals(id)) { // Kiểm tra để đảm bảo không trùng với chính nó
-      return "Chi tiết sữa với các thông tin này đã tồn tại";
-    }
 
     String username = jwtUtilities.extractUsername(token);
 

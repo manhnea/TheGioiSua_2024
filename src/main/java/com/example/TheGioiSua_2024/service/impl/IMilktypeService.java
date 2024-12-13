@@ -12,6 +12,8 @@ public interface IMilktypeService {
 
   List<MilkType> GetAllMilktype();
 
+  String checkDuplicatMilkType(String milkType);
+
   String AddMilktype(String token, MilkType milktype);
 
   String UpdateMilktype(Long id, MilkType milktype);

@@ -15,6 +15,8 @@ public interface IVoucherService {
 
   List<Voucher> getVoucherList();
 
+  String checkDuplicatevoucher(String voucher);
+
   String saveVoucher(String token, Voucher voucher);
 
   String updateVoucher(String token, Long id, Voucher voucher);

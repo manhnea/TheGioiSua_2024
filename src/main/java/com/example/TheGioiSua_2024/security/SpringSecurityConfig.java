@@ -87,7 +87,7 @@ public class SpringSecurityConfig {
                 // Quyền của Staff
                 .requestMatchers(
                         "/user/**",
-                        "/Voucher/lst",
+                        "/Voucher/**",
                         "/Milktype/**",
                         "/Milktaste/**",
                         "/Packagingunit/**",

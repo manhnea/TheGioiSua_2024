@@ -51,6 +51,16 @@ public class ProductRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    String checkDuplicateMessage = productService.checkDuplicateproduct(product.getProductname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "productname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
         Map.of("status", "success", "message", productService.addProduct(token, product)));
@@ -77,7 +87,16 @@ public class ProductRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
-
+    String checkDuplicateMessage = productService.checkDuplicateproduct(product.getProductname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "productname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     return ResponseEntity.ok(
         Map.of("status", "success", "message", productService.updateProduct(token, id, product)));
   }

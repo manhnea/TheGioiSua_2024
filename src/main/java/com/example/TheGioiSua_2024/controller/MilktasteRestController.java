@@ -55,6 +55,16 @@ public class MilktasteRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    String checkDuplicateMessage = milktasteService.checkDuplicatemilktaste(milktaste.getMilktastename());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milktastename",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
       Map.of("status", "success", "message", milktasteService.addMilktaste(token, milktaste)));
@@ -73,6 +83,16 @@ public class MilktasteRestController {
         errors.add(error);
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }
+    String checkDuplicateMessage = milktasteService.checkDuplicatemilktaste(milktaste.getMilktastename());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milktastename",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     return ResponseEntity.ok(
       Map.of("status", "success", "message", milktasteService.updateMilktaste(id, milktaste)));

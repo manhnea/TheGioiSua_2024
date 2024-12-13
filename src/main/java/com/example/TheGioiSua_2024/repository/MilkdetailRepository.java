@@ -102,4 +102,6 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
   long countMilkDetails();
   @Query("SELECT md FROM Milkdetail md WHERE md.stockquantity = 0")
  List<Milkdetail>  gethethang();
+@Query("SELECT md FROM Milkdetail md WHERE md.product.id = :getProduct AND md.milkTaste.id = :getMilkTaste AND md.packagingunit.id = :getPackagingunit AND md.usageCapacity.id = :getUsageCapacity")
+    Optional<Milkdetail> findByIds(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity);
 }

@@ -1,6 +1,5 @@
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Log;
@@ -43,10 +42,20 @@ public class ProductService implements IProductService {
   private JwtUtilities jwtUtilities;
   @Autowired
   private logService logService;
-
+  
   @Override
   public List<Product> getAllProduct() {
     return productRepository.findAll();
+  }
+  @Override
+  public String checkDuplicateproduct(String productname) {
+    // Check if product with the same capacity and unit already exists
+    Optional<Product> existingproduct = productRepository.findByProductname(productname);
+
+    if (existingproduct.isPresent()) {
+      return "Kết hợp capacity và unit này đã tồn tại."; // Capacity and unit combination already exists
+    }
+    return null; // No duplicates found
   }
 
   @Override
@@ -62,15 +71,7 @@ public class ProductService implements IProductService {
 
       // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
       String productCode = String.format("SP%03d", maxId);
-      if (product.getMilkBrand().getId() == null) {
-        return "Thương Hiệu Không Được Để Trống.";
-      }
-      if (product.getMilkType().getId() == null) {
-        return "Loại Sữa Không Được Để Trống.";
-      }
-      if (product.getTargetUser().getId() == null) {
-        return "Đối Tượng Sử Dụng Không Được Để Trống.";
-      }
+
       String productname = product.getProductname().trim();
       product.setProductCode(productCode);
       product.setProductname(productname);
@@ -83,13 +84,6 @@ public class ProductService implements IProductService {
       String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
         + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
         + Random.generateRandom4Digits();
-
-      if (productRepository.findByProductname(productname).isPresent()) {
-        return "Sản phẩm với tên này đã tồn tại.";
-      }
-      if (productRepository.findByProductCode(productCode).isPresent()) {
-        return "Sản phẩm với mã này đã tồn tại.";
-      }
       while (productRepository.findByProductUrl(StringUtil.removeAccent(urlProduct)).isPresent()) {
         urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
           + StringUtil.replaceSpacesWithUnderscore(nameMilkBrand) + "_"
@@ -153,9 +147,7 @@ public class ProductService implements IProductService {
         logService.saveLog(username, log);
         productRepository.save(existingProduct);
         return "Cập nhật Sản Phẩm thành công.";
-      } else if (productRepository.findByProductname(product.getProductname()).isPresent()) {
-        return "Sản phẩm này đã tồn tại.";
-      }
+      } 
       existingProduct.setProductname(product.getProductname());
       existingProduct.setMilkType(milkType);
       existingProduct.setMilkBrand(milkbrand);

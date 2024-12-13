@@ -57,7 +57,16 @@ public class VoucherRestController {
 
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
-
+    String checkDuplicateMessage = voucherService.checkDuplicatevoucher(voucher.getVouchercode());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "vouchercode",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     // Step 3: Retrieve the token from the request header
     String token = jwtUtilities.getToken(request);
 

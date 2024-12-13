@@ -50,6 +50,16 @@ public class TargetuserRestController {
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
     }
+    String checkDuplicateMessage = targetuserService.checkDuplicatetargetuser(targetuser.getTargetName());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "targetName",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(
       Map.of("status", "success", "message", targetuserService.addTargetuser(token, targetuser)));
@@ -75,6 +85,15 @@ public class TargetuserRestController {
         errors.add(error);
       }
       return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    }String checkDuplicateMessage = targetuserService.checkDuplicatetargetuser(targetuser.getTargetName());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "targetName",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     return ResponseEntity.ok(
       Map.of("status", "success", "message",

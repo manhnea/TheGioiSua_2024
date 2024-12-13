@@ -23,17 +23,20 @@ public class PackagingunitService implements IPackagingunitService {
   private JwtUtilities jwtUtilities;
   @Autowired
   private logService logService;
+  @Override
+  public String checkDuplicatepackagingunit(String packagingunit) {
+    // Check if Usagecapacity with the same capacity and unit already exists
+    Optional<Packagingunit> existingUsagecapacity = packagingunitRepository.findByPackagingunitname(packagingunit);
+
+    if (existingUsagecapacity.isPresent()) {
+        return "Đơn vị đóng gói này đã tồn tại."; // Packaging unit already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String addPackagingunit(String token, Packagingunit packagingunit) {
-    // Loại bỏ khoảng trắng ở đầu và cuối tên
-    String trimmedName = packagingunit.getPackagingunitname().trim();
-    packagingunit.setPackagingunitname(trimmedName);
-    // Kiểm tra xem tên đã tồn tại chưa
-    Optional<Packagingunit> existingContainer = getPackagingunitByName(trimmedName);
-    if (existingContainer.isPresent()) {
-      return "Đơn vị đóng gói với tên này đã tồn tại.";
-    }
+
     packagingunit.setStatus(Status.Active);
     String username = jwtUtilities.extractUsername(token);
     Log log = new Log();
@@ -53,13 +56,6 @@ public class PackagingunitService implements IPackagingunitService {
   public String updatePackagingunit(String token, Long id, Packagingunit packagingunit) {
     // Loại bỏ khoảng trắng ở đầu và cuối tên
     String username = jwtUtilities.extractUsername(token);
-    String trimmedName = packagingunit.getPackagingunitname().trim();
-    packagingunit.setPackagingunitname(trimmedName);
-    // Kiểm tra xem tên đã tồn tại chưa
-    Optional<Packagingunit> existingContainer = getPackagingunitByName(trimmedName);
-    if (existingContainer.isPresent()) {
-      return "Tên đơn vị đóng gói này đã tồn tại.";
-    }
     Packagingunit existingPackagingunit = packagingunitRepository.findById(id).orElseThrow();
     String oldpackagingunitName = existingPackagingunit.getPackagingunitname();
     String newpackagingunitName = packagingunit.getPackagingunitname();

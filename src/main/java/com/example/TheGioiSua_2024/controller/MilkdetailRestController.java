@@ -4,6 +4,7 @@ import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
+import com.example.TheGioiSua_2024.util.MilkbrandValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,17 +61,32 @@ public class MilkdetailRestController {
   //http://localhost:1234/api/Milkdetail/add
   @PostMapping("/add")
   private ResponseEntity<?> add(@NonNull HttpServletRequest request,
-      @RequestBody @Valid Milkdetail milkdetail,
-      BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+      @RequestBody Milkdetail milkdetail
+     ) {
+    Map<String, String> errors = MilkDeta.validateMilkbrand(milkbrand);
+    // Step 2: If there are validation errors, return a 400 response with error details
+    if (!errors.isEmpty()) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      // Convert the errors to a list of error objects with field and message
+      errors.forEach((field, message) -> {
+        Map<String, String> error = Map.of(
+                "field", field,
+                "message", message
+        );
+        errorList.add(error);
+      });
+
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    }
+    String checkDuplicateMessage = milkbrandService.checkDuplicatemilkbrand(milkbrand.getMilkbrandname());
+    if (checkDuplicateMessage != null) {
+      List<Map<String, String>> errorList = new ArrayList<>();
+      Map<String, String> error = Map.of(
+              "field", "milkbrandname",
+              "message", checkDuplicateMessage
+      );
+      errorList.add(error);
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
     }
     String token = jwtUtilities.getToken(request);
     return ResponseEntity.ok(

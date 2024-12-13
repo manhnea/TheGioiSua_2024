@@ -28,17 +28,19 @@ public class MilktasteService implements IMilktasteService {
   public List<Milktaste> getAllMilktaste() {
     return milktasteRepository.findAll();
   }
+  @Override
+  public String checkDuplicatemilktaste(String milktaste) {
+    // Check if Usagecapacity with the same capacity and unit already exists
+    Optional<Milktaste> existingUsagecapacity = milktasteRepository.findByMilktastename(milktaste);
+
+    if (existingUsagecapacity.isPresent()) {
+      return "Kết hợp capacity và unit này đã tồn tại."; // Capacity and unit combination already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String addMilktaste(String token, Milktaste milktaste) {
-    // Loại bỏ khoảng trắng ở đầu và cuối tên
-    String trimmedName = milktaste.getMilktastename().trim();
-    milktaste.setMilktastename(trimmedName);
-    // Kiểm tra xem tên đã tồn tại chưa
-    Optional<Milktaste> existingContainer = getMilktasteByName(trimmedName);
-    if (existingContainer.isPresent()) {
-      return "Tên vị sữa này đã tồn tại.";
-    }
     milktaste.setStatus(Status.Active);
     String username = jwtUtilities.extractUsername(token);
 
@@ -52,22 +54,16 @@ public class MilktasteService implements IMilktasteService {
     log.setAction("Thêm voucher");
     log.setDescription(message);
     logService.saveLog(username, log);
-    milktasteRepository.save(milktaste); // Lưu đối tượng milktaste vào cơ sở dữ liệu
+    milktasteRepository.save(milktaste);
     return "Thêm vị sữa thành công";
   }
 
   @Override
   public String updateMilktaste(Long id, Milktaste milktaste) {
     Milktaste m = milktasteRepository.findById(id).orElseThrow();
-    String trimmedName = milktaste.getMilktastename().trim();
-    milktaste.setMilktastename(trimmedName);
-    Optional<Milktaste> existingContainer = getMilktasteByName(trimmedName);
-    if (existingContainer.isPresent()) {
-      return "Tên vị sữa này đã tồn tại.";
-    }
     m.setMilktastename(milktaste.getMilktastename());
     milktasteRepository.save(m);
-    return "Cập nhật vị sữa thành công"; // Đã thay đổi thông báo
+    return "Cập nhật vị sữa thành công";
   }
 
   @Override

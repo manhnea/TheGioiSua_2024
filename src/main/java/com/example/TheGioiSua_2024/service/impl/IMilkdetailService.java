@@ -15,7 +15,9 @@ public interface IMilkdetailService {
 
   List<Milkdetail> getAll();
 
-  String add(String token, Milkdetail milkdetail);
+    String checkDuplicatemilkdetail(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity);
+
+    String add(String token, Milkdetail milkdetail);
 
   String update(String token, Long id, Milkdetail milkdetail);
 

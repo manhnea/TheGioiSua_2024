@@ -28,18 +28,20 @@ public class TargetuserService implements ITargetuserService {
   public List<Targetuser> getAllTargetuser() {
     return targetuserRepository.findAll();
   }
+  @Override
+  public String checkDuplicatetargetuser(String targetusername) {
+    // Check if targetuser with the same capacity and unit already exists
+    Optional<Targetuser> existingtargetuser = targetuserRepository.findByTargetusername(targetusername);
+
+    if (existingtargetuser.isPresent()) {
+        return "Người dùng mục tiêu này đã tồn tại."; // Target user already exists
+    }
+    return null; // No duplicates found
+  }
 
   @Override
   public String addTargetuser(String token, Targetuser targetuser) {
     String username = jwtUtilities.extractUsername(token);
-    // Loại bỏ khoảng trắng ở đầu và cuối tên
-    String trimmedName = targetuser.getTargetName().trim();
-    targetuser.setTargetName(trimmedName);
-    // Kiểm tra xem tên đã tồn tại chưa
-    Optional<Targetuser> existingContainer = getTargetuserByName(trimmedName);
-    if (existingContainer.isPresent()) {
-      return "Tên người dùng mục tiêu này đã tồn tại.";
-    }
     targetuser.setStatus(Status.Active);
     Log log = new Log(); // Tạo log
     log.setAction("Thêm người dùng mục tiêu");
@@ -70,10 +72,6 @@ public class TargetuserService implements ITargetuserService {
       logService.saveLog(username, log);
       targetuserRepository.save(existingTargetuser);
       return "Cập nhật người dùng mục tiêu thành công.";
-    }
-    // Kiểm tra xem tên mới có bị trùng không
-    else if (targetuserRepository.findByTargetusername(targetuser.getTargetName()).isPresent()) {
-      return "Tên người dùng mục tiêu này đã tồn tại.";
     }
     // Cập nhật tên và mô tả mới
     existingTargetuser.setDescription(targetuser.getDescription());
