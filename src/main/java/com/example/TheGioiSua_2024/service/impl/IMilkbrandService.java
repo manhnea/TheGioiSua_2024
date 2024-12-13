@@ -21,5 +21,5 @@ public interface IMilkbrandService {
   Milkbrand getMilkbrandById(Long id);
 
   Page<Milkbrand> getMilkbrandPage(Pageable pageable);
-
+  Page<Milkbrand> getMilkbrandsearch(String milkbrandname, Pageable pageable);
 }

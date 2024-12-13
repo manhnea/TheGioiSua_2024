@@ -26,4 +26,5 @@ public interface IMilktypeService {
 
   Page<MilkType> GetMilktypePage(Pageable pageable);
 
+  Page<MilkType> GetMilktypePageByName(String milkTypeName, Pageable pageable);
 }

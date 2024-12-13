@@ -128,5 +128,10 @@ public class MilkbrandService implements IMilkbrandService {
     return milkbrandRepository.findAll(pageable);
   }
 
+  @Override
+  public Page<Milkbrand> getMilkbrandsearch(String milkbrandname, Pageable pageable) {
+    return milkbrandRepository.findByMilkbrandnamePage(milkbrandname, pageable);
+  }
+
 }
 

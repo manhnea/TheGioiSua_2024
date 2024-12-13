@@ -107,4 +107,9 @@ public class PackagingunitService implements IPackagingunitService {
   public Page<Packagingunit> getPackagingunitPage(Pageable pageable) {
     return packagingunitRepository.findAll(pageable);
   }
+
+  @Override
+  public Page<Packagingunit> getPackagingunitPageByName(String packagingunitName, Pageable pageable) {
+    return packagingunitRepository.findByPackagingunitPage(packagingunitName, pageable);
+  }
 }

@@ -26,4 +26,5 @@ public interface IPackagingunitService {
 
   Page<Packagingunit> getPackagingunitPage(Pageable pageable);
 
+  Page<Packagingunit> getPackagingunitPageByName(String packagingunitName, Pageable pageable);
 }

@@ -128,4 +128,11 @@ public class PackagingunitRestController {
     Pageable pageable = PageRequest.of(page, size);
     return packagingunitService.getPackagingunitPage(pageable);
   }
+  @GetMapping("/getPackagingunitPageByName")
+    public Page<Packagingunit> getPackagingunitPageByName(@RequestParam("page") int page,
+        @RequestParam("size") int size,
+        @RequestParam("packagingunitName") String packagingunitName) {
+        Pageable pageable = PageRequest.of(page, size);
+        return packagingunitService.getPackagingunitPageByName(packagingunitName, pageable);
+    }
 }

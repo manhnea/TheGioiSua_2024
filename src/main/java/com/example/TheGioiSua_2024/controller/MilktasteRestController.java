@@ -128,4 +128,11 @@ public class MilktasteRestController {
     return milktasteService.getMilktastePage(pageable);
   }
 
+  @GetMapping("/getMilktastePageByName")
+    public Page<Milktaste> getMilktastePageByName(@RequestParam("page") int page,
+        @RequestParam("size") int size, @RequestParam("milktasteName") String milktasteName) {
+        Pageable pageable = PageRequest.of(page, size);
+        return milktasteService.getMilktastePageByName(milktasteName, pageable);
+    }
+
 }

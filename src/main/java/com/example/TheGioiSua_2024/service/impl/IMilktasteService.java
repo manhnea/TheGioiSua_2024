@@ -25,4 +25,5 @@ public interface IMilktasteService {
   Milktaste getMilktasteById(Long id);
 
   Page<Milktaste> getMilktastePage(Pageable pageable);
+  Page<Milktaste> getMilktastePageByName(String milktasteName, Pageable pageable);
 }

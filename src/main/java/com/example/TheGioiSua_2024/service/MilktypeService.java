@@ -114,4 +114,9 @@ public class MilktypeService implements IMilktypeService {
     return milktypeRepository.findAll(pageable);
   }
 
+  @Override
+  public Page<MilkType> GetMilktypePageByName(String milkTypeName, Pageable pageable) {
+    return milktypeRepository.findByMilkTypenameContaining(milkTypeName, pageable);
+  }
+
 }

@@ -1,6 +1,8 @@
 package com.example.TheGioiSua_2024.repository;
 
 import com.example.TheGioiSua_2024.entity.Milkbrand;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,7 @@ public interface MilkbrandRepository extends JpaRepository<Milkbrand, Long> {
 
     @Query("SELECT m FROM Milkbrand m WHERE m.id = ?1")
     Milkbrand findBydadata(Long id);
+
+    @Query("SELECT m FROM Milkbrand m WHERE m.milkbrandname LIKE %:milkbrandname%")
+    Page<Milkbrand> findByMilkbrandnamePage(String milkbrandname, Pageable pageable);
 }

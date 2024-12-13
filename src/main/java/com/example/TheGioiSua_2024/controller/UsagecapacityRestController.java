@@ -41,7 +41,7 @@ public class UsagecapacityRestController {
   //http://localhost:1234/api/Usagecapacity/add
   @PostMapping("/add")
   public ResponseEntity<?> addUsagecapacity(@NonNull HttpServletRequest request,
-      @RequestBody @Valid Usagecapacity usagecapacity, BindingResult bindingResult) {
+      @RequestBody  Usagecapacity usagecapacity) {
     Map<String, String> errors = UsagecapacityValidator.validateUsagecapacity(usagecapacity);
 
     // Step 2: If there are validation errors, return a 400 response with error details
@@ -122,9 +122,9 @@ public class UsagecapacityRestController {
     String message = usagecapacityService.deleteUsagecapacity(token, id);
     return ResponseEntity.ok(Map.of("status", "success", "message", message));
   }
-  @GetMapping("/getUsagecapacityPage")
-  public Page<Usagecapacity> getUsagecapacityPage(@RequestParam("page") int page, @RequestParam("size") int size) {
-    Pageable pageable = PageRequest.of(page, size);
-    return usagecapacityService.getUsagecapacityPage(pageable);
-  }
+//  @GetMapping("/getUsagecapacityPage")
+//  public Page<Usagecapacity> getUsagecapacityPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+//    Pageable pageable = PageRequest.of(page, size);
+//    return usagecapacityService.getUsagecapacityPage(pageable);
+//  }
 }

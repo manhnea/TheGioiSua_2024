@@ -103,4 +103,9 @@ public class MilktasteService implements IMilktasteService {
   public Page<Milktaste> getMilktastePage(Pageable pageable) {
     return milktasteRepository.findAll(pageable);
   }
+
+  @Override
+  public Page<Milktaste> getMilktastePageByName(String milktasteName, Pageable pageable) {
+    return milktasteRepository.findByMilktastenamePage(milktasteName, pageable);
+  }
 }
