@@ -1,9 +1,11 @@
 package com.example.TheGioiSua_2024.util;
 
 import com.example.TheGioiSua_2024.entity.Milkdetail;
+import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.Map;
-
+@Service
 public class MilkdetailValidator {
 
     // Phương thức kiểm tra các trường dữ liệu của Milkdetail

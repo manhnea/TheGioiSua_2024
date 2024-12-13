@@ -23,7 +23,7 @@ public class UsagecapacityValidator {
             errors.put("unit", "Đơn vị không được để trống");
         } else if (usagecapacity.getUnit().length() < 1 || usagecapacity.getUnit().length() > 50) {
             errors.put("unit", "Đơn vị phải có độ dài từ 1 đến 50 ký tự");
-        } else if (!usagecapacity.getUnit().matches("^[A-Za-z0-9\\s]+$")) {
+        } else if (!usagecapacity.getUnit().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
             errors.put("unit", "Đơn vị chỉ có thể chứa các ký tự chữ cái, số và khoảng trắng");
         }
 

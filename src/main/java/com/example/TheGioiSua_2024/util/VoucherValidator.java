@@ -11,7 +11,7 @@ public class VoucherValidator {
 
         // Validate vouchercode
         if (voucher.getVouchercode() == null || voucher.getVouchercode().isEmpty()) {
-            errors.put("vouchercode", "Tên voucher không được để trống");
+            errors.put("vouchercode", "Mã voucher không được để trống");
         } else if (!voucher.getVouchercode().matches("^[A-Za-z0-9]+$")) {
             errors.put("vouchercode", "Mã voucher chỉ được chứa các ký tự chữ và số (A-Z, a-z, 0-9), không được chứa khoảng trắng");
         } else if (voucher.getVouchercode().length() < 5 || voucher.getVouchercode().length() > 20) {

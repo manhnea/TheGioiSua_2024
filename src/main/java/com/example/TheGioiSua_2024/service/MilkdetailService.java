@@ -39,7 +39,7 @@ public class MilkdetailService implements IMilkdetailService {
     return milkdetailRepository.findAll();
   }
   @Override
-  public String checkDuplicatemilkdetail(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity) {
+  public String checkDuplicatemilkdetail(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity) {
     // Check if Usagecapacity with the same capacity and unit already exists
     Optional<Milkdetail> existingmilkdetail = milkdetailRepository.findByIds(getProduct, getMilkTaste, getPackagingunit, getUsageCapacity);
     if (existingmilkdetail.isPresent()) {

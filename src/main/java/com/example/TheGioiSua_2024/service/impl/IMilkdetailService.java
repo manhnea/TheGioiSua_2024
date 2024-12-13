@@ -9,13 +9,12 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 public interface IMilkdetailService {
 
   List<Milkdetail> getAll();
 
-    String checkDuplicatemilkdetail(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity);
+    String checkDuplicatemilkdetail(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
 
     String add(String token, Milkdetail milkdetail);
 

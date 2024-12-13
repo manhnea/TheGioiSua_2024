@@ -14,7 +14,7 @@ public class MilktasteValidator {
             errors.put("milktastename", "Tên hương vị sữa không được để trống");
         } else if (milktaste.getMilktastename().length() < 3 || milktaste.getMilktastename().length() > 100) {
             errors.put("milktastename", "Tên hương vị sữa phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!milktaste.getMilktastename().matches("^[A-Za-z0-9 ]+$")) {
+        } else if (!milktaste.getMilktastename().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
             errors.put("milktastename", "Tên hương vị sữa chỉ được chứa các ký tự chữ, số và khoảng trắng");
         }
 

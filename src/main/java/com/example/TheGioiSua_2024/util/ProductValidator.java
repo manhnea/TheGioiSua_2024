@@ -18,18 +18,10 @@ public class ProductValidator {
             errors.put("productname", "Tên sản phẩm không được để trống");
         } else if (product.getProductname().length() < 3 || product.getProductname().length() > 100) {
             errors.put("productname", "Tên sản phẩm phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!product.getProductname().matches("^[A-Za-z0-9 ]+$")) {
+        } else if (!product.getProductname().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
             errors.put("productname", "Tên sản phẩm chỉ được chứa các ký tự chữ, số và khoảng trắng");
         }
 
-        // Validate productCode
-        if (product.getProductCode() == null || product.getProductCode().isEmpty()) {
-            errors.put("productCode", "Mã sản phẩm không được để trống");
-        } else if (product.getProductCode().length() < 5 || product.getProductCode().length() > 50) {
-            errors.put("productCode", "Mã sản phẩm phải có độ dài từ 5 đến 50 ký tự");
-        } else if (!product.getProductCode().matches("^[A-Za-z0-9]+$")) {
-            errors.put("productCode", "Mã sản phẩm chỉ được chứa các ký tự chữ và số");
-        }
 
         // Validate milkType (should not be null as it's required)
         if (product.getMilkType() == null) {
