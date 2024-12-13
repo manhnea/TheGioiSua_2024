@@ -53,7 +53,7 @@ public class ProductService implements IProductService {
     Optional<Product> existingproduct = productRepository.findByProductname(productname);
 
     if (existingproduct.isPresent()) {
-      return "Kết hợp capacity và unit này đã tồn tại."; // Capacity and unit combination already exists
+        return "Sản phẩm này đã tồn tại."; // Product already exists
     }
     return null; // No duplicates found
   }

@@ -14,7 +14,7 @@ public class MilkTypeValidator {
             errors.put("milkTypename", "Tên loại sữa không được để trống");
         } else if (milkType.getMilkTypename().length() < 3 || milkType.getMilkTypename().length() > 100) {
             errors.put("milkTypename", "Tên loại sữa phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!milkType.getMilkTypename().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
+        } else if (!milkType.getMilkTypename().matches("^[\\p{L}0-9\\s,.-/]+$")) {
             errors.put("milkTypename", "Tên loại sữa chỉ được chứa các ký tự chữ, số và khoảng trắng");
         }
 

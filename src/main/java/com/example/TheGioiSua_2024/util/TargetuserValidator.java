@@ -13,7 +13,7 @@ public class TargetuserValidator {
             errors.put("targetName", "Tên nhóm khách hàng không được để trống");
         } else if (targetuser.getTargetName().length() < 3 || targetuser.getTargetName().length() > 100) {
             errors.put("targetName", "Tên nhóm khách hàng phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!targetuser.getTargetName().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
+        } else if (!targetuser.getTargetName().matches("^[\\p{L}0-9\\s,.-/]+$")) {
             // Cập nhật regex để cho phép ký tự tiếng Việt và các ký tự đặc biệt như dấu phẩy, dấu chấm, dấu gạch ngang và khoảng trắng
             errors.put("targetName", "Tên nhóm khách hàng chỉ được chứa chữ cái, chữ số, khoảng trắng và các ký tự tiếng Việt có dấu");
         }

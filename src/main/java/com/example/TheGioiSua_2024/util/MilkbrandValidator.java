@@ -14,10 +14,10 @@ public class MilkbrandValidator {
             errors.put("milkbrandname", "Tên thương hiệu sữa không được để trống");
         } else if (milkbrand.getMilkbrandname().length() < 3 || milkbrand.getMilkbrandname().length() > 100) {
             errors.put("milkbrandname", "Tên thương hiệu sữa phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!milkbrand.getMilkbrandname().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
-            // Cập nhật regex để cho phép ký tự tiếng Việt và các ký tự đặc biệt như dấu phẩy, dấu chấm, dấu gạch ngang và khoảng trắng
-            errors.put("milkbrandname", "Tên thương hiệu sữa chỉ được chứa chữ cái, chữ số, khoảng trắng và các ký tự tiếng Việt có dấu");
+        } else if (!milkbrand.getMilkbrandname().matches("^[\\p{L}0-9\\s,.-]+$")) {
+            errors.put("milkbrandname", "Tên thương hiệu sữa chỉ được chứa chữ cái (tiếng Việt có dấu), chữ số, khoảng trắng, dấu phẩy, dấu chấm và dấu gạch ngang.");
         }
+
 
         // Kiểm tra mô tả (description)
         if (milkbrand.getDescription() == null || milkbrand.getDescription().isEmpty()) {

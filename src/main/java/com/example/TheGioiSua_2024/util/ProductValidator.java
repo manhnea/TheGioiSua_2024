@@ -18,7 +18,7 @@ public class ProductValidator {
             errors.put("productname", "Tên sản phẩm không được để trống");
         } else if (product.getProductname().length() < 3 || product.getProductname().length() > 100) {
             errors.put("productname", "Tên sản phẩm phải có độ dài từ 3 đến 100 ký tự");
-        } else if (!product.getProductname().matches("^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậêếềểễệôốồổỗộơớờởỡợuúùủũụưứừửữự,.-\\s]+$")) {
+        } else if (!product.getProductname().matches("^[\\p{L}0-9\\s,.-/]+$")) {
             errors.put("productname", "Tên sản phẩm chỉ được chứa các ký tự chữ, số và khoảng trắng");
         }
 
