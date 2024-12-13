@@ -150,4 +150,8 @@ public class InvoiceRestController {
         }
         return ResponseEntity.ok(Map.of("success", true));
     }
+    @GetMapping("/getInvoice/{invoiceCode}")
+    public ResponseEntity<?> getInvoiceCode(@PathVariable String invoiceCode) {
+        return invoiceService.findInvoicesByInvoiceCode(invoiceCode);
+    }
 }

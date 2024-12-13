@@ -19,6 +19,8 @@ public interface IInvoiceService {
     List<Invoice> getInvoiceList();
 
     ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto);
+    
+    ResponseEntity<?> findInvoicesByInvoiceCode(String invoiceCode);
 
     String updateInvoice(Long id, Invoice invoice);
 
