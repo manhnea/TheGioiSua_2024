@@ -186,4 +186,10 @@ public class ProductRestController {
     Pageable pageable = PageRequest.of(page, size);
     return productService.getProductPage(pageable);
   }
+
+    @GetMapping("/productPageByName")
+    public Page<Product> getProductPageByTypeMilk(@RequestParam("productname") String productname, @RequestParam("page") int page, @RequestParam("size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productService.getProductPageByTypeMilk(productname, pageable);
+    }
 }

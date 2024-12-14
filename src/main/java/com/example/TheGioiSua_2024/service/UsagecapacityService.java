@@ -7,6 +7,8 @@ import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IUsagecapacityService;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -112,4 +114,11 @@ public class UsagecapacityService implements IUsagecapacityService {
   public Page<Usagecapacity> getUsagecapacityPage(Pageable pageable) {
     return usagecapacityRepository.findAll(pageable);
   }
+
+//  @Override
+//  public Page<Usagecapacity> getUsagecapacityPageByCapacity(int capacity,String unit, Pageable pageable) {
+//    return usagecapacityRepository.findByCapacityContaining(capacity,unit, pageable);
+//  }
+
+
 }

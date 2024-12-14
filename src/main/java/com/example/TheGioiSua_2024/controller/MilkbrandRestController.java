@@ -137,4 +137,10 @@ public class MilkbrandRestController {
     Pageable pageable = PageRequest.of(page, size);
     return milkbrandService.getMilkbrandPage(pageable);
   }
+  @GetMapping("/getMilkBrandsearch")
+  public Page<Milkbrand> getMilkBrandsearch(@RequestParam("milkbrandname") String milkbrandname,
+    @RequestParam("page") int page, @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return milkbrandService.getMilkbrandsearch(milkbrandname, pageable);
+  }
 }

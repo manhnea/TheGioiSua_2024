@@ -126,4 +126,11 @@ public class MilktypeRestController {
     Pageable pageable = PageRequest.of(page, size);
     return milktypeService.GetMilktypePage(pageable);
   }
+
+  @GetMapping("/getTypePageByName")
+  public Page<MilkType> getTypePageByName(@RequestParam("milkTypeName") String milkTypeName,
+    @RequestParam("page") int page, @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return milktypeService.GetMilktypePageByName(milkTypeName, pageable);
+  }
 }

@@ -34,4 +34,5 @@ public interface IProductService {
   Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
   Page<Product> getProductPage(Pageable pageable);
 
+  Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable);
 }
