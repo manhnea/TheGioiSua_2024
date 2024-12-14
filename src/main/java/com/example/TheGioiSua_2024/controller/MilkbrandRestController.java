@@ -49,75 +49,30 @@ public class MilkbrandRestController {
 
   //http://localhost:1234/api/Milkbrand/add
   @PostMapping("/add")
-  public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-    @RequestBody  Milkbrand milkbrand
-    ) {
-
-    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
-
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = milkbrandService.checkDuplicatemilkbrand(milkbrand.getMilkbrandname());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "milkbrandname",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    // Step 3: Retrieve the token from the request header
+  public ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody Milkbrand milkbrand) {
     String token = jwtUtilities.getToken(request);
-    String resultMessage = milkbrandService.addMilkbrand(token, milkbrand);
+    ResponseEntity<?> response = milkbrandService.addMilkbrand(token, milkbrand);
+    if (response.getStatusCode().is4xxClientError()) {
+      return response;  // This will contain the validation errors
+    }
+
+    // Otherwise, return a success message
+    String resultMessage = (String) response.getBody();  // The success message from service
     return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
   }
+
 
   //http://localhost:1234/api/Milkbrand/update/{id}
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable Long id,
     @RequestBody  Milkbrand milkbrand) {
     String token = jwtUtilities.getToken(request);
-    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
+    ResponseEntity<?> response = milkbrandService.updateMilkbrand(token, id, milkbrand);
+    if (response.getStatusCode().is4xxClientError()) {
+      return response;  // This will contain the validation errors
     }
-    String checkDuplicateMessage = milkbrandService.checkDuplicatemilkbrand(milkbrand.getMilkbrandname());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "milkbrandname",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    return ResponseEntity.ok(
-      Map.of("status", "success", "message",
-        milkbrandService.updateMilkbrand(token, id, milkbrand)));
+    String resultMessage = (String) response.getBody();  // The success message from service
+    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
   }
 
   //http://localhost:1234/api/Milkbrand/delete/{id}
@@ -143,4 +98,5 @@ public class MilkbrandRestController {
     Pageable pageable = PageRequest.of(page, size);
     return milkbrandService.getMilkbrandsearch(milkbrandname, pageable);
   }
+
 }

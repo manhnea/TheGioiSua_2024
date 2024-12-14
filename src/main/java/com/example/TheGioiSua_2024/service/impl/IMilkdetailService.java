@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface IMilkdetailService {
 
@@ -16,9 +17,9 @@ public interface IMilkdetailService {
 
     String checkDuplicatemilkdetail(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
 
-    String add(String token, Milkdetail milkdetail);
+  ResponseEntity<?> add(String token, Milkdetail milkdetail);
 
-  String update(String token, Long id, Milkdetail milkdetail);
+  ResponseEntity<?> update(String token, Long id, Milkdetail milkdetail);
 
   String delete(String token, Long id);
 
