@@ -36,60 +36,62 @@ public class WebSocketController {
     InvoiceRepository invoiceRepository;
 
     @MessageMapping("/cod")
-    public void sendMessage(@Payload String message) {
-        List<InvoiceDto> invoicecode = invoiceRepository.findInvoicesByCOD();
-        List<UserOnlineDto> online = new ArrayList<>(SessionUserLogin.onlineUsers);
-        List<UserOnlineDto> staffOnline = online.stream()
-                .filter(user -> "Staff".equals(user.getRole()))
-                .collect(Collectors.toList());
-        int staffCount = staffOnline.size();
-        int invoiceCount = invoicecode.size();
+public void sendMessage(@Payload String message) {
+    List<InvoiceDto> invoicecode = new ArrayList<>();
+    invoicecode = invoiceRepository.findInvoicesByCOD();
+    List<UserOnlineDto> online = new ArrayList<>(SessionUserLogin.onlineUsers);
+    List<UserOnlineDto> staffOnline = online.stream()
+            .filter(user -> "Staff".equals(user.getRole()))
+            .collect(Collectors.toList());
+    int staffCount = staffOnline.size();
+    int invoiceCount = invoicecode.size();
 
-        if (staffCount > 0 && invoiceCount > 0) {
-            // Chia hóa đơn cho mỗi nhân viên
-            int invoicesPerStaff = invoiceCount / staffCount; // Mỗi nhân viên sẽ nhận bao nhiêu hóa đơn
-            int remainder = invoiceCount % staffCount; // Hóa đơn dư nếu có
+    if (staffCount > 0) {
+        // Chia hóa đơn cho mỗi nhân viên
+        int invoicesPerStaff = invoiceCount / staffCount; // Mỗi nhân viên sẽ nhận bao nhiêu hóa đơn
+        int remainder = invoiceCount % staffCount; // Hóa đơn dư nếu có
 
-            Map<UserOnlineDto, List<InvoiceDto>> staffInvoicesMap = new HashMap<>(); // Lưu hóa đơn cho từng nhân viên
+        Map<UserOnlineDto, List<InvoiceDto>> staffInvoicesMap = new HashMap<>(); // Lưu hóa đơn cho từng nhân viên
 
-            int counter = 0;
-            int currentInvoiceIndex = 0; // Dùng biến này để theo dõi vị trí hóa đơn đang được phân phối
+        int counter = 0;
+        int currentInvoiceIndex = 0; // Dùng biến này để theo dõi vị trí hóa đơn đang được phân phối
 
-            for (int i = 0; i < staffCount; i++) {
-                // Tính số hóa đơn mà nhân viên i sẽ nhận
-                int staffInvoicesCount = invoicesPerStaff + (i < remainder ? 1 : 0); // Nếu có dư thì cộng thêm 1 hóa đơn cho nhân viên đầu tiên
+        for (int i = 0; i < staffCount; i++) {
+            // Tính số hóa đơn mà nhân viên i sẽ nhận
+            int staffInvoicesCount = invoiceCount > 0
+                    ? invoicesPerStaff + (i < remainder ? 1 : 0) // Nếu có dư thì cộng thêm 1 hóa đơn cho nhân viên đầu tiên
+                    : 0; // Không có hóa đơn thì gửi danh sách rỗng
 
-                // Đảm bảo không lấy quá số hóa đơn còn lại
-                if (currentInvoiceIndex + staffInvoicesCount > invoiceCount) {
-                    staffInvoicesCount = invoiceCount - currentInvoiceIndex;
-                }
+            // Lấy danh sách hóa đơn cho nhân viên hiện tại, nếu không còn hóa đơn thì trả về list rỗng
+            List<InvoiceDto> staffInvoices = staffInvoicesCount > 0
+                    ? invoicecode.subList(currentInvoiceIndex, currentInvoiceIndex + staffInvoicesCount)
+                    : new ArrayList<>();
 
-                // Lấy danh sách hóa đơn cho nhân viên hiện tại
-                List<InvoiceDto> staffInvoices = invoicecode.subList(currentInvoiceIndex, currentInvoiceIndex + staffInvoicesCount);
+            // Lưu danh sách hóa đơn vào map với key là nhân viên
+            staffInvoicesMap.put(staffOnline.get(i), staffInvoices);
 
-                // Lưu danh sách hóa đơn vào map với key là nhân viên
-                staffInvoicesMap.put(staffOnline.get(i), staffInvoices);
+            // Gửi thẳng danh sách hóa đơn cho nhân viên qua WebSocket
+            UserOnlineDto userOnlineDto = staffOnline.get(i);
+            messagingTemplate.convertAndSendToUser(
+                    userOnlineDto.getUsername(), // Gửi đến username của người nhận
+                    "/queue/messages", // Đảm bảo là /user/{username}/queue/messages
+                    staffInvoices // Gửi thẳng danh sách hóa đơn (có thể là danh sách rỗng)
+            );
 
-                // Gửi thẳng danh sách hóa đơn cho nhân viên qua WebSocket
-                UserOnlineDto userOnlineDto = staffOnline.get(i);
-                messagingTemplate.convertAndSendToUser(
-                        userOnlineDto.getUsername(), // Gửi đến username của người nhận
-                        "/queue/messages", // Đảm bảo là /user/{username}/queue/messages
-                        staffInvoices // Gửi thẳng danh sách hóa đơn
-                );
-
-                // Cập nhật vị trí của hóa đơn tiếp theo
+            // Cập nhật vị trí của hóa đơn tiếp theo nếu còn hóa đơn
+            if (invoiceCount > 0) {
                 currentInvoiceIndex += staffInvoicesCount;
-
-                counter++; // Tăng bộ đếm
             }
 
-            System.out.println("Đã chia và gửi hóa đơn cho " + counter + " nhân viên.");
-        } else {
-            System.out.println("Không có nhân viên hoặc hóa đơn để xử lý.");
+            counter++; // Tăng bộ đếm
         }
 
+        System.out.println("Đã chia và gửi hóa đơn cho " + counter + " nhân viên.");
+    } else {
+        System.out.println("Không có nhân viên để xử lý.");
     }
+}
+
 
     @MessageMapping("/invoice")
     public void invoice(@Payload String message) {

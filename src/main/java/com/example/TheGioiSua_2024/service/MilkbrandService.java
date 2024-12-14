@@ -5,13 +5,16 @@ import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.repository.MilkbrandRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilkbrandService;
+import com.example.TheGioiSua_2024.util.MilkbrandValidator;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,26 +41,40 @@ public class MilkbrandService implements IMilkbrandService {
     return null; // No duplicates found
   }
   @Override
-  public String addMilkbrand(String token, Milkbrand milkbrand) {
+  public ResponseEntity<?> addMilkbrand(String token, Milkbrand milkbrand) {
     String username = jwtUtilities.extractUsername(token);
+
+    // Validate Milkbrand input
+    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
+    if (!errors.isEmpty()) {
+      return ResponseEntity.badRequest().body(errors);  // Return validation errors
+    }if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
+      return ResponseEntity.badRequest().body(Map.of("milkbrandname", "Thương hiệu sữa này đã tồn tại."));
+    }
+
+    // Create log message
     String message = String.format(
-      "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
-      milkbrand.getMilkbrandname(),
-      milkbrand.getDescription(),
-      milkbrand.getStatus()
+            "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
+            milkbrand.getMilkbrandname(),
+            milkbrand.getDescription(),
+            milkbrand.getStatus()
     );
 
-    Log log = new Log(); // Tạo log
-    log.setAction("Thêm voucher");
+    // Log the action
+    Log log = new Log();
+    log.setAction("Thêm thương hiệu sữa");
     log.setDescription(message);
     logService.saveLog(username, log);
-    milkbrand.setStatus(Status.Active);
+
+    // Set the status and save milkbrand
+    milkbrand.setStatus(Status.Active);  // Ensure the status is set to 'Active'
     milkbrandRepository.save(milkbrand);
-    return "Thêm thương hiệu sữa thành công.";
+
+    return ResponseEntity.ok("Thêm thương hiệu sữa thành công.");
   }
 
   @Override
-  public String updateMilkbrand(String token, Long id, Milkbrand milkbrand) {
+  public ResponseEntity<?> updateMilkbrand(String token, Long id, Milkbrand milkbrand) {
     String username = jwtUtilities.extractUsername(token);
     Log log = new Log(); // Tạo log
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id).orElseThrow();
@@ -70,6 +87,10 @@ public class MilkbrandService implements IMilkbrandService {
       oldMilkbrandName, oldDescription, newMilkbrandName, newDescription
     );
     String currentMilkbrandName = existingMilkbrand.getMilkbrandname();
+    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
+    if (!errors.isEmpty()) {
+      return ResponseEntity.badRequest().body(errors);  // Return validation errors
+    }
     if (currentMilkbrandName.equals(milkbrand.getMilkbrandname())) {
       existingMilkbrand.setDescription(milkbrand.getDescription());
       existingMilkbrand.setStatus(Status.Active);
@@ -77,9 +98,9 @@ public class MilkbrandService implements IMilkbrandService {
       log.setAction("Cập nhật mô tả brand");
       log.setDescription(message);
       logService.saveLog(username, log);
-      return "Cập nhật mô tả thương hiệu sữa thành công.";
+        return ResponseEntity.ok("Cập nhật thương hiệu sữa thành công.");
     } else if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
-      return "Thương hiệu sữa này đã tồn tại.";
+        return ResponseEntity.badRequest().body(Map.of("milkbrandname", "Thương hiệu sữa này đã tồn tại."));
     }
     existingMilkbrand.setMilkbrandname(milkbrand.getMilkbrandname());
     existingMilkbrand.setStatus(Status.Active);
@@ -88,7 +109,7 @@ public class MilkbrandService implements IMilkbrandService {
     log.setAction("Cập nhật mô tả brand");
     log.setDescription(message);
     logService.saveLog(username, log);
-    return "Cập nhật thương hiệu sữa thành công.";
+    return ResponseEntity.ok("Cập nhật thương hiệu sữa thành công.");
   }
 
 

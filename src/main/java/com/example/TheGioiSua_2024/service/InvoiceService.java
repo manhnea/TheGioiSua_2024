@@ -318,4 +318,9 @@ public class InvoiceService implements IInvoiceService {
         userinvoiceRepository.save(userinvoice);
         return true;
     }
+
+    @Override
+    public ResponseEntity<?> findInvoicesByInvoiceCode(String invoiceCode) {
+       return ResponseEntity.ok(Map.of("message", invoiceRepository.findInvoicesByInvoiceCode(invoiceCode)));
+    }
 }

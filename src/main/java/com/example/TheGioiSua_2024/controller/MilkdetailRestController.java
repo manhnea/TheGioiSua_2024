@@ -65,45 +65,27 @@ private MilkdetailValidator milkdetailValidator;
   private ResponseEntity<?> add(@NonNull HttpServletRequest request,
       @RequestBody Milkdetail milkdetail
      ) {
-    Map<String, String> errors = milkdetailValidator.validateMilkdetail(milkdetail);
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
 
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = milkdetailService.checkDuplicatemilkdetail(milkdetail.getProduct().getId(), milkdetail.getMilkTaste().getId(), milkdetail.getPackagingunit().getId(), milkdetail.getUsageCapacity().getId());
-
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "milkdetail",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
     String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.add(token, milkdetail)));
+    ResponseEntity<?> response = milkdetailService.add(token, milkdetail);
+    if (response.getStatusCode().is4xxClientError()) {
+      return response;  // This will contain the validation errors
+    }
+    String resultMessage = (String) response.getBody();  // The success message from service
+    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
   }
 
   //http://localhost:1234/api/Milkdetail/update/{id}
   @PutMapping("/update/{id}")
   private ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable("id") Long id,
-       @RequestBody Milkdetail milkdetail, BindingResult bindinegRsul) {
+       @RequestBody Milkdetail milkdetail) {
     String token = jwtUtilities.getToken(request);
-
-    return ResponseEntity.ok(
-        Map.of("status", "success", "message", milkdetailService.update(token, id, milkdetail)));
+    ResponseEntity<?> response = milkdetailService.update(token, id, milkdetail);
+    if (response.getStatusCode().is4xxClientError()) {
+      return response;  // This will contain the validation errors
+    }
+    String resultMessage = (String) response.getBody();  // The success message from service
+    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
   }
 
   //http://localhost:1234/api/Milkdetail/delete/{id}

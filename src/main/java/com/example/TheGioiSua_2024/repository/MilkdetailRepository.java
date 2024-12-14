@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.repository;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
+import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -102,8 +103,8 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
   long countMilkDetails();
   @Query("SELECT md FROM Milkdetail md WHERE md.stockquantity = 0")
  List<Milkdetail>  gethethang();
+//@Query("SELECT md FROM Milkdetail md WHERE md.product.id = :getProduct AND md.milkTaste.id = :getMilkTaste AND md.packagingunit.id = :getPackagingunit AND md.usageCapacity.id = :getUsageCapacity")
+//    Optional<Milkdetail> findByIds(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity);
 @Query("SELECT md FROM Milkdetail md WHERE md.product.id = :getProduct AND md.milkTaste.id = :getMilkTaste AND md.packagingunit.id = :getPackagingunit AND md.usageCapacity.id = :getUsageCapacity")
-    Optional<Milkdetail> findByIds(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity);
-@Query("SELECT md FROM Milkdetail md WHERE md.product.id = :getProduct AND md.milkTaste.id = :getMilkTaste AND md.packagingunit.id = :getPackagingunit AND md.usageCapacity.id = :getUsageCapacity")
-  Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
+Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
 }
