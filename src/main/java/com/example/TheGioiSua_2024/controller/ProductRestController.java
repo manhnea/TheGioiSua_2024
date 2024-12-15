@@ -135,4 +135,20 @@ public class ProductRestController {
         Pageable pageable = PageRequest.of(page, size);
         return productService.getProductPageByTypeMilk(productname, pageable);
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?>  filterProduct(@RequestParam(required = false) String productname,
+                                       @RequestParam(required = false) Long milkBrand,
+                                       @RequestParam(required = false) Long targetUser,
+                                       @RequestParam(required = false) Long milkType,
+                                       @RequestParam("page") int page,
+                                       @RequestParam("size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.filterProduct(productname, milkBrand, targetUser, milkType, pageable);
+        if (products.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("status", "error", "errors", "Danh Sách Trống"));
+        }
+        return ResponseEntity.ok(Map.of("status", "success", "message", products));
+    }
 }

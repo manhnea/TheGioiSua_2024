@@ -226,4 +226,11 @@ public class ProductService implements IProductService {
   public Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable) {
     return productRepository.findByProductnameContaining(productname, pageable);
   }
+
+  @Override
+  public Page<Product> filterProduct(String productname,Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
+    return productRepository.filterProducts(productname,milkBrandId, targetUserId, milkTypeId, pageable);
+  }
+
+
 }

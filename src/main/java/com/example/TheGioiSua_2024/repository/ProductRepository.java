@@ -2,8 +2,10 @@ package com.example.TheGioiSua_2024.repository;
 
 import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
+import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -132,6 +134,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   boolean existsByProductname(String productname);
 
-
+  @Query("SELECT p FROM Product p " +
+          "JOIN p.milkBrand mb " +
+          "JOIN p.milkType mt " +
+          "JOIN p.targetUser tu " +
+          "WHERE (:productname IS NULL OR p.productname LIKE CONCAT('%', :productname, '%')) " +
+          "AND(:milkBrand IS NULL OR mb.id = :milkBrand) " +
+          "AND (:targetUser IS NULL OR tu.id = :targetUser) " +
+          "AND (:milkType IS NULL OR mt.id = :milkType)")
+  Page<Product> filterProducts(
+          @Param("productname") String productname,
+          @Param("milkBrand") Long milkBrand,
+          @Param("targetUser") Long targetUser,
+          @Param("milkType") Long milkType,
+          Pageable pageable
+  );
 
 }

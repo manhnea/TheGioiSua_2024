@@ -34,4 +34,5 @@ public interface IProductService {
   Page<Product> getProductPage(Pageable pageable);
 
   Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable);
+  Page<Product> filterProduct(String productname,Long milkBrandId,Long targetUserId, Long milkTypeId,  Pageable pageable);
 }
