@@ -16,6 +16,7 @@ public interface IMilkdetailService {
   List<Milkdetail> getAll();
 
     String checkDuplicatemilkdetail(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
+  Page<Milkdetail> filterMilkdetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
 
   ResponseEntity<?> add(String token, Milkdetail milkdetail);
 

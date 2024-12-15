@@ -107,4 +107,30 @@ public interface MilkdetailRepository extends JpaRepository<Milkdetail, Long> {
 //    Optional<Milkdetail> findByIds(int getProduct, int getMilkTaste, int getPackagingunit, int getUsageCapacity);
 @Query("SELECT md FROM Milkdetail md WHERE md.product.id = :getProduct AND md.milkTaste.id = :getMilkTaste AND md.packagingunit.id = :getPackagingunit AND md.usageCapacity.id = :getUsageCapacity")
 Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
+
+  @Query("SELECT m FROM Milkdetail m " +
+          "JOIN m.product p " +
+          "JOIN m.milkTaste t " +
+          "JOIN m.packagingunit pu " +
+          "JOIN m.usageCapacity uc " +
+          "JOIN p.milkBrand b " +
+          "JOIN p.targetUser tu " +
+          "JOIN p.milkType mt " +
+          "WHERE (:productId IS NULL OR p.id = :productId) " +
+          "AND (:milkTasteId IS NULL OR t.id = :milkTasteId) " +
+          "AND (:packagingUnitId IS NULL OR pu.id = :packagingUnitId) " +
+          "AND (:usageCapacityId IS NULL OR uc.id = :usageCapacityId) " +
+          "AND (:milkBrandId IS NULL OR b.id = :milkBrandId) " +
+          "AND (:targetUserId IS NULL OR tu.id = :targetUserId) " +
+          "AND (:milkTypeId IS NULL OR mt.id = :milkTypeId)")
+  Page<Milkdetail> filterMilkdetails(
+          @Param("productId") Long productId,
+          @Param("milkTasteId") Long milkTasteId,
+          @Param("packagingUnitId") Long packagingUnitId,
+          @Param("usageCapacityId") Long usageCapacityId,
+          @Param("milkBrandId") Long milkBrandId,
+          @Param("targetUserId") Long targetUserId,
+          @Param("milkTypeId") Long milkTypeId,
+          Pageable pageable
+  );
 }
