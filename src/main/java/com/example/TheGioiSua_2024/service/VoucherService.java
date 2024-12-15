@@ -97,6 +97,7 @@ public class VoucherService implements IVoucherService {
     String username = jwtUtilities.extractUsername(token);
       existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
       existingVoucher.setMaxamount(voucher.getMaxamount());
+      existingVoucher.setMinamount(voucher.getMinamount());
       existingVoucher.setEnddate(voucher.getEnddate());
       existingVoucher.setUsagecount(voucher.getUsagecount());
       existingVoucher.setStartdate(voucher.getStartdate());
