@@ -3,7 +3,7 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Product;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.ProductService;
-import com.example.TheGioiSua_2024.util.ProductValidator;
+import com.example.TheGioiSua_2024.Validator.ProductValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,34 +38,9 @@ public class ProductRestController {
   @PostMapping("/add")
   public ResponseEntity<?> addProduct(@NonNull HttpServletRequest request,
       @RequestBody  Product product) {
-    Map<String, String> errors = ProductValidator.validateProduct(product);
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
 
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = productService.checkDuplicateproduct(product.getProductname());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "productname",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
     String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(
-        Map.of("status", "success", "message", productService.addProduct(token, product)));
+  return productService.addProduct(token, product);
   }
 
   @GetMapping("/lst/{id}")
@@ -79,33 +54,7 @@ public class ProductRestController {
       @PathVariable("id") Long id,
       @RequestBody  Product product) {
     String token = jwtUtilities.getToken(request);
-    Map<String, String> errors = ProductValidator.validateProduct(product);
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = productService.checkDuplicateproduct(product.getProductname());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "productname",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    return ResponseEntity.ok(
-        Map.of("status", "success", "message", productService.updateProduct(token, id, product)));
+    return productService.updateProduct(token, id, product);
   }
 
   //http://localhost:1234/api/Product/delete/{id}
@@ -113,8 +62,7 @@ public class ProductRestController {
   public ResponseEntity<?> deleteProduct(@NonNull HttpServletRequest request,
       @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    String message = productService.deleteProduct(token, id);
-    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+  return productService.deleteProduct(token, id);
   }
 
   //http://localhost:1234/api/Product/page

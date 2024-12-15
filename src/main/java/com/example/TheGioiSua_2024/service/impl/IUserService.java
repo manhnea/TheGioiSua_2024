@@ -53,10 +53,10 @@ public interface IUserService {
   Page<User> getUserPage(Pageable pageable);
 
   Page<User> getCustomerPage(Pageable pageable);
-  
-  User updateUser(Long id, User user);
 
-  String deleteUser(Long id);
+  ResponseEntity<?> updateUser(Long id, User user);
+
+  ResponseEntity<?> deleteUser(Long id);
 
   User getbyID(Long id);
 

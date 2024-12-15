@@ -8,18 +8,17 @@ import com.example.TheGioiSua_2024.entity.Product;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface IProductService {
 
   List<Product> getAllProduct();
 
-    String checkDuplicateproduct(String productname);
+  ResponseEntity<?> addProduct(String token, Product product);
 
-    String addProduct(String token, Product product);
+  ResponseEntity<?> updateProduct(String token, Long id, Product product);
 
-  String updateProduct(String token, Long id, Product product);
-
-  String deleteProduct(String token, Long id);
+  ResponseEntity<?> deleteProduct(String token, Long id);
 
   Product getProductById(Long id);
 

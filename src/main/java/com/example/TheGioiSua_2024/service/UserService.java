@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.MilkbrandValidator;
 import com.example.TheGioiSua_2024.dto.ForgotPasswordDto;
 import com.example.TheGioiSua_2024.dto.LoginDto;
 import com.example.TheGioiSua_2024.dto.RegisterDto;
@@ -19,6 +20,7 @@ import com.example.TheGioiSua_2024.util.UserValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -353,7 +355,11 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public User updateUser(Long id, User user) {
+  public ResponseEntity<?> updateUser(Long id, User user) {
+    String error = com.example.TheGioiSua_2024.Validator.UserValidator.validateUser(user);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
     User user1 = iUserRepository.findById(id).orElseThrow();
     Role role = iRoleRepository.findById(user.getRole().getId()).get();
     user1.setRole(role);
@@ -361,20 +367,20 @@ public class UserService implements IUserService {
     user1.setFullname(user.getFullname());
     user1.setAddress(user.getAddress());
     user1.setPhonenumber(user.getPhonenumber());
-    return iUserRepository.save(user1);
+    return ResponseEntity.ok(Map.of("success", "Cập nhật người dùng thành công"));
   }
 
   @Override
-  public String deleteUser(Long id) {
+  public ResponseEntity<?> deleteUser(Long id) {
     User user = iUserRepository.findById(id).get();
     if (user.getStatus() == Status.Delete) {
       user.setStatus(Status.Active);
       iUserRepository.save(user);
-      return "Khôi phục thành công";
+    return ResponseEntity.ok(Map.of("success", "Khôi phục người dùng thành công"));
     } else {
       user.setStatus(Status.Delete);
       iUserRepository.save(user);
-      return "Xóa thành công";
+      return ResponseEntity.ok(Map.of("success", "Khóa người dùng thành công"));
     }
   }
 

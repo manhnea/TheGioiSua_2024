@@ -1,5 +1,7 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.MilkTasteValidator;
+import com.example.TheGioiSua_2024.Validator.ProductValidator;
 import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Log;
@@ -16,10 +18,13 @@ import com.example.TheGioiSua_2024.service.impl.IProductService;
 import com.example.TheGioiSua_2024.util.Random;
 import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.StringUtil;
+
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,20 +52,15 @@ public class ProductService implements IProductService {
   public List<Product> getAllProduct() {
     return productRepository.findAll();
   }
-  @Override
-  public String checkDuplicateproduct(String productname) {
-    // Check if product with the same capacity and unit already exists
-    Optional<Product> existingproduct = productRepository.findByProductname(productname);
 
-    if (existingproduct.isPresent()) {
-        return "Sản phẩm này đã tồn tại."; // Product already exists
+
+  @Override
+  public ResponseEntity<?> addProduct(String token, Product product) {
+    String error = ProductValidator.validateProduct(product);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
     }
-    return null; // No duplicates found
-  }
 
-  @Override
-  public String addProduct(String token, Product product) {
-    try {
       Integer maxId = productRepository.findMaxId();
 
       if (maxId == null) {
@@ -102,18 +102,20 @@ public class ProductService implements IProductService {
           product.getTargetUser()));
       logService.saveLog(username, log);
       productRepository.save(product);
-      return "Thêm sản phẩm thành công.";
-    } catch (RuntimeException e) {
-      return e.getMessage();
-    }
+   return ResponseEntity.ok(Map.of("success", "Thêm sản phẩm thành công."));
+
   }
 
   @Override
-  public String updateProduct(String token, Long id, Product product) {
+  public ResponseEntity<?> updateProduct(String token, Long id, Product product) {
+    String error = ProductValidator.validateProduct(product);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
     String username = jwtUtilities.extractUsername(token);
     Log log = new Log();
 
-    try {
+
       Product existingProduct = productRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Sản Phẩm Không Tồn Tại"));
 
@@ -146,8 +148,11 @@ public class ProductService implements IProductService {
         log.setDescription(changeLog);
         logService.saveLog(username, log);
         productRepository.save(existingProduct);
-        return "Cập nhật Sản Phẩm thành công.";
-      } 
+       return ResponseEntity.ok(Map.of("success", "Cập nhật sản phẩm thành công."));
+      }
+    if (productRepository.existsByProductname(product.getProductname())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Tên sản phẩm đã tồn tại"));
+    }
       existingProduct.setProductname(product.getProductname());
       existingProduct.setMilkType(milkType);
       existingProduct.setMilkBrand(milkbrand);
@@ -156,16 +161,13 @@ public class ProductService implements IProductService {
       log.setDescription(changeLog);
       logService.saveLog(username, log);
       productRepository.save(existingProduct);
-      return "Cập nhật sản phẩm thành công.";
+    return ResponseEntity.ok(Map.of("success", "Cập nhật sản phẩm thành công."));
 
-    } catch (RuntimeException e) {
-      // Trả về thông báo lỗi cụ thể
-      return e.getMessage();
     }
-  }
+
 
   @Override
-  public String deleteProduct(String token, Long id) {
+  public ResponseEntity<?>  deleteProduct(String token, Long id) {
     Product existingProduct = productRepository.findById(id).orElseThrow();
     String username = jwtUtilities.extractUsername(token);
     Log log = new Log();
@@ -175,14 +177,14 @@ public class ProductService implements IProductService {
       log.setDescription(String.format("Khôi phục sản phẩm: %s", existingProduct.getProductname()));
       logService.saveLog(username, log);
       productRepository.save(existingProduct);
-      return "Khôi phục sản phẩm thành công.";
+      return ResponseEntity.ok(Map.of("success", "Khôi phục sản phẩm thành công."));
     } else {
       existingProduct.setStatus(Status.Delete);
       log.setAction("Xóa sản phẩm");
       log.setDescription(String.format("Xóa sản phẩm: %s", existingProduct.getProductname()));
       logService.saveLog(username, log);
       productRepository.save(existingProduct);
-      return "Xóa sản phẩm thành công.";
+      return ResponseEntity.ok(Map.of("success", "Xóa sản phẩm thành công."));
     }
   }
 

@@ -175,14 +175,13 @@ public class UserRestController {
   }
 
   @PutMapping("/update/{id}")
-  public User updateUser(@PathVariable("id") Long id, @RequestBody User user) {
+  public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody User user) {
     return iUserService.updateUser(id, user);
   }
 
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-    String message = iUserService.deleteUser(id);
-    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+    return iUserService.deleteUser(id);
   }
 
   @GetMapping("/lst/{id}")
