@@ -16,5 +16,7 @@ public interface MilktypeRepository extends JpaRepository<MilkType,Long> {
     Page<MilkType> findByMilkTypenameContaining(String milkTypename, Pageable pageable);
 
     boolean existsByMilkTypename(String milkTypename);
+    @Query(value = "SELECT m FROM MilkType m order by m.id desc")
+    Page<MilkType> getMilkTypePage(Pageable pageable);
 }
 //a

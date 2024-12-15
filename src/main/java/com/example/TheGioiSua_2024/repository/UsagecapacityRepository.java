@@ -18,4 +18,6 @@ public interface UsagecapacityRepository extends JpaRepository<Usagecapacity, Lo
 //    Page<Usagecapacity> findByCapacityContaining(int capacity, String unit, Pageable pageable);
 //    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity = :capacity and u.unit = :unit")
     boolean existsByCapacityAndUnit(int capacity,String unit);
+    @Query(value = "SELECT u FROM Usagecapacity u order by u.id desc")
+    Page<Usagecapacity> getUsagecapacityPage(Pageable pageable);
 }

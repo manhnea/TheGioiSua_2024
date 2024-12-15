@@ -119,7 +119,7 @@ public class MilktasteService implements IMilktasteService {
 
   @Override
   public Page<Milktaste> getMilktastePage(Pageable pageable) {
-    return milktasteRepository.findAll(pageable);
+    return milktasteRepository.getMilktastePage(pageable);
   }
 
   @Override

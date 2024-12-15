@@ -121,7 +121,7 @@ public class MilktypeService implements IMilktypeService {
 
   @Override
   public Page<MilkType> GetMilktypePage(Pageable pageable) {
-    return milktypeRepository.findAll(pageable);
+    return milktypeRepository.getMilkTypePage(pageable);
   }
 
   @Override

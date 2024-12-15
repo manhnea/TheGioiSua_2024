@@ -15,4 +15,6 @@ public interface PackagingunitRepository extends JpaRepository<Packagingunit, Lo
     @Query("SELECT p FROM Packagingunit p WHERE p.packagingunitname LIKE %:packagingunitName%")
     Page<Packagingunit> findByPackagingunitPage(String packagingunitName, Pageable pageable);
     boolean existsByPackagingunitname(String packagingunitName);
+    @Query(value = "SELECT p FROM Packagingunit p order by p.id desc")
+    Page<Packagingunit> getPackagingunitPage(Pageable pageable);
 }

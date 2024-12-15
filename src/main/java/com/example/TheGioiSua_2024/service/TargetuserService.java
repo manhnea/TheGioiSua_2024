@@ -126,6 +126,6 @@ public class TargetuserService implements ITargetuserService {
 
   @Override
   public Page<Targetuser> getTargetuserPage(Pageable pageable) {
-    return targetuserRepository.findAll(pageable);
+    return targetuserRepository.getTargetuserPage(pageable);
   }
 }

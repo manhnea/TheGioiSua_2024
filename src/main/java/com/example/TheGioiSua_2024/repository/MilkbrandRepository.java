@@ -24,4 +24,6 @@ public interface MilkbrandRepository extends JpaRepository<Milkbrand, Long> {
                                             @Param("status") String status,
                                             Pageable pageable);
     boolean existsByMilkbrandname(String milkbrandname);
+    @Query(value = "SELECT m FROM Milkbrand m order by m.id desc")
+    Page<Milkbrand> getMilkbrandPage(Pageable pageable);
 }

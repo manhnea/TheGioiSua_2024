@@ -138,7 +138,7 @@ public class MilkbrandService implements IMilkbrandService {
 
   @Override
   public Page<Milkbrand> getMilkbrandPage(Pageable pageable) {
-    return milkbrandRepository.findAll(pageable);
+    return milkbrandRepository.getMilkbrandPage(pageable);
   }
 
   @Override

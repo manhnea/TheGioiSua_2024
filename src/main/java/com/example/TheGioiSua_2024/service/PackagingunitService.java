@@ -113,7 +113,7 @@ public class PackagingunitService implements IPackagingunitService {
 
   @Override
   public Page<Packagingunit> getPackagingunitPage(Pageable pageable) {
-    return packagingunitRepository.findAll(pageable);
+    return packagingunitRepository.getPackagingunitPage(pageable);
   }
 
   @Override
