@@ -42,7 +42,7 @@ public class MilkbrandService implements IMilkbrandService {
   }
   @Override
   public ResponseEntity<?> addMilkbrand(String token, Milkbrand milkbrand) {
-    String username = jwtUtilities.extractUsername(token);
+   
 
     // Validate Milkbrand input
     Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
@@ -52,7 +52,7 @@ public class MilkbrandService implements IMilkbrandService {
       return ResponseEntity.badRequest().body(Map.of("milkbrandname", "Thương hiệu sữa này đã tồn tại."));
     }
 
-    // Create log message
+    String username = jwtUtilities.extractUsername(token);
     String message = String.format(
             "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
             milkbrand.getMilkbrandname(),

@@ -32,45 +32,13 @@ public class UsagecapacityRestController {
   @Autowired
   private JwtUtilities jwtUtilities;
 
-  //http://localhost:1234/api/Usagecapacity/lst
-  @GetMapping("/lst")
-  public List<Usagecapacity> getUsagecapacity() {
-    return usagecapacityService.getAllUsagecapacity();
-  }
-
   //http://localhost:1234/api/Usagecapacity/add
   @PostMapping("/add")
   public ResponseEntity<?> addUsagecapacity(@NonNull HttpServletRequest request,
       @RequestBody  Usagecapacity usagecapacity) {
-    Map<String, String> errors = UsagecapacityValidator.validateUsagecapacity(usagecapacity);
-
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = usagecapacityService.checkDuplicateusagecapacity(usagecapacity.getCapacity(),usagecapacity.getUnit());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "capacity",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
+   
     String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(Map.of("status", "success", "message",
-        usagecapacityService.addUsagecapacity(token, usagecapacity)));
+    return usagecapacityService.addUsagecapacity(token, usagecapacity);
   }
 
   @GetMapping("/lst/{id}")
@@ -83,35 +51,9 @@ public class UsagecapacityRestController {
   public ResponseEntity<?> updateUsagecapacity(@NonNull HttpServletRequest request,
       @PathVariable("id") Long id,
       @RequestBody  Usagecapacity usagecapacity) {
-    Map<String, String> errors = UsagecapacityValidator.validateUsagecapacity(usagecapacity);
-
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = usagecapacityService.checkDuplicateusagecapacity(usagecapacity.getCapacity(),usagecapacity.getUnit());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "capacity",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
+   
     String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(Map.of("status", "success", "message",
-        usagecapacityService.updateUsagecapacity(token, id, usagecapacity)));
+   return usagecapacityService.updateUsagecapacity(token, id, usagecapacity);
   }
 
   //http://localhost:1234/api/Usagecapacity/delete/{id}
@@ -119,12 +61,11 @@ public class UsagecapacityRestController {
   public ResponseEntity<?> deleteUsagecapacity(@NonNull HttpServletRequest request,
       @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    String message = usagecapacityService.deleteUsagecapacity(token, id);
-    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+    return  usagecapacityService.deleteUsagecapacity(token, id);
   }
-//  @GetMapping("/getUsagecapacityPage")
-//  public Page<Usagecapacity> getUsagecapacityPage(@RequestParam("page") int page, @RequestParam("size") int size) {
-//    Pageable pageable = PageRequest.of(page, size);
-//    return usagecapacityService.getUsagecapacityPage(pageable);
-//  }
+  @GetMapping("/getUsagecapacityPage")
+  public Page<Usagecapacity> getUsagecapacityPage(@RequestParam("page") int page, @RequestParam("size") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return usagecapacityService.getUsagecapacityPage(pageable);
+  }
 }

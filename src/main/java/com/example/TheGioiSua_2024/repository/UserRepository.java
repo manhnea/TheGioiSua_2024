@@ -8,6 +8,8 @@ import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,8 +39,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Query("SELECT COUNT(*) FROM User u WHERE u.status = 1 AND u.role.id = 2")
   long countUsersByStatusAndRole();
-
-
+  @Query(value = "SELECT u FROM User u Join u.role r where r.id != 1")
+  Page<User> getUserPage(Pageable pageable);
+  @Query(value = "SELECT u FROM User u Join u.role r where r.id = 2")
+  Page<User> getCustomerPage(Pageable pageable);
 }
 
 

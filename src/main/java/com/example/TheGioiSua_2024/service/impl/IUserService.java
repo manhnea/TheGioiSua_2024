@@ -12,6 +12,8 @@ import com.example.TheGioiSua_2024.dto.UserDto;
 import com.example.TheGioiSua_2024.entity.Role;
 import com.example.TheGioiSua_2024.entity.User;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 
@@ -47,7 +49,11 @@ public interface IUserService {
   List<String> findTop5();
 
   List<User> getAllUsers();
+  
+  Page<User> getUserPage(Pageable pageable);
 
+  Page<User> getCustomerPage(Pageable pageable);
+  
   User updateUser(Long id, User user);
 
   String deleteUser(Long id);

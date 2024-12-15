@@ -16,4 +16,6 @@ public interface UsagecapacityRepository extends JpaRepository<Usagecapacity, Lo
     Optional<Usagecapacity> findByCapacityAndUnit(int capacity,String unit);
 //    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity =?1 and u.unit LIKE %:unit%")
 //    Page<Usagecapacity> findByCapacityContaining(int capacity, String unit, Pageable pageable);
+//    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity = :capacity and u.unit = :unit")
+    boolean existsByCapacityAndUnit(int capacity,String unit);
 }

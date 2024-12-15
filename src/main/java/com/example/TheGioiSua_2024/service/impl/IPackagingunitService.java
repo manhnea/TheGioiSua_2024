@@ -7,18 +7,15 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface IPackagingunitService {
 
-  List<Packagingunit> getAllPackagingunit();
+  ResponseEntity<?> addPackagingunit(String token, Packagingunit packagingunit);
 
-  String checkDuplicatepackagingunit(String packagingunit);
+  ResponseEntity<?> updatePackagingunit(String token, Long id, Packagingunit packagingunit);
 
-  String addPackagingunit(String token, Packagingunit packagingunit);
-
-  String updatePackagingunit(String token, Long id, Packagingunit packagingunit);
-
-  String deletePackagingunit(String token, Long id);
+  ResponseEntity<?> deletePackagingunit(String token, Long id);
 
   Optional<Packagingunit> getPackagingunitByName(String packagingunitName);
 
@@ -27,4 +24,5 @@ public interface IPackagingunitService {
   Page<Packagingunit> getPackagingunitPage(Pageable pageable);
 
   Page<Packagingunit> getPackagingunitPageByName(String packagingunitName, Pageable pageable);
+  
 }

@@ -35,6 +35,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Collections;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.server.ResponseStatusException;
@@ -484,6 +486,16 @@ public class UserService implements IUserService {
         .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
     }
   }
+
+    @Override
+    public Page<User> getUserPage(Pageable pageable) {
+       return  iUserRepository.getUserPage(pageable);
+    }
+
+    @Override
+    public Page<User> getCustomerPage(Pageable pageable) {
+       return  iUserRepository.getCustomerPage(pageable);
+    }
 
 
 }

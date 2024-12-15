@@ -28,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -191,4 +194,17 @@ public class UserRestController {
   public Set<UserOnlineDto> onlineUsers() {
     return SessionUserLogin.getOnline();
   }
+  
+  @GetMapping("/Userpage")
+  public Page<User> getUserPage(@RequestParam("page") int page, @RequestParam("size") int size, Pageable pageable ){
+      Pageable pageable1 = PageRequest.of(page, size);
+      return iUserService.getUserPage(pageable);
+  }
+  
+  @GetMapping("/Customerpage")
+  public Page<User> getCustomerPage(@RequestParam("page") int page, @RequestParam("size") int size, Pageable pageable ){
+      Pageable pageable1 = PageRequest.of(page, size);
+      return iUserService.getCustomerPage(pageable);
+  }
+          
 }
