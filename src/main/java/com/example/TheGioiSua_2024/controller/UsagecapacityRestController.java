@@ -3,24 +3,16 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Usagecapacity;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.UsagecapacityService;
-import com.example.TheGioiSua_2024.util.TargetuserValidator;
-import com.example.TheGioiSua_2024.util.UsagecapacityValidator;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -31,6 +23,11 @@ public class UsagecapacityRestController {
   private UsagecapacityService usagecapacityService;
   @Autowired
   private JwtUtilities jwtUtilities;
+
+  @GetMapping("/lst")
+    public List<Usagecapacity> getAllUsagecapacity() {
+        return usagecapacityService.getAllUsagecapacity();
+    }
 
   //http://localhost:1234/api/Usagecapacity/add
   @PostMapping("/add")

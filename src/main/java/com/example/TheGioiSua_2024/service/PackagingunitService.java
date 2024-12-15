@@ -29,6 +29,11 @@ public class PackagingunitService implements IPackagingunitService {
 
 
   @Override
+  public List<Packagingunit> getAllPackagingunit() {
+    return packagingunitRepository.findAll();
+  }
+
+  @Override
   public ResponseEntity<?> addPackagingunit(String token, Packagingunit packagingunit) {
       String error = PackaginunitValidator.validatePackagingUnit(packagingunit);
     if(error != null){

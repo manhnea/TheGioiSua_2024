@@ -6,18 +6,17 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface ITargetuserService {
 
   List<Targetuser> getAllTargetuser();
 
-    String checkDuplicatetargetuser(String targetusername);
+  ResponseEntity<?> addTargetuser(String token, Targetuser targetuser);
 
-    String addTargetuser(String token, Targetuser targetuser);
+  ResponseEntity<?> updateTargetuser(String token, Long id, Targetuser targetuser);
 
-  String updateTargetuser(String token, Long id, Targetuser targetuser);
-
-  String deleteTargetuser(String token, Long id);
+  ResponseEntity<?> deleteTargetuser(String token, Long id);
 
   Optional<Targetuser> getTargetuserByName(String targetname);
 

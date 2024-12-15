@@ -16,4 +16,5 @@ public interface MilktasteRepository extends JpaRepository<Milktaste, Long> {
     Optional<Milktaste> findByMilktastename(String milktasteName);
     @Query("SELECT m FROM Milktaste m WHERE m.milktastename LIKE %:milktasteName%")
     Page<Milktaste> findByMilktastenamePage(String milktasteName, Pageable pageable);
+    boolean existsByMilktastename(String milktasteName);
 }

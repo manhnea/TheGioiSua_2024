@@ -7,18 +7,17 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface IMilktypeService {
 
   List<MilkType> GetAllMilktype();
 
-  String checkDuplicatMilkType(String milkType);
+  ResponseEntity<?> AddMilktype(String token, MilkType milktype);
 
-  String AddMilktype(String token, MilkType milktype);
+  ResponseEntity<?> UpdateMilktype(Long id, MilkType milktype);
 
-  String UpdateMilktype(Long id, MilkType milktype);
-
-  String DeleteMilktype(String token, Long id);
+  ResponseEntity<?> DeleteMilktype(String token, Long id);
 
   Optional<MilkType> getMilkTypeByName(String milkTypeName);
 

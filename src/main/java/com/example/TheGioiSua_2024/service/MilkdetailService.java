@@ -5,7 +5,6 @@ import com.example.TheGioiSua_2024.entity.*;
 import com.example.TheGioiSua_2024.repository.*;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilkdetailService;
-import com.example.TheGioiSua_2024.util.MilkbrandValidator;
 import com.example.TheGioiSua_2024.util.MilkdetailValidator;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class MilkdetailService implements IMilkdetailService {

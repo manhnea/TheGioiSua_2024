@@ -1,5 +1,7 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.MilkTasteValidator;
+import com.example.TheGioiSua_2024.Validator.UsagecapacityValidator;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.Milktaste;
 import com.example.TheGioiSua_2024.repository.MilktasteRepository;
@@ -9,9 +11,11 @@ import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,7 +44,14 @@ public class MilktasteService implements IMilktasteService {
   }
 
   @Override
-  public String addMilktaste(String token, Milktaste milktaste) {
+  public ResponseEntity<?> addMilktaste(String token, Milktaste milktaste) {
+    String error = MilkTasteValidator.validateMilktaste(milktaste);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
+    if (milktasteRepository.existsByMilktastename(milktaste.getMilktastename())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Vị Sữa Đã Tồn Tại"));
+    }
     milktaste.setStatus(Status.Active);
     String username = jwtUtilities.extractUsername(token);
 
@@ -55,19 +66,26 @@ public class MilktasteService implements IMilktasteService {
     log.setDescription(message);
     logService.saveLog(username, log);
     milktasteRepository.save(milktaste);
-    return "Thêm vị sữa thành công";
+    return  ResponseEntity.ok(Map.of("succecc","Thành Công"));
   }
 
   @Override
-  public String updateMilktaste(Long id, Milktaste milktaste) {
+  public ResponseEntity<?> updateMilktaste(Long id, Milktaste milktaste) {
+    String error = MilkTasteValidator.validateMilktaste(milktaste);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
+    if (milktasteRepository.existsByMilktastename(milktaste.getMilktastename())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Vị Sữa Đã Tồn Tại"));
+    }
     Milktaste m = milktasteRepository.findById(id).orElseThrow();
     m.setMilktastename(milktaste.getMilktastename());
     milktasteRepository.save(m);
-    return "Cập nhật vị sữa thành công";
+    return  ResponseEntity.ok(Map.of("succecc","Thành Công"));
   }
 
   @Override
-  public String deleteMilktaste(String token, Long id) {
+  public ResponseEntity<?> deleteMilktaste(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     Milktaste existingMilktaste = milktasteRepository.findById(id).orElseThrow();
     if (existingMilktaste.getStatus() == Status.Delete) {
@@ -77,7 +95,7 @@ public class MilktasteService implements IMilktasteService {
       log.setDescription(String.format(existingMilktaste.getMilktastename()));
       logService.saveLog(username, log);
       milktasteRepository.save(existingMilktaste);
-      return "Khôi phục vị sữa thành công!";
+      return  ResponseEntity.ok(Map.of("succecc","Khôi phục Thành Công"));
     } else {
       existingMilktaste.setStatus(Status.Delete);
       Log log = new Log(); // Tạo log
@@ -85,7 +103,7 @@ public class MilktasteService implements IMilktasteService {
       log.setDescription(String.format(existingMilktaste.getMilktastename()));
       logService.saveLog(username, log);
       milktasteRepository.save(existingMilktaste);
-      return "Xóa vị sữa thành công!";
+      return  ResponseEntity.ok(Map.of("succecc"," Xóa Thành Công"));
     }
   }
 

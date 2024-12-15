@@ -3,23 +3,16 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Packagingunit;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.PackagingunitService;
-import com.example.TheGioiSua_2024.util.PackagingUnitValidator;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -31,8 +24,11 @@ public class PackagingunitRestController {
   @Autowired
   private JwtUtilities jwtUtilities;
 
-
-
+    //http://localhost:1234/api/Packagingunit/lst
+@GetMapping ("/lst")
+public List<Packagingunit> getAllPackagingunit() {
+    return packagingunitService.getAllPackagingunit();
+}
   @GetMapping("/lst/{id}")
   public Packagingunit getPackagingunit(@PathVariable("id") Long id) {
     return packagingunitService.getPackagingunitById(id);

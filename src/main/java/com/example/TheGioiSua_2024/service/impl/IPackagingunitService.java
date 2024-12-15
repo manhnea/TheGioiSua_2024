@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 public interface IPackagingunitService {
-
+  List<Packagingunit> getAllPackagingunit();
   ResponseEntity<?> addPackagingunit(String token, Packagingunit packagingunit);
 
   ResponseEntity<?> updatePackagingunit(String token, Long id, Packagingunit packagingunit);

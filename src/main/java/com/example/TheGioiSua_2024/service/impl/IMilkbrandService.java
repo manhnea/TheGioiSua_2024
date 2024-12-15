@@ -11,13 +11,11 @@ public interface IMilkbrandService {
 
   List<Milkbrand> getAllMilkbrands();
 
-    String checkDuplicatemilkbrand(String milkbrand);
-
   ResponseEntity<?> addMilkbrand(String token, Milkbrand milkbrand);
 
   ResponseEntity<?> updateMilkbrand(String token, Long id, Milkbrand milkbrand);
 
-  String deleteMilkbrand(String token, Long id);
+  ResponseEntity<?> deleteMilkbrand(String token, Long id);
 
   Milkbrand getMilkbrandById(Long id);
 

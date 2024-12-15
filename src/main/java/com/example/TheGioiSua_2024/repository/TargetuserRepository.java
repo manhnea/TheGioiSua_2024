@@ -11,4 +11,7 @@ import java.util.Optional;
 public interface TargetuserRepository extends JpaRepository<Targetuser, Long> {
     @Query("SELECT t FROM Targetuser t WHERE t.targetName = ?1")
     Optional<Targetuser> findByTargetusername(String targetName);
+
+    boolean existsByTargetName(String targetName);
+
 }

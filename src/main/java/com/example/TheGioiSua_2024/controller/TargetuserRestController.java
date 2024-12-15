@@ -3,8 +3,7 @@ package com.example.TheGioiSua_2024.controller;
 import com.example.TheGioiSua_2024.entity.Targetuser;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.TargetuserService;
-import com.example.TheGioiSua_2024.util.PackagingUnitValidator;
-import com.example.TheGioiSua_2024.util.TargetuserValidator;
+import com.example.TheGioiSua_2024.Validator.TargetuserValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -41,30 +40,9 @@ public class TargetuserRestController {
   //http://localhost:1234/api/Targetuser/add
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request,
-    @RequestBody @Valid Targetuser targetuser, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors()) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-    }
-    String checkDuplicateMessage = targetuserService.checkDuplicatetargetuser(targetuser.getTargetName());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "targetName",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
+    @RequestBody  Targetuser targetuser) {
     String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(
-      Map.of("status", "success", "message", targetuserService.addTargetuser(token, targetuser)));
+   return targetuserService.addTargetuser(token, targetuser);
   }
 
   @GetMapping("/lst/{id}")
@@ -78,35 +56,8 @@ public class TargetuserRestController {
     @RequestBody  Targetuser targetuser,
      @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    Map<String, String> errors = TargetuserValidator.validateTargetuser(targetuser);
+    return targetuserService.updateTargetuser(token, id, targetuser);
 
-    // Step 2: If there are validation errors, return a 400 response with error details
-    if (!errors.isEmpty()) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      // Convert the errors to a list of error objects with field and message
-      errors.forEach((field, message) -> {
-        Map<String, String> error = Map.of(
-                "field", field,
-                "message", message
-        );
-        errorList.add(error);
-      });
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    String checkDuplicateMessage = targetuserService.checkDuplicatetargetuser(targetuser.getTargetName());
-    if (checkDuplicateMessage != null) {
-      List<Map<String, String>> errorList = new ArrayList<>();
-      Map<String, String> error = Map.of(
-              "field", "targetName",
-              "message", checkDuplicateMessage
-      );
-      errorList.add(error);
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errorList));
-    }
-    return ResponseEntity.ok(
-      Map.of("status", "success", "message",
-        targetuserService.updateTargetuser(token, id, targetuser)));
   }
 
   //http://localhost:1234/api/Targetuser/delete/{id}
@@ -114,8 +65,7 @@ public class TargetuserRestController {
   public ResponseEntity<?> delete(@NonNull HttpServletRequest request,
     @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    String message = targetuserService.deleteTargetuser(token, id);
-    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+  return targetuserService.deleteTargetuser(token, id);
   }
 
   @GetMapping("/getTargetuserPage")

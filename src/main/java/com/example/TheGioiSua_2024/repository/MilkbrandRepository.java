@@ -23,4 +23,5 @@ public interface MilkbrandRepository extends JpaRepository<Milkbrand, Long> {
     Page<Milkbrand> findByMilkbrandnamePage(@Param("milkbrandname") String milkbrandname,
                                             @Param("status") String status,
                                             Pageable pageable);
+    boolean existsByMilkbrandname(String milkbrandname);
 }

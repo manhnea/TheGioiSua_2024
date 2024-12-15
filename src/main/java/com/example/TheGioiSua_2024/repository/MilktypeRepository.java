@@ -14,5 +14,7 @@ public interface MilktypeRepository extends JpaRepository<MilkType,Long> {
     Optional<MilkType> findByMilkTypename(String milkTypename);
     @Query("SELECT m FROM MilkType m WHERE m.milkTypename LIKE %:milkTypename%")
     Page<MilkType> findByMilkTypenameContaining(String milkTypename, Pageable pageable);
+
+    boolean existsByMilkTypename(String milkTypename);
 }
 //a

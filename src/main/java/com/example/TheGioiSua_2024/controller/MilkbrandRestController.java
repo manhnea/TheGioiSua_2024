@@ -1,26 +1,18 @@
 package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.entity.Milkbrand;
-import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.MilkbrandService;
 import com.example.TheGioiSua_2024.service.MilkdetailService;
-import com.example.TheGioiSua_2024.util.MilkbrandValidator;
-import com.example.TheGioiSua_2024.util.VoucherValidator;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,14 +43,7 @@ public class MilkbrandRestController {
   @PostMapping("/add")
   public ResponseEntity<?> add(@NonNull HttpServletRequest request, @RequestBody Milkbrand milkbrand) {
     String token = jwtUtilities.getToken(request);
-    ResponseEntity<?> response = milkbrandService.addMilkbrand(token, milkbrand);
-    if (response.getStatusCode().is4xxClientError()) {
-      return response;  // This will contain the validation errors
-    }
-
-    // Otherwise, return a success message
-    String resultMessage = (String) response.getBody();  // The success message from service
-    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
+return milkbrandService.addMilkbrand(token, milkbrand);
   }
 
 
@@ -67,12 +52,7 @@ public class MilkbrandRestController {
   public ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable Long id,
     @RequestBody  Milkbrand milkbrand) {
     String token = jwtUtilities.getToken(request);
-    ResponseEntity<?> response = milkbrandService.updateMilkbrand(token, id, milkbrand);
-    if (response.getStatusCode().is4xxClientError()) {
-      return response;  // This will contain the validation errors
-    }
-    String resultMessage = (String) response.getBody();  // The success message from service
-    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
+  return milkbrandService.updateMilkbrand(token, id, milkbrand);
   }
 
   //http://localhost:1234/api/Milkbrand/delete/{id}
@@ -80,8 +60,7 @@ public class MilkbrandRestController {
   public ResponseEntity<?> delete(@NonNull HttpServletRequest request,
     @PathVariable("id") Long id) {
     String token = jwtUtilities.getToken(request);
-    String message = milkbrandService.deleteMilkbrand(token, id);
-    return ResponseEntity.ok(Map.of("status", "success", "message", message));
+  return milkbrandService.deleteMilkbrand(token, id);
   }
 
   // http://localhost:1234/api/Milkdetail/getMilkDetailPage

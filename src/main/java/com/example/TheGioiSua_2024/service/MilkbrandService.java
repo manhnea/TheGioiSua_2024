@@ -1,11 +1,12 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.MilkTypeValidator;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.Milkbrand;
 import com.example.TheGioiSua_2024.repository.MilkbrandRepository;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.impl.IMilkbrandService;
-import com.example.TheGioiSua_2024.util.MilkbrandValidator;
+import com.example.TheGioiSua_2024.Validator.MilkbrandValidator;
 import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,27 +32,16 @@ public class MilkbrandService implements IMilkbrandService {
   public List<Milkbrand> getAllMilkbrands() {
     return milkbrandRepository.findAll();
   }
-  @Override
-  public String checkDuplicatemilkbrand(String milkbrand) {
-    // Check if Milkbrand with the same name already exists
-    Optional<Milkbrand> existingMilkbrand = milkbrandRepository.findByMilkbrandname(milkbrand);
-    if (existingMilkbrand.isPresent()) {
-      return "Vị sữa sữa này đã tồn tại."; // Milk brand already exists
-    }
-    return null; // No duplicates found
-  }
+
   @Override
   public ResponseEntity<?> addMilkbrand(String token, Milkbrand milkbrand) {
-   
-
-    // Validate Milkbrand input
-    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
-    if (!errors.isEmpty()) {
-      return ResponseEntity.badRequest().body(errors);  // Return validation errors
-    }if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
-      return ResponseEntity.badRequest().body(Map.of("milkbrandname", "Thương hiệu sữa này đã tồn tại."));
+    String error = MilkbrandValidator.validateMilkbrand(milkbrand);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
     }
-
+    if (milkbrandRepository.existsByMilkbrandname(milkbrand.getMilkbrandname())) {
+     return ResponseEntity.badRequest().body(Map.of("error", "Thương hiệu sữa này đã tồn tại"));
+    }
     String username = jwtUtilities.extractUsername(token);
     String message = String.format(
             "Tên thương hiệu: %s, Mô tả: %s, trạng thái: %s",
@@ -70,11 +60,16 @@ public class MilkbrandService implements IMilkbrandService {
     milkbrand.setStatus(Status.Active);  // Ensure the status is set to 'Active'
     milkbrandRepository.save(milkbrand);
 
-    return ResponseEntity.ok("Thêm thương hiệu sữa thành công.");
+    return ResponseEntity.ok(Map.of("success", "Thêm thương hiệu sữa thành công"));
   }
 
   @Override
   public ResponseEntity<?> updateMilkbrand(String token, Long id, Milkbrand milkbrand) {
+    String error = MilkbrandValidator.validateMilkbrand(milkbrand);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
+
     String username = jwtUtilities.extractUsername(token);
     Log log = new Log(); // Tạo log
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id).orElseThrow();
@@ -87,10 +82,6 @@ public class MilkbrandService implements IMilkbrandService {
       oldMilkbrandName, oldDescription, newMilkbrandName, newDescription
     );
     String currentMilkbrandName = existingMilkbrand.getMilkbrandname();
-    Map<String, String> errors = MilkbrandValidator.validateMilkbrand(milkbrand);
-    if (!errors.isEmpty()) {
-      return ResponseEntity.badRequest().body(errors);  // Return validation errors
-    }
     if (currentMilkbrandName.equals(milkbrand.getMilkbrandname())) {
       existingMilkbrand.setDescription(milkbrand.getDescription());
       existingMilkbrand.setStatus(Status.Active);
@@ -98,9 +89,10 @@ public class MilkbrandService implements IMilkbrandService {
       log.setAction("Cập nhật mô tả brand");
       log.setDescription(message);
       logService.saveLog(username, log);
-        return ResponseEntity.ok("Cập nhật thương hiệu sữa thành công.");
-    } else if (milkbrandRepository.findByMilkbrandname(milkbrand.getMilkbrandname()).isPresent()) {
-        return ResponseEntity.badRequest().body(Map.of("milkbrandname", "Thương hiệu sữa này đã tồn tại."));
+      return ResponseEntity.ok(Map.of("success", "Cập nhật thương hiệu sữa thành công"));
+    }
+    if (milkbrandRepository.existsByMilkbrandname(milkbrand.getMilkbrandname())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Thương hiệu sữa này đã tồn tại"));
     }
     existingMilkbrand.setMilkbrandname(milkbrand.getMilkbrandname());
     existingMilkbrand.setStatus(Status.Active);
@@ -109,12 +101,12 @@ public class MilkbrandService implements IMilkbrandService {
     log.setAction("Cập nhật mô tả brand");
     log.setDescription(message);
     logService.saveLog(username, log);
-    return ResponseEntity.ok("Cập nhật thương hiệu sữa thành công.");
+    return ResponseEntity.ok(Map.of("success", "Cập nhật thương hiệu sữa thành công"));
   }
 
 
   @Override
-  public String deleteMilkbrand(String token, Long id) {
+  public ResponseEntity<?> deleteMilkbrand(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     Milkbrand existingMilkbrand = milkbrandRepository.findById(id)
       .orElseThrow(() -> new RuntimeException("Thương hiệu sữa không tồn tại"));
@@ -126,7 +118,7 @@ public class MilkbrandService implements IMilkbrandService {
       log.setDescription(String.format(existingMilkbrand.getMilkbrandname()));
       logService.saveLog(username, log);
       milkbrandRepository.save(existingMilkbrand);
-      return "Khôi phục thương hiệu sữa thành công.";
+     return ResponseEntity.ok(Map.of("success", "Khôi phục thương hiệu sữa thành công"));
     } else {
       existingMilkbrand.setStatus(Status.Delete);
       Log log = new Log(); // Tạo log
@@ -134,7 +126,7 @@ public class MilkbrandService implements IMilkbrandService {
       log.setDescription(String.format(existingMilkbrand.getMilkbrandname()));
       logService.saveLog(username, log);
       milkbrandRepository.save(existingMilkbrand);
-      return "Khóa thương hiệu sữa thành công.";
+      return ResponseEntity.ok(Map.of("success", "Khóa thương hiệu sữa thành công"));
     }
   }
 

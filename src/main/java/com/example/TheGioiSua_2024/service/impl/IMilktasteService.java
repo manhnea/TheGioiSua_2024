@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 public interface IMilktasteService {
 
@@ -14,11 +15,11 @@ public interface IMilktasteService {
 
     String checkDuplicatemilktaste(String milktaste);
 
-    String addMilktaste(String token, Milktaste milktaste);
+ ResponseEntity<?> addMilktaste(String token, Milktaste milktaste);
 
-  String updateMilktaste(Long id, Milktaste milktaste);
+  ResponseEntity<?>  updateMilktaste(Long id, Milktaste milktaste);
 
-  String deleteMilktaste(String token, Long id);
+  ResponseEntity<?>  deleteMilktaste(String token, Long id);
 
   Optional<Milktaste> getMilktasteByName(String milktasteName);
 

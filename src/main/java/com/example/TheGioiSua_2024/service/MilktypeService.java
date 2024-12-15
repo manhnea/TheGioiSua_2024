@@ -1,5 +1,7 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.MilkTypeValidator;
+import com.example.TheGioiSua_2024.Validator.TargetuserValidator;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.MilkType;
 import com.example.TheGioiSua_2024.repository.MilktypeRepository;
@@ -9,9 +11,11 @@ import com.example.TheGioiSua_2024.util.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,19 +27,17 @@ public class MilktypeService implements IMilktypeService {
   private logService logService;
   @Autowired
   private JwtUtilities jwtUtilities;
-  @Override
-  public String checkDuplicatMilkType(String milkType) {
-    // Check if Usagecapacity with the same capacity and unit already exists
-    Optional<MilkType> existingUsagecapacity = milktypeRepository.findByMilkTypename(milkType);
 
-    if (existingUsagecapacity.isPresent()) {
-        return "Loại sữa này đã tồn tại."; // Capacity and unit combination already exists
+
+  @Override
+  public ResponseEntity<?> AddMilktype(String token, MilkType milktype) {
+    String error = MilkTypeValidator.validateMilkType(milktype);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
     }
-    return null; // No duplicates found
-  }
-
-  @Override
-  public String AddMilktype(String token, MilkType milktype) {
+    if (milktypeRepository.existsByMilkTypename(milktype.getMilkTypename())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Loại sữa này đã tồn tại"));
+    }
     milktype.setStatus(Status.Active);
     String username = jwtUtilities.extractUsername(token);
 
@@ -51,28 +53,36 @@ public class MilktypeService implements IMilktypeService {
     log.setDescription(message);
     logService.saveLog(username, log);
     milktypeRepository.save(milktype);
-    return "Them Thanh Cong";
+    return ResponseEntity.ok(Map.of("success", "Thêm loại sữa thành công"));
   }
 
   @Override
-  public String UpdateMilktype(Long id, MilkType milktype) {
+  public ResponseEntity<?> UpdateMilktype(Long id, MilkType milktype) {
+    String error = MilkTypeValidator.validateMilkType(milktype);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
+
     MilkType existingMilkType = milktypeRepository.findById(id).orElseThrow();
     String currentMilkTypeName = existingMilkType.getMilkTypename();
     if (currentMilkTypeName.equals(milktype.getMilkTypename())) {
       existingMilkType.setDescription(milktype.getDescription());
       existingMilkType.setStatus(Status.Active);
       milktypeRepository.save(existingMilkType);
-      return "Cập nhật mô tả loại sữa sữa thành công.";
+     return ResponseEntity.ok(Map.of("success", "Cập nhật loại sữa thành công"));
+    }
+    if (milktypeRepository.existsByMilkTypename(milktype.getMilkTypename())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Loại sữa này đã tồn tại"));
     }
     MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
     milktype1.setDescription(milktype.getDescription());
     milktype1.setMilkTypename(milktype.getMilkTypename());
     milktypeRepository.save(milktype1);
-    return "Cập nhật loại sữa thành công!";
+    return ResponseEntity.ok(Map.of("success", "Cập nhật loại sữa thành công"));
   }
 
   @Override
-  public String DeleteMilktype(String token, Long id) {
+  public ResponseEntity<?> DeleteMilktype(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     MilkType milktype1 = milktypeRepository.findById(id).orElseThrow();
     if (milktype1.getStatus() == Status.Delete) {
@@ -82,7 +92,7 @@ public class MilktypeService implements IMilktypeService {
       log.setDescription(String.format(milktype1.getMilkTypename()));
       logService.saveLog(username, log);
       milktypeRepository.save(milktype1);
-      return "Khôi phục loại sữa thành công!";
+      return ResponseEntity.ok(Map.of("success", "Khôi Phuc Thành Công"));
     } else {
       milktype1.setStatus(Status.Delete);
       Log log = new Log(); // Tạo log
@@ -90,7 +100,7 @@ public class MilktypeService implements IMilktypeService {
       log.setDescription(String.format(milktype1.getMilkTypename()));
       logService.saveLog(username, log);
       milktypeRepository.save(milktype1);
-      return "Xóa Thanh Cong";
+     return ResponseEntity.ok(Map.of("success", "Xóa Thành Công"));
     }
   }
 

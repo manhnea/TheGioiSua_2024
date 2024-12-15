@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 
@@ -24,6 +26,11 @@ public class UsagecapacityService implements IUsagecapacityService {
     private JwtUtilities jwtUtilities;
     @Autowired
     private logService logService;
+
+    @Override
+    public List<Usagecapacity> getAllUsagecapacity() {
+        return usagecapacityRepository.findAll();
+    }
 
     @Override
     public ResponseEntity<?> addUsagecapacity(String token, Usagecapacity usagecapacity) {
