@@ -2,6 +2,9 @@ package com.example.TheGioiSua_2024.repository;
 
 import com.example.TheGioiSua_2024.entity.Voucher;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -31,5 +34,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
             + "  AND CURDATE() < enddate\n"
             + "  AND `status` = 1", nativeQuery = true)
     List<Voucher> voucherActive();
-
+    boolean existsByVouchercode(String vouchercode);
+    @Query(value = "select v from Voucher v  order by v.id desc")
+    Page<Voucher> getVoucherPage(Pageable pageable);
 }

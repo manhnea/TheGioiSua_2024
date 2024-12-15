@@ -1,5 +1,7 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.UsagecapacityValidator;
+import com.example.TheGioiSua_2024.Validator.VoucherValidator;
 import com.example.TheGioiSua_2024.dto.VoucherDto;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.Voucher;
@@ -34,19 +36,17 @@ public class VoucherService implements IVoucherService {
   public List<Voucher> getVoucherList() {
     return voucherRepository.findAll();
   }
-  @Override
-  public String checkDuplicatevoucher(String voucher) {
-    // Check if voucher with the same capacity and unit already exists
-    Optional<Voucher> existingvoucher = voucherRepository.findByVoucher(voucher);
 
-    if (existingvoucher.isPresent()) {
-        return "Voucher này đã tồn tại."; // Voucher already exists
+
+  @Override
+  public ResponseEntity<?> saveVoucher(String token, Voucher voucher) {
+    String error = VoucherValidator.validateVoucher(voucher);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
     }
-    return null; // No duplicates found
-  }
-
-  @Override
-  public String saveVoucher(String token, Voucher voucher) {
+    if (voucherRepository.existsByVouchercode(voucher.getVouchercode())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Voucher đã tồn tại"));
+    }
     voucher.setStatus(Status.Active); // Kích hoạt voucher
     String username = jwtUtilities.extractUsername(token);
 
@@ -64,12 +64,17 @@ public class VoucherService implements IVoucherService {
     log.setDescription(message);
     logService.saveLog(username, log);
     voucherRepository.save(voucher);
-    return "Đã lưu voucher thành công.";
+   return ResponseEntity.ok(Map.of("Success", "Đã thêm voucher thành công."));
   }
 
   @Override
-  public String updateVoucher(String token, Long id, Voucher voucher) {
+  public ResponseEntity<?> updateVoucher(String token, Long id, Voucher voucher) {
     Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
+    String error = VoucherValidator.validateVoucher(voucher);
+    if (error != null) {
+      return ResponseEntity.badRequest().body(Map.of("error", error));
+    }
+
     String currentVoucherCode = existingVoucher.getVouchercode();
     String messagecu = String.format(
         "Mã Voucher: %s, Phần trăm giảm giá: %s, Ngày bắt đầu: %s, Ngày kết thúc: %s, Số tiền giảm tối đa: %s, Số lần sử dụng: %s",
@@ -90,40 +95,21 @@ public class VoucherService implements IVoucherService {
         voucher.getUsagecount()
     );
     String username = jwtUtilities.extractUsername(token);
-    // Nếu mã voucher không thay đổi
-    if (currentVoucherCode.equals(voucher.getVouchercode())) {
       existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
       existingVoucher.setMaxamount(voucher.getMaxamount());
       existingVoucher.setEnddate(voucher.getEnddate());
       existingVoucher.setUsagecount(voucher.getUsagecount());
       existingVoucher.setStartdate(voucher.getStartdate());
-      Log log = new Log(); // Tạo log
-      log.setAction("Cập nhật voucher");
-      log.setDescription(String.format("%s được sửa thành %s", messagecu, message));
-      logService.saveLog(username, log);
-      voucherRepository.save(existingVoucher);
-
-      return "Đã cập nhật voucher thành công.";
-    } // Nếu mã voucher thay đổi, kiểm tra xem mã mới đã tồn tại chưa
-    
-
-    existingVoucher.setDiscountpercentage(voucher.getDiscountpercentage());
-    existingVoucher.setMaxamount(voucher.getMaxamount());
-    existingVoucher.setMinamount(voucher.getMinamount());
-    existingVoucher.setEnddate(voucher.getEnddate());
-    existingVoucher.setUsagecount(voucher.getUsagecount());
-    existingVoucher.setStartdate(voucher.getStartdate());
-    existingVoucher.setVouchercode(voucher.getVouchercode());
     Log log = new Log(); // Tạo log
     log.setAction("Cập nhật voucher");
     log.setDescription(String.format("%s được sửa thành %s", messagecu, message));
     logService.saveLog(username, log);
     voucherRepository.save(existingVoucher);
-    return "Đã cập nhật voucher thành công.";
+    return ResponseEntity.ok(Map.of("error", "Cap nhat voucher thanh cong"));
   }
 
   @Override
-  public String deleteVoucher(String token, Long id) {
+  public ResponseEntity<?> deleteVoucher(String token, Long id) {
     String username = jwtUtilities.extractUsername(token);
     Voucher existingVoucher = voucherRepository.findById(id).orElseThrow();
     if (existingVoucher.getStatus() == Status.Delete) {
@@ -133,7 +119,7 @@ public class VoucherService implements IVoucherService {
       log.setDescription(String.format(existingVoucher.getVouchercode()));
       logService.saveLog(username, log);
       voucherRepository.save(existingVoucher);
-      return "Khôi phục voucher thành công.";
+     return ResponseEntity.ok(Map.of("success", "Khôi phục voucher thành công"));
     } else {
       existingVoucher.setStatus(Status.Delete);
       Log log = new Log(); // Tạo log
@@ -141,11 +127,9 @@ public class VoucherService implements IVoucherService {
       log.setDescription(String.format(existingVoucher.getVouchercode()));
       logService.saveLog(username, log);
       voucherRepository.save(existingVoucher);
-      return "Đã xóa voucher thành công.";
+      return ResponseEntity.ok(Map.of("success", "Xóa voucher thành công"));
     }
   }
-//  
-//
   @Override
   public Optional<Voucher> getVoucherByName(String voucherName) {
     return voucherRepository.findByVoucher(voucherName);
@@ -210,7 +194,7 @@ public class VoucherService implements IVoucherService {
 
   @Override
   public Page<Voucher> getVoucherPage(Pageable pageable) {
-    return voucherRepository.findAll(pageable);
+    return voucherRepository.getVoucherPage(pageable);
   }
 
 }

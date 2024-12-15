@@ -15,13 +15,11 @@ public interface IVoucherService {
 
   List<Voucher> getVoucherList();
 
-  String checkDuplicatevoucher(String voucher);
+  ResponseEntity<?> saveVoucher(String token, Voucher voucher);
 
-  String saveVoucher(String token, Voucher voucher);
+  ResponseEntity<?> updateVoucher(String token, Long id, Voucher voucher);
 
-  String updateVoucher(String token, Long id, Voucher voucher);
-
-  String deleteVoucher(String token, Long id);
+  ResponseEntity<?> deleteVoucher(String token, Long id);
 
   Optional<Voucher> getVoucherByName(String voucherName);
 
