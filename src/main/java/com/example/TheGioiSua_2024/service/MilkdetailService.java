@@ -113,6 +113,10 @@ public class MilkdetailService implements IMilkdetailService {
 
 
     @Override
+    public Page<Milkdetail> filterMilkdetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
+        return milkdetailRepository.filterMilkdetails(productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+    }
+    @Override
     public ResponseEntity<?> update(String token, Long id, Milkdetail milkdetail) {
         Milkdetail existingMilkDetail = milkdetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chi tiết sữa không tồn tại với ID: " + id));

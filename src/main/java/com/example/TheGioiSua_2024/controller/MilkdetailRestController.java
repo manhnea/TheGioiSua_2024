@@ -165,6 +165,24 @@ private MilkdetailValidator milkdetailValidator;
     // If stock is sufficient, return a 200 OK response with the current stock in the response
     return ResponseEntity.ok(response);
   }
-
+  @GetMapping("/filter")
+  public ResponseEntity<?> filterMilkdetails(
+          @RequestParam(required = false) Long productId,
+          @RequestParam(required = false) Long milkTasteId,
+          @RequestParam(required = false) Long packagingUnitId,
+          @RequestParam(required = false) Long usageCapacityId,
+          @RequestParam(required = false) Long milkBrandId,
+          @RequestParam(required = false) Long targetUserId,
+          @RequestParam(required = false) Long milkTypeId,
+          @RequestParam int page,
+          @RequestParam int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Milkdetail> filteredMilkdetails = milkdetailService.filterMilkdetails(
+            productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+    if (filteredMilkdetails.isEmpty()) {
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", "Danh Sách Trống"));
+    }
+    return ResponseEntity.ok(Map.of("status", "success", "message", filteredMilkdetails));
+  }
 
 }
