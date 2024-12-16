@@ -26,7 +26,7 @@ public class ShipController {
     @Autowired
     private IShipService shipService;
 
-    @Value("${client.secret}")
+    @Value("${jwt.secret}")
     private String clientSecret;
 
     private boolean verifyWebhook(String data, String webhookHmac) {
