@@ -179,9 +179,6 @@ private MilkdetailValidator milkdetailValidator;
     Pageable pageable = PageRequest.of(page, size);
     Page<Milkdetail> filteredMilkdetails = milkdetailService.filterMilkdetails(
             productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
-    if (filteredMilkdetails.isEmpty()) {
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", "Danh Sách Trống"));
-    }
     return ResponseEntity.ok(Map.of("status", "success", "message", filteredMilkdetails));
   }
 
