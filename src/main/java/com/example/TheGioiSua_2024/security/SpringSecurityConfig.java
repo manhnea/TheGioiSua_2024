@@ -83,7 +83,8 @@ public class SpringSecurityConfig {
                         "/Invoicedetail/getInvoiceDetailByUser/**",
                         "/Invoice/cancel/**",
                         "/Invoice/getInvoice/**",
-                        "/Log/getlog/**"
+                        "/Log/getlog/**",
+                        "/Invoice/getInvoicespage/**"
                 ).hasAnyAuthority("Customer", "Staff", "Admin") // Chỉ có Customer mới được phép
                 // Quyền của Staff
                 .requestMatchers(

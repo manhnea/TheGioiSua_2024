@@ -299,6 +299,11 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
+    public Page<InvoiceDto> getInvoicespage(Long buyerId, LocalDateTime startDate, LocalDateTime endDate, Integer trangThai, Pageable pageable) {
+        return invoiceRepository.findInvoicesByBuyerIds(buyerId, trangThai, startDate, endDate, pageable);
+    }
+
+    @Override
     public boolean waitingInvoice(Long id,Long usellerid) {
         User  user = userRepository.findById(usellerid).get();
         InvoiceLog invoiceLog = new InvoiceLog();

@@ -84,7 +84,20 @@ public class InvoiceRestController {
         }
         return ResponseEntity.ok(Map.of("message", invoiceDtos));
     }
+    @GetMapping("/getInvoicespage/{buyerId}")
+    public ResponseEntity<?> getInvoicespage(
+            @PathVariable Long buyerId,
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) Integer trangThai,  // Use Integer for nullable parameter
+            Pageable pageable) {
 
+        // Gọi service để lấy danh sách hóa đơn
+        Page<InvoiceDto> invoiceDtos = invoiceService.getInvoicespage(buyerId, startDate, endDate, trangThai, pageable);
+
+
+        return ResponseEntity.ok(Map.of("status", "success", "data", invoiceDtos));
+    }
     @GetMapping("/count/current")
     public long getCurrentMonthInvoiceCount() {
         return invoiceService.countInvoices();

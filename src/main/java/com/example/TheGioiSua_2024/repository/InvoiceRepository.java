@@ -19,7 +19,27 @@ import java.util.Optional;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Optional<Invoice> existsByInvoicecode(String milkbrandname);
-
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
+            + "i.id, i.invoicecode, buyer.fullname, "
+            + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
+            + "i.fullname, i.email, i.creationdate, i.deliveryaddress, "
+            + "i.phonenumber, i.paymentmethod, v.vouchercode, "
+            + "i.discountamount, i.shippingfee, i.totalamount, i.status) "
+            + "FROM Invoice i "
+            + "JOIN i.userInvoices uvBuyer "
+            + "JOIN uvBuyer.user buyer "
+            + "JOIN buyer.role rBuyer "
+            + "LEFT JOIN i.userInvoices uvSeller ON uvSeller <> uvBuyer "
+            + "LEFT JOIN uvSeller.user seller "
+            + "LEFT JOIN seller.role rSeller ON rSeller.id IN (1, 3) "
+            + "LEFT JOIN i.voucher v "
+            + "WHERE rBuyer.id = 2 "
+            + "AND buyer.id = :buyerId "
+            + "AND (:trangThai IS NULL OR i.status = :trangThai) "
+            + "AND (:startDate IS NULL OR i.creationdate >= :startDate) "
+            + "AND (:endDate IS NULL OR i.creationdate <= :endDate) "
+            + "ORDER BY i.id DESC")
+   Page<InvoiceDto> findInvoicesByBuyerIds(Long buyerId, Integer trangThai, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
             + "i.id, i.invoicecode, buyer.fullname, "
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
