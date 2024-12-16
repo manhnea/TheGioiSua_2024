@@ -422,6 +422,16 @@ public class UserService implements IUserService {
   }
 
   @Override
+  public Page<User> getCustomerPages(Pageable pageable, String username, String email, String fullname, String phonenumber,String address) {
+    return iUserRepository.getCustomerPageseachr(pageable, username, email, fullname, phonenumber,address);
+  }
+
+  @Override
+  public Page<User> getUserPages(Pageable pageable, String username, String email, String fullname, String phonenumber,String address) {
+    return iUserRepository.getUserPages(pageable, username, email, fullname, phonenumber,address);
+  }
+
+  @Override
   public ResponseEntity<?> updatePhoneNumber(String token, User user) {
     String username = jwtUtilities.extractUsername(token);
     try {
