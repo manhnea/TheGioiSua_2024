@@ -205,5 +205,36 @@ public class UserRestController {
       Pageable pageable1 = PageRequest.of(page, size);
       return iUserService.getCustomerPage(pageable);
   }
-          
+
+  @GetMapping("/Userpages")
+  public ResponseEntity<?> getUserpages(@RequestParam("page") int page,
+                                     @RequestParam("size") int size,
+                                     @RequestParam(value = "username", required = false) String username,
+                                     @RequestParam(value = "email", required = false) String email,
+                                     @RequestParam(value = "fullname", required = false) String fullname,
+                                     @RequestParam(value = "phonenumber", required = false) String phonenumber,
+                                        @RequestParam(value = "address", required = false) String address) {
+    Pageable pageable = PageRequest.of(page, size);
+   Page<User> userPages = iUserService.getUserPages(pageable, username, email, fullname, phonenumber,address);
+   if(userPages.isEmpty()){
+       return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Không tìm thấy dữ liệu"));
+   }
+   return ResponseEntity.ok(Map.of("status", "success", "message", userPages));
+  }
+  @GetMapping("/Customerpages")
+  public ResponseEntity<?> getCustomerPages(@RequestParam("page") int page,
+                                     @RequestParam("size") int size,
+                                     @RequestParam(value = "username", required = false) String username,
+                                     @RequestParam(value = "email", required = false) String email,
+                                     @RequestParam(value = "fullname", required = false) String fullname,
+                                     @RequestParam(value = "phonenumber", required = false) String phonenumber,
+                                            @RequestParam(value = "address", required = false) String address) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<User> userPages = iUserService.getCustomerPages(pageable, username, email, fullname, phonenumber,address);
+    if(userPages.isEmpty()){
+      return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Không tìm thấy dữ liệu"));
+    }
+    return ResponseEntity.ok(Map.of("status", "success", "message", userPages));
+  }
+
 }

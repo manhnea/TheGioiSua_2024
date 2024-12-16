@@ -61,4 +61,7 @@ public interface IUserService {
   User getbyID(Long id);
 
   Object updateFullName(String token, User user);
+
+  Page<User> getCustomerPages(Pageable pageable, String username, String email, String fullname, String phonenumber,String address);
+  Page<User> getUserPages(Pageable pageable, String username, String email, String fullname, String phonenumber ,String address);
 }
