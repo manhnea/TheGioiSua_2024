@@ -1,8 +1,6 @@
 package com.example.TheGioiSua_2024.Validator;
 
 import com.example.TheGioiSua_2024.entity.Voucher;
-import java.util.HashMap;
-import java.util.Map;
 
 public class VoucherValidator {
 
