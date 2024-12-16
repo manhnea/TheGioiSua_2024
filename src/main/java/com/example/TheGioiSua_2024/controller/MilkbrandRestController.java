@@ -74,13 +74,12 @@ return milkbrandService.addMilkbrand(token, milkbrand);
   @GetMapping("/getMilkBrandsearch")
   public Page<Milkbrand> getMilkBrandsearch(
           @RequestParam(value = "milkbrandname", required = false) String milkbrandname,
-          @RequestParam(value = "status", required = false) String status,
           @RequestParam("page") int page,
           @RequestParam("size") int size) {
 
     Pageable pageable = PageRequest.of(page, size);
 
-    return milkbrandService.getMilkbrandsearch(milkbrandname, status, pageable);
+    return milkbrandService.getMilkbrandsearch(milkbrandname, pageable);
   }
 
 }

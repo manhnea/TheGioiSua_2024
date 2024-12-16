@@ -74,4 +74,11 @@ public class TargetuserRestController {
     Pageable pageable = PageRequest.of(page, size);
     return targetuserService.getTargetuserPage(pageable);
   }
+
+    @GetMapping("/getTargetusersearch")
+    public Page<Targetuser> targetusersPage(@RequestParam("page") int page,
+      @RequestParam("size") int size, @RequestParam("targetname") String targetname) {
+      Pageable pageable = PageRequest.of(page, size);
+      return targetuserService.getTargetusersearch(targetname, pageable);
+    }
 }

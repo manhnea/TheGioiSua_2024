@@ -37,4 +37,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     boolean existsByVouchercode(String vouchercode);
     @Query(value = "select v from Voucher v  order by v.id desc")
     Page<Voucher> getVoucherPage(Pageable pageable);
+    @Query(value = "select v from Voucher v where v.vouchercode like %:vouchercode% order by v.id desc")
+    Page<Voucher> getVoucherPages(Pageable pageable, String vouchercode);
 }

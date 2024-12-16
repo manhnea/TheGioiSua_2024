@@ -17,12 +17,8 @@ public interface MilkbrandRepository extends JpaRepository<Milkbrand, Long> {
     @Query("SELECT m FROM Milkbrand m WHERE m.id = ?1")
     Milkbrand findBydadata(Long id);
 
-    @Query("SELECT m FROM Milkbrand m " +
-            "WHERE (:milkbrandname IS NULL OR :milkbrandname = '' OR LOWER(m.milkbrandname) LIKE LOWER(CONCAT('%', :milkbrandname, '%'))) " +
-            "AND (:status IS NULL OR CAST(m.status AS string) = :status)")
-    Page<Milkbrand> findByMilkbrandnamePage(@Param("milkbrandname") String milkbrandname,
-                                            @Param("status") String status,
-                                            Pageable pageable);
+@Query("SELECT m FROM Milkbrand m WHERE m.milkbrandname LIKE %:milkbrandname% order by m.id desc")
+    Page<Milkbrand> findByMilkbrandnamePage(@Param("milkbrandname") String milkbrandname, Pageable pageable);
     boolean existsByMilkbrandname(String milkbrandname);
     @Query(value = "SELECT m FROM Milkbrand m order by m.id desc")
     Page<Milkbrand> getMilkbrandPage(Pageable pageable);

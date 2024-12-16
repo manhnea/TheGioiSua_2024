@@ -84,4 +84,9 @@ public class VoucherRestController {
     public Voucher getVoucherById(@PathVariable("id") Long id) {
         return voucherService.getVoucherById(id);
     }
+    @GetMapping("/getVouchersearch")
+    public Page<Voucher> getVouchersearch(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("vouchercode") String vouchercode) {
+        Pageable pageable = PageRequest.of(page, size);
+        return voucherService.getVouchersearch(pageable, vouchercode);
+    }
 }

@@ -28,5 +28,5 @@ public interface IVoucherService {
   ResponseEntity<?> discountmoney(String token, VoucherDto voucherDto);
   ResponseEntity<?> voucherActive();
   Page<Voucher> getVoucherPage(Pageable pageable);
-
+  Page<Voucher> getVouchersearch( Pageable pageable , String vouchercode);
 }

@@ -24,4 +24,6 @@ public interface ITargetuserService {
 
   Page<Targetuser> getTargetuserPage(Pageable pageable);
 
+  Page<Targetuser> getTargetusersearch(String targetname, Pageable pageable);
+
 }

@@ -14,8 +14,8 @@ import java.util.Optional;
 public interface UsagecapacityRepository extends JpaRepository<Usagecapacity, Long> {
     @Query("SELECT u FROM Usagecapacity u WHERE u.capacity = ?1 and u.unit = ?2")
     Optional<Usagecapacity> findByCapacityAndUnit(int capacity,String unit);
-//    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity =?1 and u.unit LIKE %:unit%")
-//    Page<Usagecapacity> findByCapacityContaining(int capacity, String unit, Pageable pageable);
+    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity =?1 ")
+    Page<Usagecapacity> findByCapacityContaining(int capacity, Pageable pageable);
 //    @Query("SELECT u FROM Usagecapacity u WHERE u.capacity = :capacity and u.unit = :unit")
     boolean existsByCapacityAndUnit(int capacity,String unit);
     @Query(value = "SELECT u FROM Usagecapacity u order by u.id desc")
