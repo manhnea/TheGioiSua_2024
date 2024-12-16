@@ -43,19 +43,23 @@ public class ShipController {
         }
     }
 
+//    @PostMapping("/listen")
+//    public ResponseEntity<?> listenWebhook(
+//            @RequestBody ShippingstatusDto shippingstatusDto,
+//            @RequestHeader("X-Goship-Hmac-SHA256") String webhookHmac) {
+//
+//        String jsonData = convertObjectToJson(shippingstatusDto);
+//        boolean isVerified = verifyWebhook(jsonData, webhookHmac);
+//
+//        if (isVerified) {
+//            return shipService.getShippingStatus(shippingstatusDto);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Webhook Signature.");
+//        }
+//    }
     @PostMapping("/listen")
-    public ResponseEntity<?> listenWebhook(
-            @RequestBody ShippingstatusDto shippingstatusDto,
-            @RequestHeader("X-Goship-Hmac-SHA256") String webhookHmac) {
-
-        String jsonData = convertObjectToJson(shippingstatusDto);
-        boolean isVerified = verifyWebhook(jsonData, webhookHmac);
-
-        if (isVerified) {
-            return shipService.getShippingStatus(shippingstatusDto);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Webhook Signature.");
-        }
+    public ResponseEntity<?> listenWebhook(@RequestBody ShippingstatusDto shippingstatusDto) {
+        return shipService.getShippingStatus(shippingstatusDto);
     }
 
     private String convertObjectToJson(Object object) {
