@@ -17,4 +17,6 @@ public interface TargetuserRepository extends JpaRepository<Targetuser, Long> {
     boolean existsByTargetName(String targetName);
     @Query(value = "SELECT t FROM Targetuser t order by t.id desc")
     Page<Targetuser> getTargetuserPage(Pageable pageable);
+    @Query(value = "SELECT t FROM Targetuser t where t.targetName like %:targetName% order by t.id desc")
+    Page<Targetuser> getTargetuserPages(String targetName,Pageable pageable);
 }

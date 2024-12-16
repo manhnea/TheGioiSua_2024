@@ -20,5 +20,5 @@ public interface IUsagecapacityService {
   Usagecapacity getUsagecapacityById(Long id);
   Page<Usagecapacity> getUsagecapacityPage(Pageable pageable);
 
-//  Page<Usagecapacity> getUsagecapacityPageByCapacity(int capacity,String unit, Pageable pageable);
+  Page<Usagecapacity> getUsagecapacityPageByCapacity(int capacity, Pageable pageable);
 }

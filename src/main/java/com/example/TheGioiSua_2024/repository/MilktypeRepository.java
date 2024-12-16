@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface MilktypeRepository extends JpaRepository<MilkType,Long> {
     Optional<MilkType> findByMilkTypename(String milkTypename);
-    @Query("SELECT m FROM MilkType m WHERE m.milkTypename LIKE %:milkTypename%")
+    @Query("SELECT m FROM MilkType m WHERE m.milkTypename LIKE %:milkTypename% order by m.id desc")
     Page<MilkType> findByMilkTypenameContaining(String milkTypename, Pageable pageable);
 
     boolean existsByMilkTypename(String milkTypename);

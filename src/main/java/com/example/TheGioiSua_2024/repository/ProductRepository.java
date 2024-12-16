@@ -129,7 +129,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   @Query("SELECT p FROM Product p order by p.id desc")
   Page<Product> getProductPage(Pageable pageable);
-  @Query("SELECT p FROM Product p WHERE p.productname LIKE %:productname%")
+  @Query("SELECT p FROM Product p WHERE p.productname LIKE %:productname% order by p.id desc")
   Page<Product> findByProductnameContaining(String productname, Pageable pageable);
 
   boolean existsByProductname(String productname);

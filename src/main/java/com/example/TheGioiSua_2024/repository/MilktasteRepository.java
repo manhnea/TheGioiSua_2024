@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface MilktasteRepository extends JpaRepository<Milktaste, Long> {
     Optional<Milktaste> findByMilktastename(String milktasteName);
-    @Query("SELECT m FROM Milktaste m WHERE m.milktastename LIKE %:milktasteName%")
+    @Query("SELECT m FROM Milktaste m WHERE m.milktastename LIKE %:milktasteName% order by m.id desc")
     Page<Milktaste> findByMilktastenamePage(String milktasteName, Pageable pageable);
     boolean existsByMilktastename(String milktasteName);
     @Query(value = "SELECT m FROM Milktaste m order by m.id desc")

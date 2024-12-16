@@ -198,4 +198,10 @@ public class VoucherService implements IVoucherService {
     return voucherRepository.getVoucherPage(pageable);
   }
 
+  @Override
+  public Page<Voucher> getVouchersearch(Pageable pageable, String vouchercode) {
+    return voucherRepository.getVoucherPages(pageable, vouchercode);
+  }
+
+
 }

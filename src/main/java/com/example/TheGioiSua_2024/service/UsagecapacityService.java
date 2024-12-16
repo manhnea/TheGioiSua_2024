@@ -109,8 +109,8 @@ public class UsagecapacityService implements IUsagecapacityService {
         return usagecapacityRepository.getUsagecapacityPage(pageable);
     }
 
-//  @Override
-//  public Page<Usagecapacity> getUsagecapacityPageByCapacity(int capacity,String unit, Pageable pageable) {
-//    return usagecapacityRepository.findByCapacityContaining(capacity,unit, pageable);
-//  }
+  @Override
+  public Page<Usagecapacity> getUsagecapacityPageByCapacity(int capacity, Pageable pageable) {
+    return usagecapacityRepository.findByCapacityContaining(capacity, pageable);
+  }
 }
