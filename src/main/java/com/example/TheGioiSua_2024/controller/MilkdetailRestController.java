@@ -179,10 +179,23 @@ private MilkdetailValidator milkdetailValidator;
     Pageable pageable = PageRequest.of(page, size);
     Page<Milkdetail> filteredMilkdetails = milkdetailService.filterMilkdetails(
             productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
-    if (filteredMilkdetails.isEmpty()) {
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", "Danh Sách Trống"));
-    }
     return ResponseEntity.ok(Map.of("status", "success", "message", filteredMilkdetails));
   }
+  @GetMapping("/filtershop")
+  public ResponseEntity<?> filterMilkdetailshop(
+          @RequestParam(required = false) Long productId,
+          @RequestParam(required = false) Long milkTasteId,
+          @RequestParam(required = false) Long packagingUnitId,
+          @RequestParam(required = false) Long usageCapacityId,
+          @RequestParam(required = false) Long milkBrandId,
+          @RequestParam(required = false) Long targetUserId,
+          @RequestParam(required = false) Long milkTypeId,
+          @RequestParam int page,
+          @RequestParam int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Milkdetail> filteredMilkdetails = milkdetailService.filterMilkdfilterMilkdetailshopetails(
+            productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
 
+    return ResponseEntity.ok(Map.of("status", "success", "message", filteredMilkdetails));
+  }
 }

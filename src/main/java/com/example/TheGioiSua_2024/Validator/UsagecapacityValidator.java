@@ -16,7 +16,6 @@ public class UsagecapacityValidator {
     private static final int MAX_CAPACITY = 10000;  // Example max value for capacity
     private static final String[] a = {"l","ml","kg","g"};
     public static String validateUsagecapacity(Usagecapacity usagecapacity) {
-        
         if(!Arrays.asList(a).contains(usagecapacity.getUnit())){
             return "Đơn vị đóng gói chỉ có thể là: "+Arrays.toString(a);
         }

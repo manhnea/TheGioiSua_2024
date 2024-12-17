@@ -71,7 +71,8 @@ public interface InvoicedetailRepository extends JpaRepository<Invoicedetail, Lo
           + "i.status,\n"
           +"id.id,\n"
           +"i.fullname,\n"
-          +"id.milkDetail.id \n"
+          +"id.milkDetail.id, \n" +
+          "i.shippingfee\n"
       + "FROM\n"
       + "    Invoicedetail id\n"
       + "        JOIN\n"

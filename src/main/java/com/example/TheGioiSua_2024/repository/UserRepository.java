@@ -31,18 +31,52 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
   @Query(value = "SELECT u.username\n"
-      + "FROM user u\n"
-      + "WHERE u.roleid = 2 AND u.status = 1\n"
-      + "ORDER BY u.registrationdate DESC\n"
-      + "LIMIT 5;", nativeQuery = true)
+          + "FROM user u\n"
+          + "WHERE u.roleid = 2 AND u.status = 1\n"
+          + "ORDER BY u.registrationdate DESC\n"
+          + "LIMIT 5;", nativeQuery = true)
   List<String> findAllUsernames();
 
   @Query("SELECT COUNT(*) FROM User u WHERE u.status = 1 AND u.role.id = 2")
   long countUsersByStatusAndRole();
+
   @Query(value = "SELECT u FROM User u Join u.role r where r.id != 1")
   Page<User> getUserPage(Pageable pageable);
+
   @Query(value = "SELECT u FROM User u Join u.role r where r.id = 2")
   Page<User> getCustomerPage(Pageable pageable);
-}
 
+  @Query(value = "SELECT u FROM User u JOIN u.role r " +
+          "WHERE r.id != 1 " +
+          "AND (:username IS NULL OR u.username LIKE %:username%) " +
+          "AND (:email IS NULL OR u.email LIKE %:email%) " +
+          "AND (:fullname IS NULL OR u.fullname LIKE %:fullname%) " +
+          "AND (:phonenumber IS NULL OR u.phonenumber LIKE %:phonenumber%) " +
+          "AND (:address IS NULL OR u.address LIKE %:address%) " +
+          "ORDER BY u.id DESC")
+  Page<User> getUserPages(Pageable pageable,
+                          @Param("username") String username,
+                          @Param("email") String email,
+                          @Param("fullname") String fullname,
+                          @Param("phonenumber") String phonenumber,
+                          @Param("address") String address);
+
+
+
+  @Query(value = "SELECT u FROM User u JOIN u.role r " +
+          "WHERE r.id = 2 " +
+          "AND (:username IS NULL OR u.username LIKE %:username%) " +
+          "AND (:email IS NULL OR u.email LIKE %:email%) " +
+          "AND (:fullname IS NULL OR u.fullname LIKE %:fullname%) " +
+          "AND (:phonenumber IS NULL OR u.phonenumber LIKE %:phonenumber%) " +
+          "AND (:address IS NULL OR u.address LIKE %:address%) " +
+          "ORDER BY u.id DESC")
+  Page<User> getCustomerPageseachr(Pageable pageable,
+                          @Param("username") String username,
+                          @Param("email") String email,
+                          @Param("fullname") String fullname,
+                          @Param("phonenumber") String phonenumber,
+                          @Param("address") String address);
+
+}
 
