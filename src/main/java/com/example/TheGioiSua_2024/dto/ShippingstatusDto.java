@@ -20,9 +20,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 public class ShippingstatusDto {
+
     private String gcode;
     private String code;
-    private String orderId;
+    private String order_id;
     private String weight;
     private String fee;
     private String cod;
@@ -30,4 +31,21 @@ public class ShippingstatusDto {
     private String status;
     private String message;
     private String trackingUrl;
+
+    @Override
+    public String toString() {
+        return "ClassName {"
+                + "gcode='" + gcode + '\''
+                + ", code='" + code + '\''
+                + ", orderId='" + order_id + '\''
+                + ", weight='" + weight + '\''
+                + ", fee='" + fee + '\''
+                + ", cod='" + cod + '\''
+                + ", payer='" + payer + '\''
+                + ", status='" + status + '\''
+                + ", message='" + message + '\''
+                + ", trackingUrl='" + trackingUrl + '\''
+                + '}';
+    }
+
 }

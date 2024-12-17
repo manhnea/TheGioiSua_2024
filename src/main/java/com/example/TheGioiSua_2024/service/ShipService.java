@@ -29,9 +29,10 @@ public class ShipService implements IShipService {
 
     @Override
     public ResponseEntity<?> getShippingStatus(ShippingstatusDto shippingstatusDto) {
+        System.out.println(shippingstatusDto.toString());
         int Istatus = Integer.parseInt(shippingstatusDto.getStatus());
         InvoiceLog invoiceLog = new InvoiceLog();
-        Invoice invoice = invoiceRepository.findbycode(shippingstatusDto.getOrderId());
+        Invoice invoice = invoiceRepository.findbycode(shippingstatusDto.getOrder_id());
         if (Istatus == Status.Took) {
             invoice.setStatus(Status.Took);
             invoiceLog.setStatus(Status.Took);
