@@ -133,4 +133,30 @@ Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPacka
           @Param("milkTypeId") Long milkTypeId,
           Pageable pageable
   );
+  @Query("SELECT m FROM Milkdetail m " +
+          "JOIN m.product p " +
+          "JOIN m.milkTaste t " +
+          "JOIN m.packagingunit pu " +
+          "JOIN m.usageCapacity uc " +
+          "JOIN p.milkBrand b " +
+          "JOIN p.targetUser tu " +
+          "JOIN p.milkType mt " +
+          "WHERE (:productId IS NULL OR p.id = :productId) " +
+          "AND (:milkTasteId IS NULL OR t.id = :milkTasteId) " +
+          "AND (:packagingUnitId IS NULL OR pu.id = :packagingUnitId) " +
+          "AND (:usageCapacityId IS NULL OR uc.id = :usageCapacityId) " +
+          "AND (:milkBrandId IS NULL OR b.id = :milkBrandId) " +
+          "AND (:targetUserId IS NULL OR tu.id = :targetUserId) " +
+          "AND (:milkTypeId IS NULL OR mt.id = :milkTypeId)" +
+          "AND m.status = 1")
+  Page<Milkdetail> filterMilkdetailshop(
+          @Param("productId") Long productId,
+          @Param("milkTasteId") Long milkTasteId,
+          @Param("packagingUnitId") Long packagingUnitId,
+          @Param("usageCapacityId") Long usageCapacityId,
+          @Param("milkBrandId") Long milkBrandId,
+          @Param("targetUserId") Long targetUserId,
+          @Param("milkTypeId") Long milkTypeId,
+          Pageable pageable
+  );
 }
