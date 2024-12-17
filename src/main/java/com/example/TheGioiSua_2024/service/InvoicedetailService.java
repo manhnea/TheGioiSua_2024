@@ -142,6 +142,7 @@ public class InvoicedetailService implements IInvoicedetailService {
             int status = (int) record[12];
             String fullname = (String) record[14];
             String groupKey = invoiceCode + "-" + deliveryAddress + "-" + phoneNumber;
+            int shippingfee = (int) record[16];
 
             // If the invoice group doesn't exist, create it
             groupedInvoices.putIfAbsent(groupKey, new HashMap<>() {
@@ -152,6 +153,7 @@ public class InvoicedetailService implements IInvoicedetailService {
                     put("phoneNumber", phoneNumber);
                     put("status", status);
                     put("fullname", fullname);
+                    put("shippingfee", shippingfee);
                     put("items", new ArrayList<Map<String, Object>>());
                 }
             });

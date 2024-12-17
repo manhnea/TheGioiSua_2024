@@ -43,4 +43,5 @@ public interface IMilkdetailService {
 
   Map<String, Object> checkCount(Long id, int quantity);
 
+    Page<Milkdetail> filterMilkdfilterMilkdetailshopetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
 }

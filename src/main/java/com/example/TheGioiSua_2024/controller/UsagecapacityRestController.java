@@ -66,7 +66,7 @@ public class UsagecapacityRestController {
     return usagecapacityService.getUsagecapacityPage(pageable);
   }
   @GetMapping("/getUsagecapacityPageByCapacity")
-    public Page<Usagecapacity> getUsagecapacityPageByCapacity(@RequestParam("capacity") int capacity, @RequestParam("page") int page, @RequestParam("size") int size) {
+    public Page<Usagecapacity> getUsagecapacityPageByCapacity(@RequestParam("capacity") String capacity, @RequestParam("page") int page, @RequestParam("size") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return usagecapacityService.getUsagecapacityPageByCapacity(capacity, pageable);
     }

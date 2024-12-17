@@ -358,6 +358,10 @@ public class MilkdetailService implements IMilkdetailService {
     return response;
   }
 
+    @Override
+    public Page<Milkdetail> filterMilkdfilterMilkdetailshopetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
+        return milkdetailRepository.filterMilkdetailshop(productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+    }
 
 
 }
