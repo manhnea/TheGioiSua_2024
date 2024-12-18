@@ -79,6 +79,7 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public ResponseEntity<?> saveInvoice(InvoiceDto invoiceDto) {
         Voucher voucher = null;
+        InvoiceLog invoiceLog = new InvoiceLog();
         List<Invoicedetail> invoicedetails = invoiceDto.getInvoiceDetails();
         User nguoiMua = userRepository.findByEmail(invoiceDto.getEmail());
         if (nguoiMua == null) {
@@ -127,10 +128,14 @@ public class InvoiceService implements IInvoiceService {
             voucherRepository.save(voucher);
         }
         invoice.setStatus(Status.ApproveOrders);
+        invoiceLog.setStatus(Status.ApproveOrders);
         if (!invoiceDto.getPaymentmethod().equals("COD")) {
             invoice.setStatus(Status.UnPaid);
+            invoiceLog.setStatus(Status.UnPaid);
         }
         invoiceRepository.save(invoice);
+        invoiceLog.setInvoice(invoice);
+        
         for (Invoicedetail invoicedetail : invoicedetails) {
             invoicedetail.setInvoice(invoice);
             invoicedetailRepository.save(invoicedetail);
