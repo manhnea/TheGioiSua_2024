@@ -92,7 +92,7 @@ public class UserRestController {
   @PutMapping("/updatePhonerNumber")
   public ResponseEntity<?> updatePhoneNumber(@NonNull HttpServletRequest request, @RequestBody User user) {
       String token = jwtUtilities.getToken(request);
-      return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
+      return userService.updatePhoneNumber(token, user);
     }
 
 
@@ -100,7 +100,7 @@ public class UserRestController {
   public ResponseEntity<?> updateFullName(@NonNull HttpServletRequest request,
     @RequestBody User user) {
       String token = jwtUtilities.getToken(request);
-      return ResponseEntity.ok(userService.updateFullName(token, user));
+      return userService.updateFullName(token, user);
     }
 
 
@@ -108,7 +108,7 @@ public class UserRestController {
   public ResponseEntity<?> updateAddress(@NonNull HttpServletRequest request,
     @RequestBody User user) {
     String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(userService.updateAddress(token, user));
+    return userService.updateAddress(token, user);
   }
 
   @GetMapping("/findTop5")
