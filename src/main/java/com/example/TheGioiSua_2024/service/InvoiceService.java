@@ -135,7 +135,7 @@ public class InvoiceService implements IInvoiceService {
         }
         invoiceRepository.save(invoice);
         invoiceLog.setInvoice(invoice);
-        
+        invoiceLogRepository.save(invoiceLog);
         for (Invoicedetail invoicedetail : invoicedetails) {
             invoicedetail.setInvoice(invoice);
             invoicedetailRepository.save(invoicedetail);
@@ -199,6 +199,7 @@ public class InvoiceService implements IInvoiceService {
 
     @Override
     public boolean paymentOK(String codeinvoice) {
+        InvoiceLog invoiceLog = new InvoiceLog();
         Invoice invoice = null;
         List<Invoicedetail> invoicedetails = null;
         Milkdetail milkdetail = null;
@@ -216,6 +217,8 @@ public class InvoiceService implements IInvoiceService {
             System.out.println("last:milkdetail.getStockquantity(): " + milkdetail.getStockquantity());
             milkdetailRepository.save(milkdetail);
         }
+        invoiceLog.setInvoice(invoice);
+        invoiceLog.setStatus(Status.SuccessfulPayment);
         return true;
     }
 
