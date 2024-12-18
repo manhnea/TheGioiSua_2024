@@ -50,6 +50,8 @@ public class SpringSecurityConfig {
                         "/user/online-users",
                         "/Product/page/**",
                         "/Product/lst",
+                        "/Product/lstbestseller/**",
+                        "/Product/lstnewproduct/**",
                         "/Packagingunit/lst",
                         "/Usagecapacity/lst",
                         "/Milkdetail/page",

@@ -3,6 +3,7 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.Validator.MilkTasteValidator;
 import com.example.TheGioiSua_2024.Validator.ProductValidator;
 import com.example.TheGioiSua_2024.dto.ProductDto;
+import com.example.TheGioiSua_2024.dto.ProductDtos;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.MilkType;
@@ -230,6 +231,16 @@ public class ProductService implements IProductService {
   @Override
   public Page<Product> filterProduct(String productname,Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
     return productRepository.filterProducts(productname,milkBrandId, targetUserId, milkTypeId, pageable);
+  }
+
+  @Override
+  public Page<Product> getNewProduct(Pageable pageable) {
+    return productRepository.getNewProduct(pageable);
+  }
+
+  @Override
+  public Page<ProductDtos> getBestSeller(Pageable pageable) {
+    return productRepository.getBestSeller(pageable);
   }
 
 

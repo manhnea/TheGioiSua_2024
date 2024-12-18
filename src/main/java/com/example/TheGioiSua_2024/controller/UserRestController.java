@@ -33,6 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.server.ResponseStatusException;
 
 @CrossOrigin
 @RestController
@@ -89,73 +90,24 @@ public class UserRestController {
   }
 
   @PutMapping("/updatePhonerNumber")
-  public ResponseEntity<?> updatePhonerNumber(@NonNull HttpServletRequest request,
-    @RequestBody @Valid User user,
-    BindingResult bindingResult) {
-    // Kiểm tra nếu phonenumber là null
-    if (user.getPhonenumber() == null || user.getPhonenumber().trim().isEmpty()) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      Map<String, String> error = new HashMap<>();
-      error.put("field", "phonenumber");
-      error.put("message", "Số điện thoại không được để trống");
-      errors.add(error);
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+  public ResponseEntity<?> updatePhoneNumber(@NonNull HttpServletRequest request, @RequestBody User user) {
+      String token = jwtUtilities.getToken(request);
+      return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
     }
 
-    // Kiểm tra lỗi với trường phonenumber
-    if (bindingResult.hasFieldErrors("phonenumber")) {
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors("phonenumber")) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-    }
-
-    // Nếu không có lỗi, tiếp tục xử lý cập nhật số điện thoại
-    String token = jwtUtilities.getToken(request);
-    return ResponseEntity.ok(userService.updatePhoneNumber(token, user));
-  }
 
   @PutMapping("/updateFullName")
   public ResponseEntity<?> updateFullName(@NonNull HttpServletRequest request,
-    @RequestBody @Valid User user,
-    BindingResult bindingResult) {
-    String token = jwtUtilities.getToken(request);
-    if (bindingResult.hasFieldErrors("fullname")) { // Kiểm tra lỗi chỉ với trường phoneNumber
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors("fullname")) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
+    @RequestBody User user) {
+      String token = jwtUtilities.getToken(request);
+      return ResponseEntity.ok(userService.updateFullName(token, user));
     }
 
-    return ResponseEntity.ok(userService.updateFullName(token, user));
-  }
 
   @PutMapping("/updateAddress")
   public ResponseEntity<?> updateAddress(@NonNull HttpServletRequest request,
-    @RequestBody @Valid User user,
-    BindingResult bindingResult) {
+    @RequestBody User user) {
     String token = jwtUtilities.getToken(request);
-    if (bindingResult.hasFieldErrors("address")) { // Kiểm tra lỗi chỉ với trường phoneNumber
-      List<Map<String, String>> errors = new ArrayList<>();
-      for (FieldError fieldError : bindingResult.getFieldErrors("address")) {
-        Map<String, String> error = new HashMap<>();
-        error.put("field", fieldError.getField());
-        error.put("message", fieldError.getDefaultMessage());
-        errors.add(error);
-      }
-      return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-    }
-
     return ResponseEntity.ok(userService.updateAddress(token, user));
   }
 

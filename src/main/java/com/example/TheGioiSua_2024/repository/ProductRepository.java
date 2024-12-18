@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.repository;
 
 import com.example.TheGioiSua_2024.dto.ProductDto;
+import com.example.TheGioiSua_2024.dto.ProductDtos;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Milkdetail;
 import com.example.TheGioiSua_2024.entity.Product;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 
@@ -149,5 +151,27 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
           @Param("milkType") Long milkType,
           Pageable pageable
   );
+
+  @Query("SELECT p FROM Product p ORDER BY p.id DESC")
+  Page<Product> getNewProduct(Pageable pageable);
+
+  @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDtos( " +
+          "p.id, " +
+          "p.milkType.id, " +
+          "p.milkBrand.id, " +
+          "p.targetUser.id, " +
+          "p.productCode, " +
+          "p.productname, " +
+          "p.productUrl, " +
+          "p.imgUrl, " +
+          "p.status) " +
+          "FROM Product p " +
+          "JOIN Milkdetail b ON p.id = b.product.id " +
+          "JOIN Invoicedetail a ON a.milkDetail.id = b.id " +
+          "JOIN Invoice c ON a.invoice.id = c.id " +
+          "WHERE c.status = 913 " +
+          "GROUP BY p.id, p.productCode, p.productname, p.milkType.id, p.milkBrand.id, p.targetUser.id, p.productUrl, p.imgUrl, p.status " +
+          "ORDER BY COUNT(a.id) DESC")
+  Page<ProductDtos> getBestSeller(Pageable pageable);
 
 }

@@ -2,6 +2,7 @@ package com.example.TheGioiSua_2024.service.impl;
 
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.dto.ProductDto;
+import com.example.TheGioiSua_2024.dto.ProductDtos;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Product;
 
@@ -35,4 +36,8 @@ public interface IProductService {
 
   Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable);
   Page<Product> filterProduct(String productname,Long milkBrandId,Long targetUserId, Long milkTypeId,  Pageable pageable);
+
+  Page<Product> getNewProduct(Pageable pageable);
+
+  Page<ProductDtos> getBestSeller(Pageable pageable);
 }

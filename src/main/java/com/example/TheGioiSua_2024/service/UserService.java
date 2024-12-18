@@ -19,6 +19,7 @@ import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import com.example.TheGioiSua_2024.util.UserValidator;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -395,29 +396,51 @@ public class UserService implements IUserService {
     try {
       // Kiểm tra fullname không được rỗng hoặc null
       if (user.getFullname() == null || user.getFullname().trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("Họ tên không được để trống");
+        return ResponseEntity.badRequest().body(Map.of(
+                "status", 400,
+                "errors", "Họ tên không được để trống"
+        ));
+      }
+
+      // Kiểm tra fullname không chứa ký tự đặc biệt
+      String fullNameRegex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƠƯưĂăÊê\s]+$";
+      if (!user.getFullname().matches(fullNameRegex)) {
+        return ResponseEntity.badRequest().body(Map.of(
+                "status", 400,
+                "errors", "Họ tên không được chứa ký tự đặc biệt"
+        ));
       }
 
       // Tìm người dùng theo ID
       User u = iUserRepository.findById(user.getId())
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
 
-      u.setFullname(user.getFullname());
       String oldFullName = u.getFullname(); // Lấy họ tên cũ
       String newFullName = user.getFullname(); // Lấy họ tên mới
-      Log log = new Log(); // Tạo log
+      u.setFullname(newFullName);
+      iUserRepository.save(u);
+
+      // Tạo log
+      Log log = new Log();
       log.setAction("Cập nhật họ tên");
       log.setDescription(String.format("Người dùng %s đã thay đổi họ tên từ %s thành %s",
-        u.getUsername(), oldFullName, newFullName));
+              u.getUsername(), oldFullName, newFullName));
       logService.saveLog(username, log);
-      iUserRepository.save(u);
-      return ResponseEntity.ok("Cập nhật người dùng thành công");
+
+      return ResponseEntity.ok(Map.of(
+              "status", 200,
+              "message", "Cập nhật họ tên thành công"
+      ));
     } catch (ResponseStatusException e) {
-      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+      return ResponseEntity.status(e.getStatusCode()).body(Map.of(
+              "status", e.getStatusCode().value(),
+              "errors", e.getReason()
+      ));
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+              "status", 500,
+              "errors", "Đã xảy ra lỗi trong quá trình cập nhật họ tên"
+      ));
     }
   }
 
@@ -437,71 +460,99 @@ public class UserService implements IUserService {
     try {
       // Kiểm tra số điện thoại không được rỗng hoặc null
       if (user.getPhonenumber() == null || user.getPhonenumber().trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("Số điện thoại không được để trống");
+        return ResponseEntity.badRequest().body(Map.of(
+                "status", 400,
+                "errors", "Số điện thoại không được để trống"
+        ));
       }
 
       // Kiểm tra định dạng số điện thoại Việt Nam
       String phoneRegex = "^(0[3|5|7|8|9])+([0-9]{8})$";
       Pattern pattern = Pattern.compile(phoneRegex);
       if (!pattern.matcher(user.getPhonenumber()).matches()) {
-        return ResponseEntity.badRequest()
-          .body("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam hợp lệ.");
+        return ResponseEntity.badRequest().body(Map.of(
+                "status", 400,
+                "errors", "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam hợp lệ."
+        ));
       }
 
       // Tìm người dùng theo ID
       User u = iUserRepository.findById(user.getId())
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
 
-      u.setPhonenumber(user.getPhonenumber());
       String oldPhoneNumber = u.getPhonenumber(); // Lấy số điện thoại cũ
       String newPhoneNumber = user.getPhonenumber(); // Lấy số điện thoại mới
-      Log log = new Log(); // Tạo log
+      u.setPhonenumber(newPhoneNumber);
+      iUserRepository.save(u);
+
+      // Tạo log sau khi cập nhật thành công
+      Log log = new Log();
       log.setAction("Cập nhật số điện thoại");
       log.setDescription(String.format("Người dùng %s đã thay đổi số điện thoại từ %s thành %s",
-        u.getUsername(), oldPhoneNumber, newPhoneNumber));
+              u.getUsername(), oldPhoneNumber, newPhoneNumber));
       logService.saveLog(username, log);
-      iUserRepository.save(u);
-      return ResponseEntity.ok("Cập nhật người dùng thành công");
+
+      return ResponseEntity.ok(Map.of(
+              "status", 200,
+              "message", "Cập nhật số điện thoại thành công"
+      ));
+
     } catch (ResponseStatusException e) {
-      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+      return ResponseEntity.status(e.getStatusCode()).body(Map.of(
+              "status", e.getStatusCode().value(),
+              "errors", e.getReason()
+      ));
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+              "status", 500,
+              "errors", "Đã xảy ra lỗi trong quá trình cập nhật số điện thoại"
+      ));
     }
   }
-
   @Override
   public ResponseEntity<?> updateAddress(String token, User user) {
     String username = jwtUtilities.extractUsername(token);
     try {
       // Kiểm tra địa chỉ không được rỗng hoặc null
       if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
-        return ResponseEntity.badRequest().body("Địa chỉ không được để trống");
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("status", 400);
+        errorResponse.put("errors", "Địa chỉ không được để trống");
+        return ResponseEntity.badRequest().body(errorResponse);
       }
 
       // Tìm người dùng theo ID
       User u = iUserRepository.findById(user.getId())
-        .orElseThrow(
-          () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
 
-      u.setAddress(user.getAddress());
       String oldAddress = u.getAddress(); // Lấy địa chỉ cũ
       String newAddress = user.getAddress(); // Lấy địa chỉ mới
-      Log log = new Log(); // Tạo log
+      u.setAddress(newAddress);
+
+      // Tạo log
+      Log log = new Log();
       log.setAction("Cập nhật địa chỉ");
       log.setDescription(String.format("Người dùng %s đã thay đổi địa chỉ từ %s thành %s",
-        u.getUsername(), oldAddress, newAddress));
+              u.getUsername(), oldAddress, newAddress));
       logService.saveLog(username, log);
+
+      // Lưu thông tin người dùng
       iUserRepository.save(u);
       return ResponseEntity.ok("Cập nhật người dùng thành công");
+
     } catch (ResponseStatusException e) {
-      return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+      Map<String, Object> errorResponse = new HashMap<>();
+      errorResponse.put("status", e.getStatusCode().value());
+      errorResponse.put("errors", e.getReason());
+      return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body("Đã xảy ra lỗi trong quá trình cập nhật người dùng");
+      Map<String, Object> errorResponse = new HashMap<>();
+      errorResponse.put("status", 500);
+      errorResponse.put("errors", "Đã xảy ra lỗi trong quá trình cập nhật người dùng");
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
   }
+
 
     @Override
     public Page<User> getUserPage(Pageable pageable) {

@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.controller;
 
+import com.example.TheGioiSua_2024.dto.ProductDtos;
 import com.example.TheGioiSua_2024.entity.Product;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.ProductService;
@@ -8,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,6 +36,23 @@ public class ProductRestController {
   public List<Product> getAllProduct() {
     return productService.getAllProduct();
   }
+  @GetMapping("/lstnewproduct")
+  public Page<Product> getNewProduct(
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "5") int size)
+  {
+    Pageable pageable = PageRequest.of(page, size);
+    return productService.getNewProduct(pageable);
+  }
+
+  @GetMapping("/lstbestseller")
+  public Page<ProductDtos> getBestSeller(
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "5") int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    return productService.getBestSeller(pageable);
+  }
+
 
   //http://localhost:1234/api/Product/add
   @PostMapping("/add")
