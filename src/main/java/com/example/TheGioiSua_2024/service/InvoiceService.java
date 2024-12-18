@@ -122,11 +122,6 @@ public class InvoiceService implements IInvoiceService {
             if (voucher.getUsagecount() < 1) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Voucher Đã Hết Lượt Sử Dụng"));
             }
-            if (voucherRepository.existsUserInvoiceByUserAndVoucher(nguoiMua.getId(),
-                    voucher.getVouchercode())) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("error", "Tài Khoản Đã Sử Dụng Voucher Này Rồi"));
-            }
             invoice.setVoucher(voucher);
             voucher.setUsagecount(voucher.getUsagecount() - 1);
             voucherRepository.save(voucher);
