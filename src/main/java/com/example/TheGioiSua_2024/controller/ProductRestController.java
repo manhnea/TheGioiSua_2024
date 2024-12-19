@@ -89,7 +89,7 @@ public class ProductRestController {
   @GetMapping("/page")
   public ResponseEntity<?> getPageProduct(
       @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size
+      @RequestParam(defaultValue = "5") int size
   ) {
     Pageable pageable = PageRequest.of(page, size);
     return ResponseEntity.ok(

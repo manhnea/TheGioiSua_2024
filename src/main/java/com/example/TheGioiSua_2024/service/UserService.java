@@ -429,6 +429,10 @@ public class UserService implements IUserService {
     if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
       return createErrorResponse(HttpStatus.BAD_REQUEST, "Địa chỉ không được để trống");
     }
+    String Address = "^[A-Za-zÀ-Ỵà-ỵ0-9,\\s]{5,100}$"; // Địa chỉ tối thiểu 5 ký tự, tối đa 100 ký tự
+    if (!user.getAddress().matches(Address)) {
+      return createErrorResponse(HttpStatus.BAD_REQUEST, "Địa chỉ không được chứa ký tự đặc biệt và phải từ 5 đến 100 ký tự");
+    }
 
     try {
       User u = iUserRepository.findById(user.getId())
@@ -457,7 +461,7 @@ public class UserService implements IUserService {
       return createErrorResponse(HttpStatus.BAD_REQUEST, "Họ tên không được để trống");
     }
 
-    String fullNameRegex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƠƯưĂăÊê\\s]+$";
+    String fullNameRegex = "^[A-Za-zÀ-Ỵà-ỵ,\\s]{5,100}$";
     if (!user.getFullname().matches(fullNameRegex)) {
       return createErrorResponse(HttpStatus.BAD_REQUEST, "Họ tên không được chứa ký tự đặc biệt");
     }
