@@ -19,6 +19,7 @@ import java.util.Optional;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Optional<Invoice> existsByInvoicecode(String milkbrandname);
+
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
             + "i.id, i.invoicecode, buyer.fullname, "
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
@@ -39,7 +40,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "AND (:startDate IS NULL OR i.creationdate >= :startDate) "
             + "AND (:endDate IS NULL OR i.creationdate <= :endDate) "
             + "ORDER BY i.id DESC")
-   Page<InvoiceDto> findInvoicesByBuyerIds(Long buyerId, Integer trangThai, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+    Page<InvoiceDto> findInvoicesByBuyerIds(Long buyerId, Integer trangThai, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
             + "i.id, i.invoicecode, buyer.fullname, "
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
@@ -57,7 +59,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "WHERE rBuyer.id = 2 "
             + "AND buyer.id = :buyerId "
             + "ORDER BY i.id DESC")
-    List<InvoiceDto> findInvoicesByBuyerId( Long buyerId);
+    List<InvoiceDto> findInvoicesByBuyerId(Long buyerId);
+
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
             + "i.id, i.invoicecode, buyer.fullname, "
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
@@ -76,6 +79,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "AND i.invoicecode = :invoiceCode "
             + "ORDER BY i.id DESC")
     InvoiceDto findInvoicesByInvoiceCode(String invoiceCode);
+
     @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceDto("
             + "i.id, i.invoicecode, buyer.fullname, "
             + "CASE WHEN rSeller.id IS NULL THEN NULL ELSE seller.fullname END, "
@@ -144,5 +148,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             + "GROUP BY DATE(i.creationdate) "
             + "ORDER BY DATE(i.creationdate) ASC")
     List<Object[]> findRevenueByDate();
+
+    @Query("SELECT i FROM Invoice i WHERE i.status = 337 AND i.creationdate < :cutoffTime ORDER BY i.creationdate ASC")
+    List<Invoice> findUnPaidInvoicesBefore(LocalDateTime cutoffTime, Pageable pageable);
 
 }

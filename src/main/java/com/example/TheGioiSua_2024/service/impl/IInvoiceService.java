@@ -48,4 +48,6 @@ public interface IInvoiceService {
     String updatequantity(Long id, @Valid Invoice invoice);
 
     Page<InvoiceDto> getInvoicespage(Long buyerId, LocalDateTime startDate, LocalDateTime endDate, Integer trangThai, Pageable pageable);
+    
+    void cancelUnPaidOrders();
 }

@@ -39,8 +39,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Order;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -71,6 +74,7 @@ public class InvoiceService implements IInvoiceService {
     EmailSend emailSend;
     @Autowired
     InvoiceLogRepository invoiceLogRepository;
+
     @Transactional
     public List<Invoice> getInvoiceList() {
         return invoiceRepository.findAll();
@@ -307,12 +311,12 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public boolean waitingInvoice(Long id,Long usellerid) {
-        User  user = userRepository.findById(usellerid).get();
+    public boolean waitingInvoice(Long id, Long usellerid) {
+        User user = userRepository.findById(usellerid).get();
         InvoiceLog invoiceLog = new InvoiceLog();
         Userinvoice userinvoice = new Userinvoice();
         Invoice invoice = invoiceRepository.findById(id).get();
-        if(invoice == null || invoice.getStatus() != Status.ApproveOrders){
+        if (invoice == null || invoice.getStatus() != Status.ApproveOrders) {
             return false;
         }
         invoice.setStatus(Status.Waiting);
@@ -329,6 +333,27 @@ public class InvoiceService implements IInvoiceService {
 
     @Override
     public ResponseEntity<?> findInvoicesByInvoiceCode(String invoiceCode) {
-       return ResponseEntity.ok(Map.of("message", invoiceRepository.findInvoicesByInvoiceCode(invoiceCode)));
+        return ResponseEntity.ok(Map.of("message", invoiceRepository.findInvoicesByInvoiceCode(invoiceCode)));
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Override
+    public void cancelUnPaidOrders() {
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(15); // Đơn quá 15 phút
+        Pageable pageRequest = PageRequest.of(0, 100); // Phân trang: 100 bản ghi mỗi lần
+
+        while (true) {
+            // Lấy danh sách đơn hàng Pending trước thời gian cutoff
+            List<Invoice> orders = invoiceRepository.findUnPaidInvoicesBefore(cutoffTime, pageRequest);
+            if (orders.isEmpty()) {
+                break;
+            }
+            // Đổi trạng thái các đơn hàng thành "Cancelled"
+            orders.forEach(order -> order.setStatus(Status.Canceled));
+            // Cập nhật lại cơ sở dữ liệu
+            invoiceRepository.saveAll(orders);
+            // Chuyển sang trang tiếp theo
+            pageRequest = pageRequest.next();
+        }
     }
 }
