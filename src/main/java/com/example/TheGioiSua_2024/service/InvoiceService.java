@@ -29,6 +29,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -234,6 +235,7 @@ public class InvoiceService implements IInvoiceService {
             invoiceRepository.save(invoice);
             InvoiceLog invoiceLog = new InvoiceLog();
             invoiceLog.setInvoice(invoice);
+            invoiceLog.setDescription("Khách Hàng Huỷ Đơn");
             invoiceLog.setStatus(Status.Canceled);
             invoiceLogRepository.save(invoiceLog);
         } catch (Exception e) {
@@ -348,12 +350,28 @@ public class InvoiceService implements IInvoiceService {
             if (orders.isEmpty()) {
                 break;
             }
-            // Đổi trạng thái các đơn hàng thành "Cancelled"
-            orders.forEach(order -> order.setStatus(Status.Canceled));
+
+            // Đổi trạng thái các đơn hàng thành "Cancelled" và ghi log
+            List<InvoiceLog> logs = new ArrayList<>();
+            orders.forEach(order -> {
+                order.setStatus(Status.Canceled);
+
+                // Tạo log cho hóa đơn
+                InvoiceLog log = new InvoiceLog();
+                log.setInvoice(order);
+                log.setCreated_at(LocalDateTime.now());
+                log.setDescription("Hoá đơn Huỷ Do Hết Giờ");
+                log.setStatus(Status.Canceled);
+                logs.add(log);
+            });
+
             // Cập nhật lại cơ sở dữ liệu
             invoiceRepository.saveAll(orders);
+            invoiceLogRepository.saveAll(logs);
+
             // Chuyển sang trang tiếp theo
             pageRequest = pageRequest.next();
         }
     }
+
 }
