@@ -42,7 +42,7 @@ public class VoucherValidator {
         }
 
         // Validate minamount
-        if (voucher.getMinamount() <= 1) {
+        if (voucher.getMinamount() < 1) {
             return "Số tiền tối thiểu phải lớn hơn hoặc bằng 1";
         }
 
@@ -51,7 +51,7 @@ public class VoucherValidator {
         }
         if(voucher.getMaxamount()>(voucher.getMinamount()/2)){
             System.out.println("Số tiền tối đa phải nhỏ hơn" + voucher.getMinamount()/2);
-            return "Số tiền tối đa phải nhỏ hơn" + voucher.getMinamount()/2;
+            return "Số tiền tối đa phải nhỏ hơn " + voucher.getMinamount()/2;
         }
         return null;
     }
