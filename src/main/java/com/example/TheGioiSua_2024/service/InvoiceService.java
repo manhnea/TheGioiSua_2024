@@ -361,6 +361,12 @@ public class InvoiceService implements IInvoiceService {
     public ResponseEntity<?> updateInvoice(Long id, InvoiceDto invoiceDto) {
         // Tìm invoice theo ID, nếu không tìm thấy trả về null
         Invoice invoice = invoiceRepository.findById(id).orElse(null);
+        invoice.setDeliveryaddress(invoiceDto.getDeliveryaddress());
+        invoice.setFullname(invoiceDto.getNguoiNhanHang());
+        invoice.setPhonenumber(invoiceDto.getPhonenumber());
+        invoice.setShippingfee(invoice.getShippingfee());
+        invoice.setTotalamount(invoiceDto.getTongTien());
+        invoiceRepository.save(invoice);
         if (invoice != null) {
             // Lấy danh sách invoicedetail từ DTO và từ cơ sở dữ liệu
             List<Invoicedetail> invoicedetails = invoiceDto.getInvoiceDetails();
@@ -384,17 +390,21 @@ public class InvoiceService implements IInvoiceService {
                 }
             }
 
-            // Xóa các mục không còn trong invoicedetails từ cơ sở dữ liệu
+            // Tìm các invoicedetail trong cơ sở dữ liệu không có trong DTO và cần phải xóa
             List<Invoicedetail> invoicedetailsToDelete = new ArrayList<>();
             for (Invoicedetail existingDetail : invoicedetailByIDInvoice) {
-                boolean existsInDto = invoicedetails.stream().anyMatch(detail -> detail.getMilkDetail().getId().equals(existingDetail.getMilkDetail().getId()));
+                boolean existsInDto = invoicedetails.stream()
+                        .anyMatch(detail -> detail.getMilkDetail().getId().equals(existingDetail.getMilkDetail().getId()));
                 if (!existsInDto) {
                     invoicedetailsToDelete.add(existingDetail);
                 }
             }
 
             // Xóa các mục không còn trong invoicedetails
-            invoicedetailRepository.deleteAll(invoicedetailsToDelete);
+            if (!invoicedetailsToDelete.isEmpty()) {
+                System.out.println("dproiaisda");
+                invoicedetailRepository.deleteAll(invoicedetailsToDelete);
+            }
 
             // Lưu các mục đã cập nhật hoặc thêm mới
             for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
@@ -403,9 +413,9 @@ public class InvoiceService implements IInvoiceService {
             }
         } else {
             // Nếu không tìm thấy Invoice với ID
-            return ResponseEntity.badRequest().body(Map.of("error","Không tìm thấy invoice với ID: " + id));
+            return ResponseEntity.badRequest().body(Map.of("error", "Không tìm thấy invoice với ID: " + id));
         }
-        return ResponseEntity.ok(Map.of("message","ok"));
+        return ResponseEntity.ok(Map.of("message", "Cập nhật hoá đơn thành công"));
     }
 
 }

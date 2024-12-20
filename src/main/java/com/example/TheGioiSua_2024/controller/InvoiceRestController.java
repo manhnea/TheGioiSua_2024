@@ -52,8 +52,7 @@ public class InvoiceRestController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoiceDto) {
         invoiceService.updateInvoice(id, invoiceDto);
-        return ResponseEntity.ok(
-                Map.of("status", "success"));
+        return invoiceService.updateInvoice(id, invoiceDto);
     }
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/delete
