@@ -50,20 +50,10 @@ public class InvoiceRestController {
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/update
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody @Valid Invoice invoice,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            List<Map<String, String>> errors = new ArrayList<>();
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("field", fieldError.getField());
-                error.put("message", fieldError.getDefaultMessage());
-                errors.add(error);
-            }
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "errors", errors));
-        }
+    public ResponseEntity<?> updateInvoice(@PathVariable Long id, @RequestBody InvoiceDto invoiceDto) {
+        invoiceService.updateInvoice(id, invoiceDto);
         return ResponseEntity.ok(
-                Map.of("status", "success", "message", invoiceService.updateInvoice(id, invoice)));
+                Map.of("status", "success"));
     }
 
     //RessourceEndPoint:http://localhost:1234/api/Invoice/delete

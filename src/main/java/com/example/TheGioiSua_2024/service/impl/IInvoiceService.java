@@ -22,7 +22,7 @@ public interface IInvoiceService {
     
     ResponseEntity<?> findInvoicesByInvoiceCode(String invoiceCode);
 
-    String updateInvoice(Long id, Invoice invoice);
+    ResponseEntity<?> updateInvoice(Long id, InvoiceDto invoiceDto);
 
     String deleteInvoice(Long id);
 

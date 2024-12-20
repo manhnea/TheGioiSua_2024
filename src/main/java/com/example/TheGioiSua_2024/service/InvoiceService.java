@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.dto.InvoiceDetailDto;
 import com.example.TheGioiSua_2024.dto.InvoiceDto;
 import com.example.TheGioiSua_2024.dto.ProductDto;
 import com.example.TheGioiSua_2024.entity.Invoice;
@@ -256,24 +257,6 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public String updateInvoice(Long id, Invoice invoice) {
-        // Lấy hóa đơn hiện tại từ cơ sở dữ liệu
-        Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow();
-        existingInvoice.setFullname(invoice.getFullname() != null ? invoice.getFullname()
-                : existingInvoice.getFullname());
-        // Kiểm tra và cập nhật từng trường nếu không phải null
-        existingInvoice.setPhonenumber(invoice.getPhonenumber() != null ? invoice.getPhonenumber()
-                : existingInvoice.getPhonenumber());
-        existingInvoice.setDeliveryaddress(
-                invoice.getDeliveryaddress() != null ? invoice.getDeliveryaddress()
-                : existingInvoice.getDeliveryaddress());
-        existingInvoice.setStatus(
-                invoice.getStatus() != 0 ? invoice.getStatus() : existingInvoice.getStatus());
-        invoiceRepository.save(existingInvoice);
-        return "Cập nhật hóa đơn thành công!";
-    }
-
-    @Override
     public String updatequantity(Long id, Invoice invoice) {
         // Find the existing invoice
         Invoice existingInvoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
@@ -372,6 +355,75 @@ public class InvoiceService implements IInvoiceService {
             // Chuyển sang trang tiếp theo
             pageRequest = pageRequest.next();
         }
+    }
+
+    @Override
+    public ResponseEntity<?> updateInvoice(Long id, InvoiceDto invoiceDto) {
+        System.out.println("Id Invoice"+ id);
+        // Tìm invoice theo ID, nếu không tìm thấy trả về null
+        Invoice invoice = invoiceRepository.findById(id).orElse(null);
+        if (invoice != null) {
+            // Lấy danh sách invoicedetail từ DTO và từ cơ sở dữ liệu
+            List<Invoicedetail> invoicedetails = invoiceDto.getInvoiceDetails();
+            List<Invoicedetail> invoicedetailByIDInvoice = invoicedetailRepository.invoicedetails(id);
+
+            System.out.println("Danh sách invoicedetail từ DTO:");
+            for (Invoicedetail invoicedetail : invoicedetails) {
+                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
+            }
+
+            System.out.println("Danh sách invoicedetail từ cơ sở dữ liệu:");
+            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
+                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
+            }
+
+            for (Invoicedetail invoicedetail : invoicedetails) {
+                Optional<Invoicedetail> existingDetail = invoicedetailByIDInvoice.stream()
+                        .filter(detail -> detail.getMilkDetail().getId().equals(invoicedetail.getMilkDetail().getId()))
+                        .findFirst();
+
+                if (existingDetail.isPresent()) {
+                    // Cập nhật số lượng và giá nếu mục đã tồn tại
+                    existingDetail.get().setQuantity(invoicedetail.getQuantity());
+                    existingDetail.get().setPrice(invoicedetail.getPrice());  // Cập nhật giá
+                    System.out.println("Cập nhật số lượng và giá cho InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId());
+                } else {
+                    // Thêm mục mới vào invoicedetailByIDInvoice nếu chưa có
+                    invoicedetailByIDInvoice.add(invoicedetail);
+                    System.out.println("Thêm mới InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId());
+                }
+            }
+
+            // In ra danh sách sau khi cập nhật hoặc thêm mới
+            System.out.println("Danh sách invoicedetail sau khi cập nhật hoặc thêm mới:");
+            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
+                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
+            }
+
+            // Xóa các mục không có trong invoicedetails
+            invoicedetailByIDInvoice.removeIf(existingDetail
+                    -> invoicedetails.stream().noneMatch(detail
+                            -> detail.getMilkDetail().getId().equals(existingDetail.getMilkDetail().getId())
+                    )
+            );
+
+            // In ra danh sách sau khi xóa
+            System.out.println("Danh sách invoicedetail sau khi xóa mục không còn trong invoicedetails:");
+            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
+                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
+            }
+
+            // Lưu các mục đã cập nhật hoặc thêm mới
+            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
+                invoicedetail.setInvoice(invoice);
+                invoicedetailRepository.save(invoicedetail);
+                System.out.println("Lưu InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
+            }
+        } else {
+            System.out.println("Không tìm thấy invoice với ID: " + id);
+        }
+
+        return ResponseEntity.ok("ok");
     }
 
 }
