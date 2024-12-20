@@ -27,8 +27,8 @@ public class VoucherValidator {
         }
 
         // Validate discount percentage
-        if (voucher.getDiscountpercentage() < 1 || voucher.getDiscountpercentage() > 100) {
-            return "Phần trăm giảm giá phải từ 1 đến 100";
+        if (voucher.getDiscountpercentage() < 1 || voucher.getDiscountpercentage() > 99) {
+            return "Phần trăm giảm giá phải từ 1 đến 99";
         }
 
         // Validate maxamount
@@ -42,11 +42,10 @@ public class VoucherValidator {
         }
 
         // Validate minamount
-        if (voucher.getMinamount() < 0) {
+        if (voucher.getMinamount() < 1) {
             return "Số tiền tối thiểu phải lớn hơn hoặc bằng 0";
         }
 
-        // Validate status
         if (voucher.getStatus() != 0 && voucher.getStatus() != 1) {
            return  "Trạng thái không hợp lệ (chỉ chấp nhận 0 hoặc 1)";
         }

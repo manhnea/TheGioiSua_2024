@@ -31,4 +31,6 @@ public class ProductDto {
     String productURL;
     String imgUrl;
     int status;
+    private float minPrice;
+    private float maxPrice;
 }
