@@ -32,18 +32,18 @@ public class VoucherValidator {
         }
 
         // Validate maxamount
-        if (voucher.getMaxamount() < 0) {
-            return "Số tiền tối đa phải lớn hơn hoặc bằng 0";
+        if (voucher.getMaxamount() <= 1) {
+            return "Số tiền tối đa phải lớn hơn hoặc bằng 1";
         }
 
         // Validate usagecount
-        if (voucher.getUsagecount() < 0) {
-            return "Số lần sử dụng phải lớn hơn hoặc bằng 0";
+        if (voucher.getUsagecount() <= 1) {
+            return "Số lần sử dụng phải lớn hơn hoặc bằng 1";
         }
 
         // Validate minamount
-        if (voucher.getMinamount() < 1) {
-            return "Số tiền tối thiểu phải lớn hơn hoặc bằng 0";
+        if (voucher.getMinamount() <= 1) {
+            return "Số tiền tối thiểu phải lớn hơn hoặc bằng 1";
         }
 
         if (voucher.getStatus() != 0 && voucher.getStatus() != 1) {
