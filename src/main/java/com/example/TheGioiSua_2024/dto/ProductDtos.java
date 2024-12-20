@@ -20,4 +20,6 @@ public class ProductDtos {
   private String productURL;
   private String imgUrl;
   private int status;
+  private float minPrice;
+  private float maxPrice;
 }

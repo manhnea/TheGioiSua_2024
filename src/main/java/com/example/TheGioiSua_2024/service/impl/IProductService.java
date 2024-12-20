@@ -23,7 +23,7 @@ public interface IProductService {
 
   Product getProductById(Long id);
 
-  Page<ProductlstDto> getPageProduct(Pageable pageable);
+  List<ProductlstDto> getPageProduct();
 
   Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id);
 
@@ -37,7 +37,7 @@ public interface IProductService {
   Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable);
   Page<Product> filterProduct(String productname,Long milkBrandId,Long targetUserId, Long milkTypeId,  Pageable pageable);
 
-  Page<Product> getNewProduct(Pageable pageable);
+  Page<ProductlstDto> getNewProduct(Pageable pageable);
 
   Page<ProductDtos> getBestSeller(Pageable pageable);
 }

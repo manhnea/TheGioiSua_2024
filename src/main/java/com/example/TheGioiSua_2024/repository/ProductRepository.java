@@ -48,7 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     + "JOIN p.targetUser tt "
     + "WHERE p.status = 1 "
     + "GROUP BY p.id, mt.id, mb.id, tt.id, mt.milkTypename, mb.milkbrandname, tt.targetName, p.productUrl, p.imgUrl, p.status")
-  Page<ProductlstDto> getPageProduct(Pageable pageable);
+  List<ProductlstDto> getPageProduct();
 
 
   @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDto( "
@@ -152,9 +152,29 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
           Pageable pageable
   );
 
-  @Query("SELECT p FROM Product p ORDER BY p.id DESC")
-  Page<Product> getNewProduct(Pageable pageable);
 
+  @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductlstDto( "
+          + "p.id, "
+          + "mt.id, "
+          + "mb.id, "
+          + "tt.id, "
+          + "mt.milkTypename, "
+          + "mb.milkbrandname, "
+          + "tt.targetName, "
+          + "p.productUrl, "
+          + "p.imgUrl, "
+          + "p.status, "
+          + "MIN(md.price), "
+          + "MAX(md.price)) "
+          + "FROM Milkdetail md "
+          + "JOIN md.product p "
+          + "JOIN p.milkBrand mb "
+          + "JOIN p.milkType mt "
+          + "JOIN p.targetUser tt "
+          + "WHERE p.status = 1 "
+          + "GROUP BY p.id, mt.id, mb.id, tt.id, mt.milkTypename, mb.milkbrandname, tt.targetName, p.productUrl, p.imgUrl, p.status" +
+          " ORDER BY p.id DESC")
+  Page<ProductlstDto> getNewProduct(Pageable pageable);
   @Query("SELECT new com.example.TheGioiSua_2024.dto.ProductDtos( " +
           "p.id, " +
           "p.milkType.id, " +
@@ -164,7 +184,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
           "p.productname, " +
           "p.productUrl, " +
           "p.imgUrl, " +
-          "p.status) " +
+          "p.status," +
+          "MIN(b.price), " +
+          " MAX(b.price)) " +
           "FROM Product p " +
           "JOIN Milkdetail b ON p.id = b.product.id " +
           "JOIN Invoicedetail a ON a.milkDetail.id = b.id " +

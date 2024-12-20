@@ -195,8 +195,8 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public Page<ProductlstDto> getPageProduct(Pageable pageable) {
-    return productRepository.getPageProduct(pageable);
+  public List<ProductlstDto> getPageProduct() {
+    return productRepository.getPageProduct();
   }
 
   @Override
@@ -234,7 +234,7 @@ public class ProductService implements IProductService {
   }
 
   @Override
-  public Page<Product> getNewProduct(Pageable pageable) {
+  public Page<ProductlstDto> getNewProduct(Pageable pageable) {
     return productRepository.getNewProduct(pageable);
   }
 

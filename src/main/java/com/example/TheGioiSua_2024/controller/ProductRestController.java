@@ -1,6 +1,7 @@
 package com.example.TheGioiSua_2024.controller;
 
 import com.example.TheGioiSua_2024.dto.ProductDtos;
+import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Product;
 import com.example.TheGioiSua_2024.security.JwtUtilities;
 import com.example.TheGioiSua_2024.service.ProductService;
@@ -37,9 +38,9 @@ public class ProductRestController {
     return productService.getAllProduct();
   }
   @GetMapping("/lstnewproduct")
-  public Page<Product> getNewProduct(
+  public Page<ProductlstDto> getNewProduct(
           @RequestParam(defaultValue = "0") int page,
-          @RequestParam(defaultValue = "5") int size)
+          @RequestParam(defaultValue = "6") int size)
   {
     Pageable pageable = PageRequest.of(page, size);
     return productService.getNewProduct(pageable);
@@ -48,7 +49,7 @@ public class ProductRestController {
   @GetMapping("/lstbestseller")
   public Page<ProductDtos> getBestSeller(
           @RequestParam(defaultValue = "0") int page,
-          @RequestParam(defaultValue = "5") int size) {
+          @RequestParam(defaultValue = "6") int size) {
     Pageable pageable = PageRequest.of(page, size);
     return productService.getBestSeller(pageable);
   }
@@ -88,12 +89,10 @@ public class ProductRestController {
   //http://localhost:1234/api/Product/page
   @GetMapping("/page")
   public ResponseEntity<?> getPageProduct(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "5") int size
+
   ) {
-    Pageable pageable = PageRequest.of(page, size);
     return ResponseEntity.ok(
-        Map.of("status", "success", "message", productService.getPageProduct(pageable)));
+        Map.of("status", "success", "message", productService.getPageProduct()));
   }
 
   //http://localhost:1234/api/Product/page/TypeMilk/{id}
