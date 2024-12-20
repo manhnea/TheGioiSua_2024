@@ -359,7 +359,6 @@ public class InvoiceService implements IInvoiceService {
 
     @Override
     public ResponseEntity<?> updateInvoice(Long id, InvoiceDto invoiceDto) {
-        System.out.println("Id Invoice"+ id);
         // Tìm invoice theo ID, nếu không tìm thấy trả về null
         Invoice invoice = invoiceRepository.findById(id).orElse(null);
         if (invoice != null) {
@@ -367,63 +366,46 @@ public class InvoiceService implements IInvoiceService {
             List<Invoicedetail> invoicedetails = invoiceDto.getInvoiceDetails();
             List<Invoicedetail> invoicedetailByIDInvoice = invoicedetailRepository.invoicedetails(id);
 
-            System.out.println("Danh sách invoicedetail từ DTO:");
-            for (Invoicedetail invoicedetail : invoicedetails) {
-                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
-            }
-
-            System.out.println("Danh sách invoicedetail từ cơ sở dữ liệu:");
-            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
-                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
-            }
-
+            // Cập nhật hoặc thêm mới các invoicedetail từ DTO vào danh sách đã lấy từ cơ sở dữ liệu
             for (Invoicedetail invoicedetail : invoicedetails) {
                 Optional<Invoicedetail> existingDetail = invoicedetailByIDInvoice.stream()
                         .filter(detail -> detail.getMilkDetail().getId().equals(invoicedetail.getMilkDetail().getId()))
                         .findFirst();
 
                 if (existingDetail.isPresent()) {
-                    // Cập nhật số lượng và giá nếu mục đã tồn tại
+                    // Cập nhật số lượng, giá và tính toán lại tổng giá trị (TotalPrice)
                     existingDetail.get().setQuantity(invoicedetail.getQuantity());
                     existingDetail.get().setPrice(invoicedetail.getPrice());  // Cập nhật giá
-                    System.out.println("Cập nhật số lượng và giá cho InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId());
+                    existingDetail.get().setTotalprice(invoicedetail.getQuantity() * invoicedetail.getPrice());  // Tính lại TotalPrice
                 } else {
                     // Thêm mục mới vào invoicedetailByIDInvoice nếu chưa có
+                    invoicedetail.setTotalprice(invoicedetail.getQuantity() * invoicedetail.getPrice());  // Tính TotalPrice khi thêm mới
                     invoicedetailByIDInvoice.add(invoicedetail);
-                    System.out.println("Thêm mới InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId());
                 }
             }
 
-            // In ra danh sách sau khi cập nhật hoặc thêm mới
-            System.out.println("Danh sách invoicedetail sau khi cập nhật hoặc thêm mới:");
-            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
-                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
+            // Xóa các mục không còn trong invoicedetails từ cơ sở dữ liệu
+            List<Invoicedetail> invoicedetailsToDelete = new ArrayList<>();
+            for (Invoicedetail existingDetail : invoicedetailByIDInvoice) {
+                boolean existsInDto = invoicedetails.stream().anyMatch(detail -> detail.getMilkDetail().getId().equals(existingDetail.getMilkDetail().getId()));
+                if (!existsInDto) {
+                    invoicedetailsToDelete.add(existingDetail);
+                }
             }
 
-            // Xóa các mục không có trong invoicedetails
-            invoicedetailByIDInvoice.removeIf(existingDetail
-                    -> invoicedetails.stream().noneMatch(detail
-                            -> detail.getMilkDetail().getId().equals(existingDetail.getMilkDetail().getId())
-                    )
-            );
-
-            // In ra danh sách sau khi xóa
-            System.out.println("Danh sách invoicedetail sau khi xóa mục không còn trong invoicedetails:");
-            for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
-                System.out.println("InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
-            }
+            // Xóa các mục không còn trong invoicedetails
+            invoicedetailRepository.deleteAll(invoicedetailsToDelete);
 
             // Lưu các mục đã cập nhật hoặc thêm mới
             for (Invoicedetail invoicedetail : invoicedetailByIDInvoice) {
-                invoicedetail.setInvoice(invoice);
+                invoicedetail.setInvoice(invoice);  // Đảm bảo gán đúng Invoice
                 invoicedetailRepository.save(invoicedetail);
-                System.out.println("Lưu InvoiceDetail ID: " + invoicedetail.getId() + " | MilkDetail ID: " + invoicedetail.getMilkDetail().getId() + " | Quantity: " + invoicedetail.getQuantity() + " | Price: " + invoicedetail.getPrice());
             }
         } else {
-            System.out.println("Không tìm thấy invoice với ID: " + id);
+            // Nếu không tìm thấy Invoice với ID
+            return ResponseEntity.badRequest().body(Map.of("error","Không tìm thấy invoice với ID: " + id));
         }
-
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(Map.of("message","ok"));
     }
 
 }
