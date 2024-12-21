@@ -251,7 +251,7 @@ public class MilkdetailService implements IMilkdetailService {
         ));
         logService.saveLog(username, log);
 
-        return ResponseEntity.ok("Cập nhật thành công");
+        return ResponseEntity.ok(Map.of("status", "success", "message", "Cập nhật thành công"));
     }
 
   @Override
