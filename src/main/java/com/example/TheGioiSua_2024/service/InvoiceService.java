@@ -296,19 +296,19 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public boolean waitingInvoice(Long id, Long usellerid) {
+    public ResponseEntity<?> waitingInvoice(Long id, Long usellerid) {
         User user = userRepository.findById(usellerid).get();
         List<Invoicedetail> invoicedetails = invoicedetailRepository.invoicedetails(id);
         InvoiceLog invoiceLog = new InvoiceLog();
         Userinvoice userinvoice = new Userinvoice();
         Invoice invoice = invoiceRepository.findById(id).get();
         if (invoice == null || invoice.getStatus() != Status.ApproveOrders) {
-            return false;
+            return ResponseEntity.badRequest().body(Map.of("error", "Hoá đơn không tồn tại"));
         }
         for (Invoicedetail invoicedetail : invoicedetails) {
             Milkdetail milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId()).get();
             if(invoicedetail.getQuantity()>milkdetail.getStockquantity()){
-                return false;
+                return ResponseEntity.badRequest().body(Map.of("error", milkdetail.getMilkdetailcode()+"Số lượng không đủ"));
             }
         }
         invoice.setStatus(Status.Waiting);
@@ -320,7 +320,7 @@ public class InvoiceService implements IInvoiceService {
         userinvoice.setUser(user);
         userinvoice.setStatus(Status.Active);
         userinvoiceRepository.save(userinvoice);
-        return true;
+        return ResponseEntity.ok(Map.of("message", "Cập nhật thành công"));
     }
 
     @Override
