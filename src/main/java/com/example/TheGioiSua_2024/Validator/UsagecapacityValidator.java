@@ -19,10 +19,8 @@ public class UsagecapacityValidator {
         if(!Arrays.asList(a).contains(usagecapacity.getUnit())){
             return "Đơn vị đóng gói chỉ có thể là: "+Arrays.toString(a);
         }
-        if (usagecapacity.getCapacity() <= 0) {
+        if (usagecapacity.getCapacity() < 0) {
             return "Sức chứa phải là một số nguyên dương";
-        } else if (usagecapacity.getCapacity() > MAX_CAPACITY) {
-            return "Sức chứa không được vượt quá " + MAX_CAPACITY;
         }
 
         // Validate unit
