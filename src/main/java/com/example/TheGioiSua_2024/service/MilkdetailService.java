@@ -1,5 +1,6 @@
 package com.example.TheGioiSua_2024.service;
 
+import com.example.TheGioiSua_2024.Validator.MilkTasteValidator;
 import com.example.TheGioiSua_2024.dto.MilkDetailDto;
 import com.example.TheGioiSua_2024.entity.*;
 import com.example.TheGioiSua_2024.repository.*;
@@ -48,9 +49,9 @@ public class MilkdetailService implements IMilkdetailService {
     @Override
     public ResponseEntity<?> add(String token, Milkdetail milkdetail) {
         // Step 1: Validate the milkdetail object
-        Map<String, String> errors = MilkdetailValidator.validateMilkdetail(milkdetail);
-        if (!errors.isEmpty()) {
-            return ResponseEntity.badRequest().body(errors);  // Return validation errors
+        String error = MilkdetailValidator.validateMilkdetail(milkdetail);
+        if (error != null) {
+            return ResponseEntity.badRequest().body(Map.of("error", error));
         }
 
         // Step 2: Check if the milkdetail already exists
@@ -154,9 +155,9 @@ public class MilkdetailService implements IMilkdetailService {
         );
 
         // Validate the input milkdetail
-        Map<String, String> errors = MilkdetailValidator.validateMilkdetail(milkdetail);
-        if (!errors.isEmpty()) {
-            return ResponseEntity.badRequest().body(errors);  // Return validation errors if there are any
+        String error = MilkdetailValidator.validateMilkdetail(milkdetail);
+        if (error != null) {
+            return ResponseEntity.badRequest().body(Map.of("error", error));
         }
 
         // Check if the new data is the same as the old data

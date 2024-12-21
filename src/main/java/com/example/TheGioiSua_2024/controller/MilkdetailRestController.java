@@ -57,16 +57,12 @@ private MilkdetailValidator milkdetailValidator;
   //http://localhost:1234/api/Milkdetail/add
   @PostMapping("/add")
   private ResponseEntity<?> add(@NonNull HttpServletRequest request,
-      @RequestBody Milkdetail milkdetail
-     ) {
+                                @RequestBody Milkdetail milkdetail
+  ) {
 
     String token = jwtUtilities.getToken(request);
-    ResponseEntity<?> response = milkdetailService.add(token, milkdetail);
-    if (response.getStatusCode().is4xxClientError()) {
-      return response;  // This will contain the validation errors
-    }
-    String resultMessage = (String) response.getBody();  // The success message from service
-    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
+
+    return milkdetailService.add(token, milkdetail);
   }
 
   //http://localhost:1234/api/Milkdetail/update/{id}
