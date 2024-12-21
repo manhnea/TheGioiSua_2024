@@ -236,7 +236,7 @@ public class InvoiceService implements IInvoiceService {
             invoiceRepository.save(invoice);
             InvoiceLog invoiceLog = new InvoiceLog();
             invoiceLog.setInvoice(invoice);
-            invoiceLog.setDescription("Khách Hàng Huỷ Đơn");
+            invoiceLog.setDescription("Hoá Đơn Huỷ Do Hết Sản Phẩm");
             invoiceLog.setStatus(Status.Canceled);
             invoiceLogRepository.save(invoiceLog);
         } catch (Exception e) {
@@ -298,11 +298,18 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public boolean waitingInvoice(Long id, Long usellerid) {
         User user = userRepository.findById(usellerid).get();
+        List<Invoicedetail> invoicedetails = invoicedetailRepository.invoicedetails(id);
         InvoiceLog invoiceLog = new InvoiceLog();
         Userinvoice userinvoice = new Userinvoice();
         Invoice invoice = invoiceRepository.findById(id).get();
         if (invoice == null || invoice.getStatus() != Status.ApproveOrders) {
             return false;
+        }
+        for (Invoicedetail invoicedetail : invoicedetails) {
+            Milkdetail milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId()).get();
+            if(invoicedetail.getQuantity()>milkdetail.getStockquantity()){
+                return false;
+            }
         }
         invoice.setStatus(Status.Waiting);
         invoiceRepository.save(invoice);

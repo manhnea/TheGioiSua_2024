@@ -148,7 +148,7 @@ public class InvoiceRestController {
     public ResponseEntity<?> waiting(@PathVariable Long id,@RequestBody Long usellerid) {
         boolean is = invoiceService.waitingInvoice(id,usellerid);
         if (!is) {
-            return ResponseEntity.badRequest().body(Map.of("Error", false));
+            return ResponseEntity.badRequest().body(Map.of("Error", "Số Lượng Sản Phẩm Không Đủ"));
         }
         return ResponseEntity.ok(Map.of("success", true));
     }
