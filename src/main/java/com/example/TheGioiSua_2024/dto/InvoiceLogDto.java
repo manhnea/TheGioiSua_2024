@@ -23,5 +23,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceLogDto {
     LocalDateTime created_at;
+    String description;
     int status;
 }

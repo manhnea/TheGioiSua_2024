@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InvoiceLogRepository extends JpaRepository<InvoiceLog, Long> {
 
-    @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceLogDto(il.created_at, il.status) FROM InvoiceLog il JOIN il.invoice i WHERE i.id = :invoiceId")
+    @Query("SELECT new com.example.TheGioiSua_2024.dto.InvoiceLogDto(il.created_at,il.description, il.status) FROM InvoiceLog il JOIN il.invoice i WHERE i.id = :invoiceId")
     List<InvoiceLogDto> getInvoiceLogByInvoiceId(Long invoiceId);
 
 }
