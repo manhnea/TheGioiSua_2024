@@ -373,7 +373,7 @@ public class InvoiceService implements IInvoiceService {
         invoice.setDeliveryaddress(invoiceDto.getDeliveryaddress());
         invoice.setFullname(invoiceDto.getNguoiNhanHang());
         invoice.setPhonenumber(invoiceDto.getPhonenumber());
-        invoice.setShippingfee(invoice.getShippingfee());
+        invoice.setShippingfee(invoiceDto.getSotienShip());
         invoice.setTotalamount(invoiceDto.getTongTien());
         invoiceRepository.save(invoice);
 
