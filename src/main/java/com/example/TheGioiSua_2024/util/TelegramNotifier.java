@@ -15,6 +15,7 @@ public class TelegramNotifier {
   private final RestTemplate restTemplate;
   @Autowired
   private SettingRepository settingRepository;
+  
   public TelegramNotifier() {
     this.restTemplate = new RestTemplate();
   }
@@ -40,7 +41,9 @@ public class TelegramNotifier {
   public void sendMessageZalo(String messageContent) {
     String url = "http://160.30.21.47:3030/api/sendmessage";
     Map<String, String> requestBody = new HashMap<>();
-    requestBody.put("phone", settingRepository.findAll().get(0).getHotline());
+    String a = settingRepository.findAll().get(0).getHotline();
+      System.out.println("tele phone"+a);
+    requestBody.put("phone", a);
     requestBody.put("messageContent", messageContent);
 
     try {
