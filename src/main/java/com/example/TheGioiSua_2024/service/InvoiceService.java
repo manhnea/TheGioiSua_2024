@@ -308,7 +308,7 @@ public class InvoiceService implements IInvoiceService {
         for (Invoicedetail invoicedetail : invoicedetails) {
             Milkdetail milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId()).get();
             if(invoicedetail.getQuantity()>milkdetail.getStockquantity()){
-                return ResponseEntity.badRequest().body(Map.of("error", milkdetail.getMilkdetailcode()+"Số lượng không đủ"));
+                return ResponseEntity.badRequest().body(Map.of("error","Sản phẩm:"+ milkdetail.getMilkdetailcode()+" Số lượng không đủ"));
             }
         }
         for (Invoicedetail invoicedetail : invoicedetails) {
