@@ -172,6 +172,7 @@ public class InvoicedetailService implements IInvoicedetailService {
             itemDetails.put("unit", record[11]);
             itemDetails.put("ida", record[13]);
             itemDetails.put("milkdetailid", record[15]);
+            itemDetails.put("milkdetailcode", record[17]);
             items.add(itemDetails);
         }
 

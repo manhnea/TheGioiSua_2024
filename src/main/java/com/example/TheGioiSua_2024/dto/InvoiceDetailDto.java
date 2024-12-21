@@ -22,6 +22,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceDetailDto {
     Long id;
+    String milkdetailcode;
     String packagingunitname;
     String milkTypename;
     String milkbrandname;
