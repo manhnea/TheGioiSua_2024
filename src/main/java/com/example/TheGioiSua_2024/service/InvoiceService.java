@@ -311,6 +311,11 @@ public class InvoiceService implements IInvoiceService {
                 return ResponseEntity.badRequest().body(Map.of("error", milkdetail.getMilkdetailcode()+"Số lượng không đủ"));
             }
         }
+        for (Invoicedetail invoicedetail : invoicedetails) {
+            Milkdetail milkdetail = milkdetailRepository.findById(invoicedetail.getMilkDetail().getId()).get();
+            milkdetail.setStockquantity(milkdetail.getStockquantity()-invoicedetail.getQuantity());
+            milkdetailRepository.save(milkdetail);
+        }
         invoice.setStatus(Status.Waiting);
         invoiceRepository.save(invoice);
         invoiceLog.setInvoice(invoice);
