@@ -168,6 +168,7 @@ private MilkdetailValidator milkdetailValidator;
   @GetMapping("/filter")
   public ResponseEntity<?> filterMilkdetails(
           @RequestParam(required = false) Long productId,
+          @RequestParam(required = false) String codeMilkDitail,
           @RequestParam(required = false) Long milkTasteId,
           @RequestParam(required = false) Long packagingUnitId,
           @RequestParam(required = false) Long usageCapacityId,
@@ -178,12 +179,13 @@ private MilkdetailValidator milkdetailValidator;
           @RequestParam int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<Milkdetail> filteredMilkdetails = milkdetailService.filterMilkdetails(
-            productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+            productId,codeMilkDitail, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
     return ResponseEntity.ok(Map.of("status", "success", "message", filteredMilkdetails));
   }
   @GetMapping("/filtershop")
   public ResponseEntity<?> filterMilkdetailshop(
           @RequestParam(required = false) Long productId,
+          @RequestParam(required = false) String codeMilkDitail,
           @RequestParam(required = false) Long milkTasteId,
           @RequestParam(required = false) Long packagingUnitId,
           @RequestParam(required = false) Long usageCapacityId,
@@ -194,7 +196,7 @@ private MilkdetailValidator milkdetailValidator;
           @RequestParam int size) {
     Pageable pageable = PageRequest.of(page, size);
     Page<Milkdetail> filteredMilkdetails = milkdetailService.filterMilkdfilterMilkdetailshopetails(
-            productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+            productId,codeMilkDitail, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
 
     return ResponseEntity.ok(Map.of("status", "success", "message", filteredMilkdetails));
   }

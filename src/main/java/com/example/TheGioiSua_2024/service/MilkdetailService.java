@@ -113,8 +113,8 @@ public class MilkdetailService implements IMilkdetailService {
 
 
     @Override
-    public Page<Milkdetail> filterMilkdetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
-        return milkdetailRepository.filterMilkdetails(productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+    public Page<Milkdetail> filterMilkdetails(Long productId,String codeMilkDetail, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
+        return milkdetailRepository.filterMilkdetails(productId,codeMilkDetail, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
     }
     @Override
     public ResponseEntity<?> update(String token, Long id, Milkdetail milkdetail) {
@@ -359,8 +359,8 @@ public class MilkdetailService implements IMilkdetailService {
   }
 
     @Override
-    public Page<Milkdetail> filterMilkdfilterMilkdetailshopetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
-        return milkdetailRepository.filterMilkdetailshop(productId, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
+    public Page<Milkdetail> filterMilkdfilterMilkdetailshopetails(Long productId,String codeMilkDetail, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
+        return milkdetailRepository.filterMilkdetailshop(productId,codeMilkDetail, milkTasteId, packagingUnitId, usageCapacityId, milkBrandId, targetUserId, milkTypeId, pageable);
     }
 
 

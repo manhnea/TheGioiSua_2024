@@ -117,7 +117,8 @@ Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPacka
           "JOIN p.targetUser tu " +
           "JOIN p.milkType mt " +
           "WHERE (:productId IS NULL OR p.id = :productId) " +
-          "AND (:milkTasteId IS NULL OR t.id = :milkTasteId) " +
+          "AND(:milkdetailcode IS Null OR m.milkdetailcode LIKE %:milkdetailcode%)" +
+          "AND(:milkTasteId IS NULL OR t.id = :milkTasteId) " +
           "AND (:packagingUnitId IS NULL OR pu.id = :packagingUnitId) " +
           "AND (:usageCapacityId IS NULL OR uc.id = :usageCapacityId) " +
           "AND (:milkBrandId IS NULL OR b.id = :milkBrandId) " +
@@ -125,6 +126,7 @@ Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPacka
           "AND (:milkTypeId IS NULL OR mt.id = :milkTypeId)")
   Page<Milkdetail> filterMilkdetails(
           @Param("productId") Long productId,
+          @Param("milkdetailcode") String milkdetailcode,
           @Param("milkTasteId") Long milkTasteId,
           @Param("packagingUnitId") Long packagingUnitId,
           @Param("usageCapacityId") Long usageCapacityId,
@@ -142,15 +144,16 @@ Optional<Milkdetail> findByIds(Long getProduct, Long getMilkTaste, Long getPacka
           "JOIN p.targetUser tu " +
           "JOIN p.milkType mt " +
           "WHERE (:productId IS NULL OR p.id = :productId) " +
-          "AND (:milkTasteId IS NULL OR t.id = :milkTasteId) " +
+          "AND(:milkdetailcode IS Null OR m.milkdetailcode LIKE %:milkdetailcode%)" +
+          "AND(:milkTasteId IS NULL OR t.id = :milkTasteId) " +
           "AND (:packagingUnitId IS NULL OR pu.id = :packagingUnitId) " +
           "AND (:usageCapacityId IS NULL OR uc.id = :usageCapacityId) " +
           "AND (:milkBrandId IS NULL OR b.id = :milkBrandId) " +
           "AND (:targetUserId IS NULL OR tu.id = :targetUserId) " +
-          "AND (:milkTypeId IS NULL OR mt.id = :milkTypeId)" +
-          "AND m.status = 1")
+          "AND (:milkTypeId IS NULL OR mt.id = :milkTypeId)")
   Page<Milkdetail> filterMilkdetailshop(
           @Param("productId") Long productId,
+          @Param("milkdetailcode") String milkdetailcode,
           @Param("milkTasteId") Long milkTasteId,
           @Param("packagingUnitId") Long packagingUnitId,
           @Param("usageCapacityId") Long usageCapacityId,

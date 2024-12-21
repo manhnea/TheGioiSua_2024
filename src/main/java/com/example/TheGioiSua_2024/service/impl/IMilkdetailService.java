@@ -16,7 +16,7 @@ public interface IMilkdetailService {
   List<Milkdetail> getAll();
 
     String checkDuplicatemilkdetail(Long getProduct, Long getMilkTaste, Long getPackagingunit, Long getUsageCapacity);
-  Page<Milkdetail> filterMilkdetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
+  Page<Milkdetail> filterMilkdetails(Long productId,String codeMilkDetail, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
 
   ResponseEntity<?> add(String token, Milkdetail milkdetail);
 
@@ -43,5 +43,5 @@ public interface IMilkdetailService {
 
   Map<String, Object> checkCount(Long id, int quantity);
 
-    Page<Milkdetail> filterMilkdfilterMilkdetailshopetails(Long productId, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
+    Page<Milkdetail> filterMilkdfilterMilkdetailshopetails(Long productId,String codeMilkDetail, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
 }
