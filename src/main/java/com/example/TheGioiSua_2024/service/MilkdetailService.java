@@ -111,7 +111,7 @@ public class MilkdetailService implements IMilkdetailService {
         // Step 9: Return a success message
         return ResponseEntity.ok(Map.of("status", "success", "message", "Thêm chi tiết sản phẩm thành công."));
     }
-
+//a
 
     @Override
     public Page<Milkdetail> filterMilkdetails(Long productId,String codeMilkDetail, Long milkTasteId, Long packagingUnitId, Long usageCapacityId, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable) {
