@@ -147,7 +147,7 @@ public class InvoiceService implements IInvoiceService {
             invoicedetailRepository.save(invoicedetail);
         }
         telegramNotifier.sendMessageZalo(
-                "Mã Hóa Đơn: " + invoice.getInvoicecode() + "\n" + "Số Điện Thoại: "
+                "Mã Hóa Đơn: " + invoice.getInvoicecode() + "\n" + "http://160.30.21.47:3004/invicedetail/" + invoice.getInvoicecode() + "\n" +"Số Điện Thoại: "
                 + invoice.getPhonenumber() + "\n" + "Địa Chỉ Giao Hàng: " + invoice.getDeliveryaddress()
                 + "\n" + "Tổng Tiền: " + invoice.getTotalamount() + "\n" + "Phương Thức Thanh Toán: "
                 + invoice.getPaymentmethod());

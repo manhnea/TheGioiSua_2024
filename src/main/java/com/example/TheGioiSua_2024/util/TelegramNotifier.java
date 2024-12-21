@@ -1,5 +1,8 @@
 package com.example.TheGioiSua_2024.util;
 
+import com.example.TheGioiSua_2024.repository.SettingRepository;
+import com.example.TheGioiSua_2024.service.Settingservice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -10,7 +13,8 @@ import java.util.Map;
 public class TelegramNotifier {
 
   private final RestTemplate restTemplate;
-
+  @Autowired
+  private SettingRepository settingRepository;
   public TelegramNotifier() {
     this.restTemplate = new RestTemplate();
   }
@@ -36,7 +40,7 @@ public class TelegramNotifier {
   public void sendMessageZalo(String messageContent) {
     String url = "http://160.30.21.47:3030/api/sendmessage";
     Map<String, String> requestBody = new HashMap<>();
-    requestBody.put("phone", "0338739954");
+    requestBody.put("phone", settingRepository.findAll().get(0).getHotline());
     requestBody.put("messageContent", messageContent);
 
     try {

@@ -3,8 +3,10 @@ package com.example.TheGioiSua_2024.service;
 import com.example.TheGioiSua_2024.dto.TransactionHistory;
 import com.example.TheGioiSua_2024.entity.Invoice;
 import com.example.TheGioiSua_2024.entity.InvoiceLog;
+import com.example.TheGioiSua_2024.entity.Setting;
 import com.example.TheGioiSua_2024.repository.InvoiceLogRepository;
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
+import com.example.TheGioiSua_2024.repository.SettingRepository;
 import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.TelegramNotifier;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,15 +40,22 @@ public class ApiService {
     private InvoiceService invoiceService;
     @Autowired
     private InvoiceLogRepository invoiceLogRepository;
+    @Autowired
+    private SettingRepository settingRepository;
 
     public JsonNode callMbBankApi() {
         String url = "https://api.dichvudark.vn/api/ApiMbBank";
+        Long id = 1L;
 
+        // Lấy existingSetting từ repository
+        Setting existingSetting = settingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Setting not found"));
+        System.out.println();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Code", CODE);
-        headers.set("Token", TOKEN);
-        headers.set("Stk", STK);
+        headers.set("Token", existingSetting.getApikey());
+        headers.set("Stk", existingSetting.getStk());
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("Loai_api", "lsgdv2");

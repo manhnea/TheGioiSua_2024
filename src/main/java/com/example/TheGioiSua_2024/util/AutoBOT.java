@@ -1,10 +1,13 @@
 package com.example.TheGioiSua_2024.util;
 
 import com.example.TheGioiSua_2024.repository.InvoiceRepository;
+import com.example.TheGioiSua_2024.repository.SettingRepository;
 import com.example.TheGioiSua_2024.repository.UserRepository;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+
+import com.example.TheGioiSua_2024.service.Settingservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ public class AutoBOT {
 
   @Autowired
   private InvoiceRepository invoiceRepository;
+
 
   private TelegramNotifier telegramNotifier = new TelegramNotifier();
 
