@@ -40,10 +40,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT COUNT(*) FROM User u WHERE u.status = 1 AND u.role.id = 2")
   long countUsersByStatusAndRole();
 
-  @Query(value = "SELECT u FROM User u Join u.role r where r.id != 1")
+  @Query(value = "SELECT u FROM User u Join u.role r where r.id != 1 ORDER BY u.id DESC")
   Page<User> getUserPage(Pageable pageable);
 
-  @Query(value = "SELECT u FROM User u Join u.role r where r.id = 2")
+  @Query(value = "SELECT u FROM User u Join u.role r where r.id = 2 ORDER BY u.id DESC")
   Page<User> getCustomerPage(Pageable pageable);
 
   @Query(value = "SELECT u FROM User u JOIN u.role r " +
