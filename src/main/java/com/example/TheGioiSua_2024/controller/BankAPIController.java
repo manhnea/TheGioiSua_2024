@@ -29,6 +29,7 @@ public class BankAPIController {
   @PostMapping("/transactionHistory")
   public ResponseEntity<JsonNode> checkTransactionData(@RequestBody TransactionHistory request) {
     JsonNode result = apiService.checkTransactionData(request);
+      System.out.println(result);
     return ResponseEntity.status(result.get("status").asInt()).body(result);
   }
 

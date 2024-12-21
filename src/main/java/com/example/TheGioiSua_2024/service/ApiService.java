@@ -115,7 +115,7 @@ public class ApiService {
         for (JsonNode transaction : transactionData.path("transactionHistoryList")) {
             double creditAmount = transaction.path("creditAmount").asDouble();
             String description = transaction.path("description").asText();
-
+            System.out.println("description:" + description);
             if (creditAmount == request.getCreditAmount() && description.equals(
                     request.getDescription())) {
                 Invoice doist = invoiceRepository.findbycode(description);
@@ -136,12 +136,15 @@ public class ApiService {
                         invoiceLog.setInvoice(doist);
                         invoiceLog.setStatus(Status.Waiting);
                         invoiceLogRepository.save(invoiceLog);
-                        String mess = "Thông báo: Bạn có một đơn hàng mới!"
-                                + "\nMã đơn hàng: " + description
-                                + "\nSố điện thoại: " + doist.getPhonenumber()
-                                + "\nĐịa chỉ giao hàng: " + doist.getDeliveryaddress();
-                        telegramNotifier.sendMessageZalo(mess);
-
+                        try {
+                            String mess = "Thông báo: Bạn có một đơn hàng mới!"
+                                    + "\nMã đơn hàng: " + description
+                                    + "\nSố điện thoại: " + doist.getPhonenumber()
+                                    + "\nĐịa chỉ giao hàng: " + doist.getDeliveryaddress();
+                            telegramNotifier.sendMessageZalo(mess);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         response.put("status", 200);
                         response.put("mess", "Thành công");
                     } else {
@@ -158,7 +161,6 @@ public class ApiService {
                 return response;
             }
         }
-
         response.put("status", 404);
         response.put("error", "Không tìm thấy giao dịch khớp");
         return response;
