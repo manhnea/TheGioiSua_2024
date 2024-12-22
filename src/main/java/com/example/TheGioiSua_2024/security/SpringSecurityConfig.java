@@ -72,7 +72,7 @@ public class SpringSecurityConfig {
                         "/Invoice/add",
                         "/Setting/get", 
                         "/payment/transactionHistory/**",
-                        "/webhook/**"
+                        "/webhook/listen/**"
                 ).permitAll()
                 // Quyền của Customer
                 .requestMatchers(
