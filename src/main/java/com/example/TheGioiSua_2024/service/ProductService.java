@@ -79,6 +79,8 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new RuntimeException("Loại Sữa Không Tồn Tại"));
         Milkbrand milkbrand = milkbrandRepository.findById(product.getMilkBrand().getId())
                 .orElseThrow(() -> new RuntimeException("Hãng Sữa Không Tồn Tại"));
+        Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId())
+                .orElseThrow(() -> new RuntimeException("Đối tượng Không Tồn Tại"));
         String nameMilkBrand = milkbrand.getMilkbrandname();
         String nameMilkType = milkType.getMilkTypename();
         String urlProduct = StringUtil.replaceSpacesWithUnderscore(nameMilkType) + "_"
@@ -101,6 +103,10 @@ public class ProductService implements IProductService {
                         product.getMilkBrand(),
                         product.getTargetUser()));
         logService.saveLog(username, log);
+        Product checkproduct = productRepository.existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(product.getProductname(),milkType.getId(),milkbrand.getId(),targetuser.getId());
+        if (checkproduct != null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Tên sản phẩm đã tồn tại"));
+        }
         productRepository.save(product);
         return ResponseEntity.ok(Map.of("success", "Thêm sản phẩm thành công."));
 
@@ -138,14 +144,15 @@ public class ProductService implements IProductService {
                 .orElseThrow();
         Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId())
                 .orElseThrow();
-
-        if (productRepository.existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(product.getProductname(),milkType,milkbrand,targetuser )) {
+        Product checkproduct = productRepository.existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(product.getProductname(),milkType.getId(),milkbrand.getId(),targetuser.getId());
+        if (checkproduct != null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Tên sản phẩm đã tồn tại"));
         }
         existingProduct.setProductname(product.getProductname());
         existingProduct.setMilkType(milkType);
         existingProduct.setMilkBrand(milkbrand);
         existingProduct.setTargetUser(targetuser);
+        existingProduct.setImgUrl(product.getImgUrl());
         log.setAction("Cập nhật sản phẩm");
         log.setDescription(changeLog);
         logService.saveLog(username, log);

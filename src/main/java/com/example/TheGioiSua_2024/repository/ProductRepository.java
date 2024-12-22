@@ -213,11 +213,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "GROUP BY p.id, p.productCode, p.productname, p.milkType.id, p.milkBrand.id, p.targetUser.id, p.productUrl, p.imgUrl, p.status "
             + "ORDER BY COUNT(a.id) DESC")
     Page<ProductDtos> getBestSeller(Pageable pageable);
-    @Query("SELECT p FROM Product p WHERE p.productname = :productname AND p.milkType = :milkType AND p.milkBrand = :milkBrand AND p.targetUser = :targetUser")
-    boolean existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(
+    @Query("SELECT p FROM Product p WHERE p.productname = :productname AND p.milkType.id = :milkType AND p.milkBrand.id = :milkBrand AND p.targetUser.id = :targetUser")
+    Product existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(
             String productname,
-            MilkType milkType,
-            Milkbrand milkBrand,
-            Targetuser targetUser
+            Long milkType,
+            Long milkBrand,
+            Long targetUser
     );
 }

@@ -70,12 +70,7 @@ private MilkdetailValidator milkdetailValidator;
   private ResponseEntity<?> update(@NonNull HttpServletRequest request, @PathVariable("id") Long id,
        @RequestBody Milkdetail milkdetail) {
     String token = jwtUtilities.getToken(request);
-    ResponseEntity<?> response = milkdetailService.update(token, id, milkdetail);
-    if (response.getStatusCode().is4xxClientError()) {
-      return response;  // This will contain the validation errors
-    }
-    String resultMessage = (String) response.getBody();  // The success message from service
-    return ResponseEntity.ok(Map.of("status", "success", "message", resultMessage));
+    return milkdetailService.update(token, id, milkdetail);
   }
 
   //http://localhost:1234/api/Milkdetail/delete/{id}

@@ -62,7 +62,7 @@ public class MilkdetailService implements IMilkdetailService {
                 milkdetail.getUsageCapacity().getId()
         ).isPresent()) {
             // Return error if the milkdetail already exists
-            return ResponseEntity.badRequest().body(Map.of("message", "Chi tiết sản phẩm này đã tồn tại."));
+            return ResponseEntity.badRequest().body(Map.of("error", "Chi tiết sản phẩm này đã tồn tại."));
         }
 
         // Step 3: Get the max ID from the repository (or start from 1 if empty)
@@ -208,7 +208,7 @@ public class MilkdetailService implements IMilkdetailService {
                 milkdetail.getUsageCapacity().getId()
         ).isPresent()) {
             // Return error if the milkdetail already exists
-            return ResponseEntity.badRequest().body(Map.of("message", "Chi tiết sản phẩm này đã tồn tại."));
+            return ResponseEntity.badRequest().body(Map.of("error", "Chi tiết sản phẩm này đã tồn tại."));
         }
 
         // If we reach here, that means something changed (like product or taste)
@@ -251,7 +251,7 @@ public class MilkdetailService implements IMilkdetailService {
         ));
         logService.saveLog(username, log);
 
-        return ResponseEntity.ok(Map.of("status", "success", "message", "Cập nhật thành công"));
+        return ResponseEntity.ok(Map.of( "message", "Cập nhật thành công"));
     }
 
   @Override
