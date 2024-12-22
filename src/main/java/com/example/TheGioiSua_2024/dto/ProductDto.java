@@ -22,6 +22,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDto {
     Long productID;
+    String productName;
     Long milkBrandID;
     Long milkTypeID;
     Long targetuserID;

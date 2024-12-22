@@ -13,31 +13,31 @@ import org.springframework.http.ResponseEntity;
 
 public interface IProductService {
 
-  List<Product> getAllProduct();
+    List<Product> getAllProduct();
 
-  ResponseEntity<?> addProduct(String token, Product product);
+    ResponseEntity<?> addProduct(String token, Product product);
 
-  ResponseEntity<?> updateProduct(String token, Long id, Product product);
+    ResponseEntity<?> updateProduct(String token, Long id, Product product);
 
-  ResponseEntity<?> deleteProduct(String token, Long id);
+    ResponseEntity<?> deleteProduct(String token, Long id);
 
-  Product getProductById(Long id);
+    Product getProductById(Long id);
 
-  List<ProductlstDto> getPageProduct();
+    Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id);
 
-  Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id);
+    Page<ProductDto> getPageProductByBrandMilk(Pageable pageable, Long id);
 
-  Page<ProductDto> getPageProductByBrandMilk(Pageable pageable, Long id);
+    Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id);
 
-  Page<ProductDto> getPageProductByTargetUser(Pageable pageable, Long id);
+    Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
 
-  Page<ProductDto> getPageProductWithSearch(String searchTerm, Pageable pageable);
-  Page<Product> getProductPage(Pageable pageable);
+    List<ProductDto> getProductList();
 
-  Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable);
-  Page<Product> filterProduct(String productname,Long milkBrandId,Long targetUserId, Long milkTypeId,  Pageable pageable);
+    Page<Product> getProductPage(Pageable pageable);
 
-  Page<ProductlstDto> getNewProduct(Pageable pageable);
+    Page<Product> getProductPageByTypeMilk(String productname, Pageable pageable);
 
-  Page<ProductDtos> getBestSeller(Pageable pageable);
+    Page<Product> filterProduct(String productname, Long milkBrandId, Long targetUserId, Long milkTypeId, Pageable pageable);
+
+    Page<ProductDto> getBestSeller(Pageable pageable);
 }

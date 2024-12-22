@@ -1,9 +1,7 @@
 package com.example.TheGioiSua_2024.service;
 
-import com.example.TheGioiSua_2024.Validator.MilkTasteValidator;
 import com.example.TheGioiSua_2024.Validator.ProductValidator;
 import com.example.TheGioiSua_2024.dto.ProductDto;
-import com.example.TheGioiSua_2024.dto.ProductDtos;
 import com.example.TheGioiSua_2024.dto.ProductlstDto;
 import com.example.TheGioiSua_2024.entity.Log;
 import com.example.TheGioiSua_2024.entity.MilkType;
@@ -21,7 +19,6 @@ import com.example.TheGioiSua_2024.util.Status;
 import com.example.TheGioiSua_2024.util.StringUtil;
 
 import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +65,6 @@ public class ProductService implements IProductService {
         } else {
             maxId++;
         }
-
-        // Tạo mã chi tiết sản phẩm theo định dạng "MD" + 3 số
         String productCode = String.format("SP%03d", maxId);
 
         String productname = product.getProductname().trim();
@@ -103,7 +98,7 @@ public class ProductService implements IProductService {
                         product.getMilkBrand(),
                         product.getTargetUser()));
         logService.saveLog(username, log);
-        Product checkproduct = productRepository.existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(product.getProductname(),milkType.getId(),milkbrand.getId(),targetuser.getId());
+        Product checkproduct = productRepository.existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(product.getProductname(), milkType.getId(), milkbrand.getId(), targetuser.getId());
         if (checkproduct != null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Tên sản phẩm đã tồn tại"));
         }
@@ -144,6 +139,18 @@ public class ProductService implements IProductService {
                 .orElseThrow();
         Targetuser targetuser = targetuserRepository.findById(product.getTargetUser().getId())
                 .orElseThrow();
+        if (existingProduct.getProductname().equals(product.getProductname())
+                && existingProduct.getMilkType().getId().equals(product.getMilkType().getId())
+                && existingProduct.getMilkBrand().getId().equals(product.getMilkBrand().getId())
+                && existingProduct.getTargetUser().getId().equals(product.getTargetUser().getId())) {
+
+           existingProduct.setImgUrl(product.getImgUrl());
+            log.setAction("Cập nhật sản phẩm");
+            log.setDescription(changeLog);
+            logService.saveLog(username, log);
+            productRepository.save(existingProduct);
+            return ResponseEntity.ok(Map.of("success", "Cập nhật sản phẩm thành công."));
+        }
         Product checkproduct = productRepository.existsByProductnameAndIdbrandAndIdMilkTypeAndIdTagetUser(product.getProductname(),milkType.getId(),milkbrand.getId(),targetuser.getId());
         if (checkproduct != null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Tên sản phẩm đã tồn tại"));
@@ -158,7 +165,6 @@ public class ProductService implements IProductService {
         logService.saveLog(username, log);
         productRepository.save(existingProduct);
         return ResponseEntity.ok(Map.of("success", "Cập nhật sản phẩm thành công."));
-
     }
 
     @Override
@@ -189,11 +195,6 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductlstDto> getPageProduct() {
-        return productRepository.getPageProduct();
-    }
-
-    @Override
     public Page<ProductDto> getPageProductByTypeMilk(Pageable pageable, Long id) {
         return productRepository.getPageProductByTypeMilk(pageable, id);
     }
@@ -214,6 +215,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<ProductDto> getProductList() {
+        return productRepository.getPageProduct();
+    }
+
+    @Override
     public Page<Product> getProductPage(Pageable pageable) {
         return productRepository.getProductPage(pageable);
     }
@@ -229,12 +235,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductlstDto> getNewProduct(Pageable pageable) {
-        return productRepository.getNewProduct(pageable);
-    }
-
-    @Override
-    public Page<ProductDtos> getBestSeller(Pageable pageable) {
+    public Page<ProductDto> getBestSeller(Pageable pageable) {
         return productRepository.getBestSeller(pageable);
     }
 

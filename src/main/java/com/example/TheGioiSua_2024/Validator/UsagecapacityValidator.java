@@ -14,15 +14,15 @@ import java.util.Arrays;
 public class UsagecapacityValidator {
 
     private static final int MAX_CAPACITY = 10000;  // Example max value for capacity
-    private static final String[] a = {"l","ml","kg","g"};
+    private static final String[] a = {"l", "ml", "kg", "g"};
+
     public static String validateUsagecapacity(Usagecapacity usagecapacity) {
-        if(!Arrays.asList(a).contains(usagecapacity.getUnit())){
-            return "Đơn vị đóng gói chỉ có thể là: "+Arrays.toString(a);
+        if (!Arrays.asList(a).contains(usagecapacity.getUnit())) {
+            return "Đơn vị đóng gói chỉ có thể là: " + Arrays.toString(a);
         }
-        if (usagecapacity.getCapacity() < 0) {
+        if (usagecapacity.getCapacity() < 1) {
             return "Sức chứa phải là một số nguyên dương";
         }
-
         // Validate unit
         if (usagecapacity.getUnit() == null || usagecapacity.getUnit().isEmpty()) {
             return "Đơn vị không được để trống";

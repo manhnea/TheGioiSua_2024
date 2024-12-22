@@ -11,7 +11,18 @@ public class MilkdetailValidator {
     // Phương thức kiểm tra các trường dữ liệu của Milkdetail
     public static String validateMilkdetail(Milkdetail milkdetail) {
 
-
+        if(milkdetail.getProduct().getId()==null){
+            return "Sản phẩm không được để trống";
+        }
+        if(milkdetail.getMilkTaste().getId()==null){
+            return "Vị Sữa Không Được Để Trống";
+        }
+        if(milkdetail.getUsageCapacity().getId()==null){
+            return "Vị Sữa Không Được Để Trống";
+        }
+        if(milkdetail.getPackagingunit().getId()==null){
+            return "Dung tích Không Được Để Trống";
+        }
         // Kiểm tra shelflifeofmilk (chỉ cho phép chữ cái, chữ số, dấu phẩy, dấu chấm, dấu gạch ngang và khoảng trắng)
         if (milkdetail.getShelflifeofmilk() == null || milkdetail.getShelflifeofmilk().isEmpty()) {
             return "Thời gian sử dụng sữa không được để trống";
