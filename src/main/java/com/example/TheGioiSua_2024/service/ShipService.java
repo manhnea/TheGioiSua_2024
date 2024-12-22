@@ -63,6 +63,9 @@ public class ShipService implements IShipService {
         } else if (Istatus == Status.Complete) {
             invoice.setStatus(Status.Complete);
             invoiceLog.setStatus(Status.Complete);
+        }else if (Istatus == Status.DELIVERY_FAILED) {
+            invoice.setStatus(Status.DELIVERY_FAILED);
+            invoiceLog.setStatus(Status.DELIVERY_FAILED);
         }
         invoiceRepository.save(invoice);
         invoiceLog.setInvoice(invoice);

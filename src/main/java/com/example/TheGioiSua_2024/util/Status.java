@@ -18,6 +18,7 @@ public class Status {
     public static int Waiting  = 901;//Chờ lấy hàng
     public static int Took  = 903;//Đã lấy hàng
     public static int Delivery  = 904;//Giao hàng
+    public static int DELIVERY_FAILED   = 905;//Giao hàng thất bại
     public static int ApproveOrders  = 301;//Chờ Duyệt Đơn
     public static int UnPaid  = 337;//Chưa Thanh Toán
     public static int WaitingInvoice  = 338;//Đơn Chờ
